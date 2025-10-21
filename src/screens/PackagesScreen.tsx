@@ -20,7 +20,7 @@ const PACKAGES: Package[] = [
   {
     id: "1",
     name: "Interior Basic",
-    price: "$79",
+    price: "$99",
     duration: "1-2 hours",
     description: "Essential interior cleaning",
     category: "interior",
@@ -36,7 +36,7 @@ const PACKAGES: Package[] = [
     id: "2",
     name: "Interior Premium",
     price: "$149",
-    duration: "2-3 hours",
+    duration: "2-4 hours",
     description: "Deep interior detailing",
     popular: true,
     category: "interior",
