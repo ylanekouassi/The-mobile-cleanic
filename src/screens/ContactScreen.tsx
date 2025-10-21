@@ -75,37 +75,6 @@ export default function ContactScreen() {
             ))}
           </View>
 
-          {/* Hours Section */}
-          <View style={styles.hoursSection}>
-            <Text style={styles.sectionTitle}>Business Hours</Text>
-            <View style={styles.hoursCard}>
-              <HourRow day="Monday - Friday" hours="8:00 AM - 6:00 PM" />
-              <View style={styles.hoursDivider} />
-              <HourRow day="Saturday" hours="9:00 AM - 5:00 PM" />
-              <View style={styles.hoursDivider} />
-              <HourRow day="Sunday" hours="Closed" />
-            </View>
-          </View>
-
-          {/* Social Media */}
-          <View style={styles.socialSection}>
-            <Text style={styles.sectionTitle}>Follow Us</Text>
-            <View style={styles.socialButtons}>
-              <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-instagram" size={28} color="#E89A3C" />
-              </Pressable>
-              <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-facebook" size={28} color="#E89A3C" />
-              </Pressable>
-              <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-twitter" size={28} color="#E89A3C" />
-              </Pressable>
-              <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-linkedin" size={28} color="#E89A3C" />
-              </Pressable>
-            </View>
-          </View>
-
           {/* Call to Action */}
           <View style={styles.ctaContainer}>
             <View style={styles.ctaBox}>
@@ -151,20 +120,6 @@ function ContactMethodCard({ method }: ContactMethodCardProps) {
   );
 }
 
-interface HourRowProps {
-  day: string;
-  hours: string;
-}
-
-function HourRow({ day, hours }: HourRowProps) {
-  return (
-    <View style={styles.hourRow}>
-      <Text style={styles.dayText}>{day}</Text>
-      <Text style={styles.hoursText}>{hours}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -180,21 +135,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
     alignItems: "center",
-  },
-  iconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#1a1a1a",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    borderWidth: 2,
-    borderColor: "#E89A3C",
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
   },
   headerTitle: {
     fontSize: 32,
@@ -247,62 +187,6 @@ const styles = StyleSheet.create({
   contactValue: {
     fontSize: 14,
     color: "#888888",
-  },
-  hoursSection: {
-    paddingHorizontal: 20,
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    marginBottom: 16,
-    letterSpacing: 0.5,
-  },
-  hoursCard: {
-    backgroundColor: "#0f0f0f",
-    borderRadius: 16,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: "#1a1a1a",
-  },
-  hourRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  hoursDivider: {
-    height: 1,
-    backgroundColor: "#1a1a1a",
-    marginVertical: 14,
-  },
-  dayText: {
-    fontSize: 15,
-    color: "#CCCCCC",
-    fontWeight: "500",
-  },
-  hoursText: {
-    fontSize: 15,
-    color: "#888888",
-  },
-  socialSection: {
-    paddingHorizontal: 20,
-    marginBottom: 30,
-  },
-  socialButtons: {
-    flexDirection: "row",
-    gap: 12,
-    justifyContent: "center",
-  },
-  socialButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#0f0f0f",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#E89A3C",
   },
   ctaContainer: {
     paddingHorizontal: 20,
