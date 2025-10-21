@@ -90,12 +90,6 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
             resizeMode="contain"
           />
         </Animated.View>
-
-        {/* Ambient glow - Need for Speed style */}
-        <View style={[styles.ambientGlow, { width: size * 0.8, height: size * 0.4, top: size * 0.5 }]} />
-        
-        {/* Ground shadow */}
-        <View style={[styles.shadow, { width: size * 0.6, top: size * 0.7 }]} />
       </View>
     </GestureDetector>
   );
@@ -116,21 +110,5 @@ const styles = StyleSheet.create({
   carImage: {
     width: "100%",
     height: "100%",
-  },
-  shadow: {
-    position: "absolute",
-    height: 20,
-    backgroundColor: "#000000",
-    opacity: 0.5,
-    borderRadius: 100,
-    transform: [{ scaleY: 0.3 }],
-  },
-  ambientGlow: {
-    position: "absolute",
-    backgroundColor: "#FF8C00",
-    opacity: 0.2,
-    borderRadius: 200,
-    transform: [{ scaleY: 0.3 }],
-    zIndex: -1,
   },
 });
