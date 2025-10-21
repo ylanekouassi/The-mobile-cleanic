@@ -1,0 +1,281 @@
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
+import RotatingCube from "../components/RotatingCube";
+import { Ionicons } from "@expo/vector-icons";
+
+export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const fadeAnim = useSharedValue(0);
+  const slideAnim = useSharedValue(50);
+
+  useEffect(() => {
+    fadeAnim.value = withTiming(1, { duration: 1000 });
+    slideAnim.value = withTiming(0, {
+      duration: 800,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: fadeAnim.value,
+      transform: [{ translateY: slideAnim.value }],
+    };
+  });
+
+  return (
+    <View style={styles.container}>
+      <LinearGradient
+        colors={["#000000", "#0a0a0a", "#000000"]}
+        style={styles.gradient}
+      >
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: insets.bottom + 20 },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Hero Section with Cube */}
+          <Animated.View style={[styles.heroSection, animatedStyle]}>
+            <View style={styles.taglineContainer}>
+              <Ionicons name="diamond" size={20} color="#D4AF37" />
+              <Text style={styles.tagline}>PREMIUM CAR DETAILING</Text>
+              <Ionicons name="diamond" size={20} color="#D4AF37" />
+            </View>
+
+            <Text style={styles.title}>The Mobile</Text>
+            <Text style={styles.subtitle}>CLEANIC</Text>
+
+            <View style={styles.cubeContainer}>
+              <RotatingCube size={200} />
+            </View>
+
+            <Text style={styles.slogan}>
+              Excellence in Every Detail
+            </Text>
+            <Text style={styles.description}>
+              Professional mobile car detailing service that comes to you.
+              Experience showroom quality results wherever you are.
+            </Text>
+          </Animated.View>
+
+          {/* Features Section */}
+          <View style={styles.featuresContainer}>
+            <Feature
+              icon="shield-checkmark"
+              title="Professional"
+              description="Expert technicians with years of experience"
+            />
+            <Feature
+              icon="location"
+              title="Mobile Service"
+              description="We come to your home or office"
+            />
+            <Feature
+              icon="sparkles"
+              title="Premium Products"
+              description="Only the finest detailing products used"
+            />
+            <Feature
+              icon="time"
+              title="Fast & Efficient"
+              description="Quick turnaround without compromising quality"
+            />
+          </View>
+
+          {/* Call to Action */}
+          <View style={styles.ctaContainer}>
+            <View style={styles.ctaBox}>
+              <Text style={styles.ctaTitle}>Ready to Transform Your Car?</Text>
+              <Text style={styles.ctaText}>
+                Browse our packages and book your appointment today
+              </Text>
+              <View style={styles.ctaButton}>
+                <Text style={styles.ctaButtonText}>VIEW PACKAGES</Text>
+                <Ionicons name="arrow-forward" size={20} color="#000000" />
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    </View>
+  );
+}
+
+interface FeatureProps {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  description: string;
+}
+
+function Feature({ icon, title, description }: FeatureProps) {
+  return (
+    <View style={styles.featureCard}>
+      <View style={styles.featureIconContainer}>
+        <Ionicons name={icon} size={32} color="#D4AF37" />
+      </View>
+      <Text style={styles.featureTitle}>{title}</Text>
+      <Text style={styles.featureDescription}>{description}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000000",
+  },
+  gradient: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingTop: 20,
+  },
+  heroSection: {
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
+  taglineContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
+  tagline: {
+    fontSize: 11,
+    color: "#D4AF37",
+    letterSpacing: 3,
+    fontWeight: "600",
+  },
+  title: {
+    fontSize: 38,
+    fontWeight: "300",
+    color: "#FFFFFF",
+    letterSpacing: 3,
+  },
+  subtitle: {
+    fontSize: 48,
+    fontWeight: "800",
+    color: "#D4AF37",
+    letterSpacing: 6,
+    marginBottom: 30,
+  },
+  cubeContainer: {
+    marginVertical: 30,
+  },
+  slogan: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    letterSpacing: 1,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 15,
+    color: "#999999",
+    textAlign: "center",
+    lineHeight: 22,
+    paddingHorizontal: 20,
+  },
+  featuresContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    gap: 15,
+  },
+  featureCard: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#1a1a1a",
+    shadowColor: "#D4AF37",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  featureIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#1a1a1a",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#D4AF37",
+  },
+  featureTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 6,
+    letterSpacing: 0.5,
+  },
+  featureDescription: {
+    fontSize: 14,
+    color: "#888888",
+    lineHeight: 20,
+  },
+  ctaContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  ctaBox: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 20,
+    padding: 30,
+    borderWidth: 2,
+    borderColor: "#D4AF37",
+    alignItems: "center",
+    shadowColor: "#D4AF37",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+  },
+  ctaTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+    letterSpacing: 0.5,
+  },
+  ctaText: {
+    fontSize: 15,
+    color: "#888888",
+    textAlign: "center",
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  ctaButton: {
+    flexDirection: "row",
+    backgroundColor: "#D4AF37",
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    borderRadius: 12,
+    alignItems: "center",
+    gap: 8,
+    shadowColor: "#D4AF37",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+  },
+  ctaButtonText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 1.5,
+  },
+});
