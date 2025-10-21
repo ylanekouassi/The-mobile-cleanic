@@ -110,6 +110,5 @@ const styles = StyleSheet.create({
   carImage: {
     width: "100%",
     height: "100%",
-    tintColor: "#E89A3C",
   },
 });
