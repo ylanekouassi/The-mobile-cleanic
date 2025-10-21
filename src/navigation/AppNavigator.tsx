@@ -4,14 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
-import AboutScreen from "../screens/AboutScreen";
 import CustomDrawer from "../components/CustomDrawer";
 
 export type RootDrawerParamList = {
   Home: undefined;
   Packages: undefined;
   Contact: undefined;
-  About: undefined;
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -78,16 +76,6 @@ export default function AppNavigator() {
           title: "Contact",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="call" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="About"
-        component={AboutScreen}
-        options={{
-          title: "About",
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="information-circle" size={size} color={color} />
           ),
         }}
       />
