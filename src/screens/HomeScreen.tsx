@@ -52,9 +52,6 @@ export default function HomeScreen() {
               <Ionicons name="diamond" size={20} color="#E89A3C" />
             </View>
 
-            <Text style={styles.title}>The Mobile</Text>
-            <Text style={styles.subtitle}>CLEANIC</Text>
-
             <View style={styles.cubeContainer}>
               <RotatingCar size={220} />
             </View>
@@ -157,19 +154,6 @@ const styles = StyleSheet.create({
     color: "#E89A3C",
     letterSpacing: 3,
     fontWeight: "600",
-  },
-  title: {
-    fontSize: 38,
-    fontWeight: "300",
-    color: "#FFFFFF",
-    letterSpacing: 3,
-  },
-  subtitle: {
-    fontSize: 48,
-    fontWeight: "800",
-    color: "#E89A3C",
-    letterSpacing: 6,
-    marginBottom: 30,
   },
   cubeContainer: {
     marginVertical: 30,
