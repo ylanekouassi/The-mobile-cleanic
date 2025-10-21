@@ -9,7 +9,6 @@ import Animated, {
   Easing,
   cancelAnimation,
   interpolate,
-  withSequence,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,30 +17,18 @@ interface RotatingCarProps {
   size?: number;
 }
 
-export default function RotatingCar({ size = 260 }: RotatingCarProps) {
+export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   const rotation = useSharedValue(0);
   const scale = useSharedValue(1);
-  const bobbing = useSharedValue(0);
   const savedRotation = useSharedValue(0);
   const isAutoRotating = useSharedValue(true);
 
   useEffect(() => {
     startAutoRotation();
 
-    // Gentle breathing/bobbing animation
-    bobbing.value = withRepeat(
-      withSequence(
-        withTiming(-5, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 2000, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1,
-      false
-    );
-
-    // Scale pulse
     scale.value = withRepeat(
-      withTiming(1.02, {
-        duration: 2000,
+      withTiming(1.015, {
+        duration: 2500,
         easing: Easing.inOut(Easing.ease),
       }),
       -1,
@@ -52,7 +39,7 @@ export default function RotatingCar({ size = 260 }: RotatingCarProps) {
   const startAutoRotation = () => {
     rotation.value = withRepeat(
       withTiming(rotation.value + 360, {
-        duration: 12000,
+        duration: 14000,
         easing: Easing.linear,
       }),
       -1,
@@ -85,49 +72,59 @@ export default function RotatingCar({ size = 260 }: RotatingCarProps) {
       }, 2000);
     });
 
-  const robotAnimatedStyle = useAnimatedStyle(() => {
+  const carAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { perspective: 1000 },
+        { perspective: 1200 },
         { rotateY: `${rotation.value}deg` },
-        { translateY: bobbing.value },
+        { rotateX: "-8deg" },
         { scale: scale.value },
       ],
     };
   });
 
-  // Animate visibility based on rotation
   const frontAnimatedStyle = useAnimatedStyle(() => {
     const normalizedRotation = ((rotation.value % 360) + 360) % 360;
     const opacity = interpolate(
       normalizedRotation,
-      [0, 45, 90, 180, 270, 315, 360],
-      [1, 0.9, 0.6, 0.3, 0.6, 0.9, 1]
+      [0, 30, 60, 120, 180, 240, 300, 330, 360],
+      [1, 0.95, 0.75, 0.5, 0.3, 0.5, 0.75, 0.95, 1]
     );
-    return { opacity };
+    const translateZ = interpolate(
+      normalizedRotation,
+      [0, 90, 180, 270, 360],
+      [0, -14, 0, 14, 0]
+    );
+    return { 
+      opacity,
+      transform: [{ translateX: translateZ }],
+    };
   });
 
   const sideAnimatedStyle = useAnimatedStyle(() => {
     const normalizedRotation = ((rotation.value % 360) + 360) % 360;
     const opacity = interpolate(
       normalizedRotation,
-      [0, 45, 90, 135, 180, 270, 360],
-      [0.3, 0.7, 1, 0.9, 0.5, 0.3, 0.3]
+      [0, 30, 60, 90, 120, 180, 240, 300, 360],
+      [0.35, 0.65, 0.9, 1, 0.95, 0.6, 0.4, 0.35, 0.35]
     );
     const translateX = interpolate(
       normalizedRotation,
       [0, 90, 180, 270, 360],
-      [0, 20, 0, -20, 0]
+      [0, 30, 0, -30, 0]
     );
-    return { opacity, transform: [{ translateX }] };
+    return { 
+      opacity, 
+      transform: [{ translateX }],
+    };
   });
 
   const backAnimatedStyle = useAnimatedStyle(() => {
     const normalizedRotation = ((rotation.value % 360) + 360) % 360;
     const opacity = interpolate(
       normalizedRotation,
-      [0, 90, 135, 180, 225, 270, 360],
-      [0.3, 0.5, 0.8, 1, 0.8, 0.5, 0.3]
+      [0, 60, 120, 150, 180, 210, 240, 300, 360],
+      [0.3, 0.4, 0.6, 0.85, 1, 0.85, 0.6, 0.4, 0.3]
     );
     return { opacity };
   });
@@ -135,230 +132,202 @@ export default function RotatingCar({ size = 260 }: RotatingCarProps) {
   return (
     <GestureDetector gesture={panGesture}>
       <View style={[styles.container, { width: size, height: size }]}>
-        {/* Outer glow */}
-        <View style={[styles.glow, { width: size * 1.2, height: size * 1.2 }]} />
-        
-        <Animated.View style={[styles.robotContainer, robotAnimatedStyle]}>
+        <Animated.View style={[styles.carContainer, carAnimatedStyle]}>
           
-          {/* BACK VIEW */}
-          <Animated.View style={[styles.robotLayer, backAnimatedStyle]}>
-            <View style={styles.robot}>
-              {/* Back of head */}
-              <View style={[styles.head, styles.headBack]}>
+          {/* BACK LAYER - Porsche Rear */}
+          <Animated.View style={[styles.carLayer, backAnimatedStyle]}>
+            <View style={styles.porsche}>
+              {/* Iconic Porsche rear spoiler */}
+              <View style={styles.rearWing}>
                 <LinearGradient
-                  colors={["#4a4a4a", "#2a2a2a", "#1a1a1a"]}
+                  colors={["#1a1a1a", "#0a0a0a"]}
                   style={styles.gradient}
                 />
-                {/* Back panel details */}
-                <View style={styles.backPanel} />
+                <View style={styles.wingSupport} />
               </View>
               
-              {/* Body back */}
+              {/* Rear body - curved */}
               <View style={[styles.body, styles.bodyBack]}>
                 <LinearGradient
-                  colors={["#5a5a5a", "#3a3a3a", "#2a2a2a"]}
+                  colors={["#3a3a3a", "#2a2a2a", "#1a1a1a"]}
                   style={styles.gradient}
                 />
-              </View>
-            </View>
-          </Animated.View>
-
-          {/* SIDE VIEW */}
-          <Animated.View style={[styles.robotLayer, sideAnimatedStyle]}>
-            <View style={styles.robot}>
-              {/* Head side */}
-              <View style={[styles.head, styles.headSide]}>
-                <LinearGradient
-                  colors={["#D4AF37", "#E8C055", "#D4AF37"]}
-                  style={styles.gradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                />
-                {/* Ear/sensor */}
-                <View style={styles.sensor} />
-              </View>
-              
-              {/* Body side */}
-              <View style={[styles.body, styles.bodySide]}>
-                <LinearGradient
-                  colors={["#E89A3C", "#D4822C", "#E89A3C"]}
-                  style={styles.gradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                />
-                {/* Side panel */}
-                <View style={styles.sidePanel}>
-                  <View style={styles.panelLine} />
-                  <View style={[styles.panelLine, { top: 8 }]} />
-                </View>
-                {/* Arm joint */}
-                <View style={styles.armJoint} />
-              </View>
-              
-              {/* Arm */}
-              <View style={styles.arm}>
-                <LinearGradient
-                  colors={["#C67B2E", "#A66A28"]}
-                  style={styles.gradient}
-                />
-                <View style={styles.armSegment} />
-              </View>
-              
-              {/* Leg */}
-              <View style={styles.leg}>
-                <LinearGradient
-                  colors={["#B8960F", "#8B7B2F"]}
-                  style={styles.gradient}
-                />
-                <View style={styles.legJoint} />
-              </View>
-            </View>
-          </Animated.View>
-
-          {/* FRONT VIEW */}
-          <Animated.View style={[styles.robotLayer, frontAnimatedStyle]}>
-            <View style={styles.robot}>
-              {/* Head - golden metallic */}
-              <View style={[styles.head, styles.headFront]}>
-                <LinearGradient
-                  colors={["#FFD580", "#E8C055", "#D4AF37", "#E8C055"]}
-                  style={styles.gradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                />
-                
-                {/* Visor/Eyes - glowing blue */}
-                <View style={styles.visor}>
+                {/* Porsche tail light strip */}
+                <View style={styles.tailLightStrip}>
                   <LinearGradient
-                    colors={["#4da6ff", "#0066cc", "#004d99"]}
+                    colors={["#ff1a1a", "#cc0000", "#ff1a1a"]}
                     style={styles.gradient}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }}
                   />
-                  {/* Eye lights */}
-                  <View style={[styles.eyeLight, { left: 8 }]} />
-                  <View style={[styles.eyeLight, { right: 8 }]} />
                 </View>
-                
-                {/* Antenna */}
-                <View style={styles.antenna}>
-                  <View style={styles.antennaLight} />
-                </View>
-                
-                {/* Face details */}
-                <View style={styles.facePanel} />
+                {/* Porsche badge */}
+                <View style={styles.porscheBadge} />
+                {/* Dual exhaust */}
+                <View style={[styles.exhaust, { left: 35 }]} />
+                <View style={[styles.exhaust, { right: 35 }]} />
               </View>
               
-              {/* Neck joint */}
-              <View style={styles.neck}>
+              {/* Roof - coupe style */}
+              <View style={[styles.roof, styles.roofBack]} />
+            </View>
+          </Animated.View>
+
+          {/* SIDE LAYER - Porsche Profile */}
+          <Animated.View style={[styles.carLayer, sideAnimatedStyle]}>
+            <View style={styles.porsche}>
+              {/* Rear wing side view */}
+              <View style={styles.rearWingSide}>
                 <LinearGradient
-                  colors={["#666666", "#444444"]}
+                  colors={["#1a1a1a", "#0a0a0a"]}
                   style={styles.gradient}
                 />
               </View>
               
-              {/* Body - orange metallic */}
-              <View style={[styles.body, styles.bodyFront]}>
+              {/* Side body - classic Porsche curve */}
+              <View style={[styles.body, styles.bodySide]}>
                 <LinearGradient
-                  colors={["#FFB347", "#E89A3C", "#D4822C", "#E89A3C"]}
+                  colors={["#E89A3C", "#D4822C", "#C67B2E", "#D4822C", "#E89A3C"]}
                   style={styles.gradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                 />
                 
-                {/* Chest panel with logo */}
-                <View style={styles.chestPanel}>
-                  <View style={styles.coreLightOuter}>
-                    <View style={styles.coreLight} />
-                  </View>
-                  {/* Panel lines */}
-                  <View style={styles.chestLine} />
-                  <View style={[styles.chestLine, { top: 25 }]} />
+                {/* Side window - coupe style */}
+                <View style={styles.sideWindow} />
+                
+                {/* Door handle */}
+                <View style={styles.doorHandle} />
+                
+                {/* Side air intake */}
+                <View style={styles.sideAirIntake}>
+                  <View style={styles.intakeBar} />
+                  <View style={[styles.intakeBar, { top: 4 }]} />
+                  <View style={[styles.intakeBar, { top: 8 }]} />
                 </View>
                 
-                {/* Shoulder pads */}
-                <View style={[styles.shoulder, { left: -5 }]}>
-                  <LinearGradient
-                    colors={["#C67B2E", "#A66A28"]}
-                    style={styles.gradient}
-                  />
-                </View>
-                <View style={[styles.shoulder, { right: -5 }]}>
-                  <LinearGradient
-                    colors={["#C67B2E", "#A66A28"]}
-                    style={styles.gradient}
-                  />
-                </View>
+                {/* Character line */}
+                <View style={styles.characterLine} />
+                
+                {/* Side skirt */}
+                <View style={styles.sideSkirt} />
               </View>
               
-              {/* Arms with joints */}
-              <View style={[styles.armFront, { left: -15 }]}>
+              {/* Coupe roof - low and sleek */}
+              <View style={[styles.roof, styles.roofSide]}>
                 <LinearGradient
-                  colors={["#D4822C", "#B86F25"]}
+                  colors={["#3a3a3a", "#2a2a2a", "#1a1a1a"]}
                   style={styles.gradient}
                 />
-                <View style={styles.armBand} />
-                {/* Hand/Tool */}
-                <View style={styles.hand}>
-                  <LinearGradient
-                    colors={["#8B6B3A", "#6B5330"]}
-                    style={styles.gradient}
-                  />
-                  <View style={styles.finger} />
-                </View>
               </View>
               
-              <View style={[styles.armFront, { right: -15 }]}>
-                <LinearGradient
-                  colors={["#D4822C", "#B86F25"]}
-                  style={styles.gradient}
-                />
-                <View style={styles.armBand} />
-                <View style={styles.hand}>
-                  <LinearGradient
-                    colors={["#8B6B3A", "#6B5330"]}
-                    style={styles.gradient}
-                  />
-                  <View style={styles.finger} />
+              {/* Iconic Porsche wheels */}
+              <View style={[styles.wheel, styles.wheelFront]}>
+                <View style={styles.brakeDisk} />
+                <View style={styles.brakeCaliper} />
+                <View style={styles.porscheRim}>
+                  {/* 5-spoke design */}
+                  <View style={styles.rimSpoke} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "72deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "144deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "216deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "288deg" }] }]} />
                 </View>
+                <View style={styles.porscheCenterCap} />
               </View>
               
-              {/* Legs */}
-              <View style={[styles.legFront, { left: 12 }]}>
+              <View style={[styles.wheel, styles.wheelBack]}>
+                <View style={styles.brakeDisk} />
+                <View style={styles.brakeCaliper} />
+                <View style={styles.porscheRim}>
+                  <View style={styles.rimSpoke} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "72deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "144deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "216deg" }] }]} />
+                  <View style={[styles.rimSpoke, { transform: [{ rotate: "288deg" }] }]} />
+                </View>
+                <View style={styles.porscheCenterCap} />
+              </View>
+            </View>
+          </Animated.View>
+
+          {/* FRONT LAYER - Porsche Front */}
+          <Animated.View style={[styles.carLayer, frontAnimatedStyle]}>
+            <View style={styles.porsche}>
+              {/* Front splitter */}
+              <View style={styles.frontSplitter}>
                 <LinearGradient
-                  colors={["#C6A052", "#B8960F"]}
+                  colors={["#0a0a0a", "#000000"]}
                   style={styles.gradient}
                 />
-                <View style={styles.kneeJoint} />
-                {/* Foot */}
-                <View style={styles.foot}>
-                  <LinearGradient
-                    colors={["#4a4a4a", "#2a2a2a"]}
-                    style={styles.gradient}
-                  />
-                </View>
               </View>
               
-              <View style={[styles.legFront, { right: 12 }]}>
+              {/* Front body */}
+              <View style={[styles.body, styles.bodyFront]}>
                 <LinearGradient
-                  colors={["#C6A052", "#B8960F"]}
+                  colors={["#FFB347", "#E89A3C", "#D4822C", "#E89A3C", "#FFB347"]}
+                  style={styles.gradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                />
+                
+                {/* Porsche LED headlights - 4-point design */}
+                <View style={[styles.porscheHeadlight, styles.headlightLeft]}>
+                  <View style={styles.ledDot} />
+                  <View style={[styles.ledDot, { top: 3, left: 3 }]} />
+                  <View style={[styles.ledDot, { top: 6 }]} />
+                  <View style={[styles.ledDot, { top: 9, left: 3 }]} />
+                </View>
+                <View style={[styles.porscheHeadlight, styles.headlightRight]}>
+                  <View style={styles.ledDot} />
+                  <View style={[styles.ledDot, { top: 3, right: 3 }]} />
+                  <View style={[styles.ledDot, { top: 6 }]} />
+                  <View style={[styles.ledDot, { top: 9, right: 3 }]} />
+                </View>
+                
+                {/* Front grille - minimal Porsche style */}
+                <View style={styles.frontGrille}>
+                  <View style={styles.grilleSlat} />
+                  <View style={[styles.grilleSlat, { top: 4 }]} />
+                  <View style={[styles.grilleSlat, { top: 8 }]} />
+                </View>
+                
+                {/* Hood vents */}
+                <View style={styles.hoodVents}>
+                  <View style={styles.hoodVent} />
+                  <View style={[styles.hoodVent, { left: 18 }]} />
+                </View>
+                
+                {/* Front air intakes */}
+                <View style={[styles.frontIntake, { left: 18 }]} />
+                <View style={[styles.frontIntake, { right: 18 }]} />
+              </View>
+              
+              {/* Windshield - very sloped */}
+              <View style={[styles.roof, styles.roofFront]}>
+                <LinearGradient
+                  colors={["#4a4a4a", "#3a3a3a", "#2a2a2a"]}
                   style={styles.gradient}
                 />
-                <View style={styles.kneeJoint} />
-                <View style={styles.foot}>
-                  <LinearGradient
-                    colors={["#4a4a4a", "#2a2a2a"]}
-                    style={styles.gradient}
-                  />
-                </View>
+                <View style={styles.windshieldGlare} />
+              </View>
+              
+              {/* Hood */}
+              <View style={styles.hood}>
+                <LinearGradient
+                  colors={["#E89A3C", "#D4822C"]}
+                  style={styles.gradient}
+                />
+                {/* Porsche crest */}
+                <View style={styles.porscheCrest} />
               </View>
             </View>
           </Animated.View>
           
         </Animated.View>
 
-        {/* Shadow */}
-        <View style={[styles.shadow, { width: size * 0.4, top: size * 0.8 }]} />
+        {/* Ground shadow */}
+        <View style={[styles.shadow, { width: size * 0.52, top: size * 0.68 }]} />
       </View>
     </GestureDetector>
   );
@@ -370,371 +339,430 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "relative",
   },
-  glow: {
-    position: "absolute",
-    borderRadius: 1000,
-    backgroundColor: "#E89A3C",
-    opacity: 0.12,
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 30,
-  },
-  robotContainer: {
+  carContainer: {
     width: "100%",
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  robotLayer: {
+  carLayer: {
     position: "absolute",
     width: "100%",
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  robot: {
-    width: 140,
-    height: 180,
+  porsche: {
+    width: 200,
+    height: 105,
     position: "relative",
-    alignItems: "center",
   },
   
-  // HEAD
-  head: {
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    overflow: "hidden",
+  // BODY - Low sports car profile
+  body: {
+    position: "absolute",
+    bottom: 14,
+    width: 200,
+    height: 44,
+    borderRadius: 8,
+    overflow: "visible",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+  },
+  bodyFront: {
+    borderWidth: 3,
+    borderColor: "rgba(255, 255, 255, 0.45)",
+    elevation: 14,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+  },
+  bodySide: {
     borderWidth: 2,
     borderColor: "rgba(255, 255, 255, 0.3)",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    position: "relative",
-  },
-  headFront: {
     elevation: 10,
-    borderColor: "rgba(255, 255, 255, 0.4)",
-    borderWidth: 2.5,
   },
-  headSide: {
-    borderColor: "rgba(255, 255, 255, 0.25)",
+  bodyBack: {
+    borderWidth: 1.5,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    elevation: 6,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
-  headBack: {
-    borderColor: "rgba(255, 255, 255, 0.15)",
-  },
-  visor: {
+  
+  // ROOF - Low coupe
+  roof: {
     position: "absolute",
-    top: 15,
-    left: 8,
-    width: 34,
-    height: 16,
+    top: 20,
+    left: 65,
+    width: 70,
+    height: 26,
     borderRadius: 8,
     overflow: "hidden",
-    shadowColor: "#0066cc",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
     shadowRadius: 8,
-    borderWidth: 1,
-    borderColor: "rgba(0, 102, 204, 0.6)",
   },
-  eyeLight: {
-    position: "absolute",
-    top: 4,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#66d9ff",
-    shadowColor: "#66d9ff",
-    shadowOpacity: 1,
-    shadowRadius: 4,
+  roofFront: {
+    borderWidth: 2,
+    borderColor: "rgba(140, 140, 140, 0.6)",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
-  antenna: {
-    position: "absolute",
-    top: -8,
-    left: 20,
-    width: 3,
-    height: 10,
-    backgroundColor: "#666666",
-    borderRadius: 1.5,
+  roofSide: {
+    borderWidth: 1.5,
+    borderColor: "rgba(120, 120, 120, 0.4)",
   },
-  antennaLight: {
-    position: "absolute",
-    top: -4,
-    left: -2,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: "#ff3333",
-    shadowColor: "#ff3333",
-    shadowOpacity: 0.8,
-    shadowRadius: 6,
-  },
-  facePanel: {
-    position: "absolute",
-    bottom: 8,
-    left: 12,
-    width: 26,
-    height: 4,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    borderRadius: 2,
-  },
-  sensor: {
-    position: "absolute",
-    right: -3,
-    top: 18,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#4da6ff",
-    borderWidth: 1,
-    borderColor: "#0066cc",
-  },
-  backPanel: {
-    position: "absolute",
-    top: 12,
-    left: 12,
-    width: 26,
-    height: 26,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    borderRadius: 4,
+  roofBack: {
+    backgroundColor: "#1a1a1a",
     borderWidth: 1,
     borderColor: "rgba(100, 100, 100, 0.3)",
   },
   
-  // NECK
-  neck: {
+  // WINDOWS
+  sideWindow: {
+    position: "absolute",
+    top: -14,
+    left: 70,
+    width: 58,
+    height: 14,
+    backgroundColor: "rgba(70, 90, 110, 0.6)",
+    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: "rgba(100, 140, 180, 0.4)",
+    transform: [{ skewX: "-8deg" }],
+  },
+  windshieldGlare: {
+    position: "absolute",
+    top: 4,
+    left: 8,
+    width: 28,
+    height: 12,
+    backgroundColor: "rgba(200, 220, 255, 0.4)",
+    borderRadius: 6,
+    transform: [{ skewX: "-18deg" }],
+  },
+  
+  // DOOR & DETAILS
+  doorHandle: {
+    position: "absolute",
+    top: 16,
+    left: 90,
+    width: 16,
+    height: 3,
+    backgroundColor: "rgba(150, 150, 150, 0.7)",
+    borderRadius: 1.5,
+  },
+  characterLine: {
+    position: "absolute",
+    top: 14,
+    left: 30,
+    width: 140,
+    height: 2,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    shadowColor: "#FFFFFF",
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+  },
+  sideSkirt: {
+    position: "absolute",
+    bottom: -2,
+    left: 30,
+    width: 140,
+    height: 6,
+    backgroundColor: "#0a0a0a",
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: "rgba(80, 80, 80, 0.5)",
+  },
+  
+  // PORSCHE HEADLIGHTS - 4-point LED
+  porscheHeadlight: {
+    position: "absolute",
+    top: 14,
     width: 20,
+    height: 16,
+    backgroundColor: "rgba(255, 255, 250, 0.98)",
+    borderRadius: 4,
+    shadowColor: "#FFFACD",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.7)",
+  },
+  headlightLeft: {
+    left: 14,
+  },
+  headlightRight: {
+    right: 14,
+  },
+  ledDot: {
+    position: "absolute",
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#FFFFFF",
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    top: 2,
+    left: 2,
+  },
+  
+  // TAIL LIGHT STRIP
+  tailLightStrip: {
+    position: "absolute",
+    top: 16,
+    left: 30,
+    width: 140,
+    height: 8,
+    borderRadius: 4,
+    overflow: "hidden",
+    shadowColor: "#ff0000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9,
+    shadowRadius: 10,
+    borderWidth: 1.5,
+    borderColor: "rgba(200, 0, 0, 0.8)",
+  },
+  
+  // EXHAUSTS
+  exhaust: {
+    position: "absolute",
+    bottom: 4,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#1a1a1a",
+    borderWidth: 2.5,
+    borderColor: "#555555",
+  },
+  
+  // AIR INTAKES
+  sideAirIntake: {
+    position: "absolute",
+    bottom: 10,
+    left: 30,
+    width: 24,
+    height: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: "rgba(150, 150, 150, 0.3)",
+  },
+  intakeBar: {
+    position: "absolute",
+    width: 20,
+    height: 1.5,
+    backgroundColor: "rgba(100, 100, 100, 0.5)",
+    left: 2,
+    top: 2,
+  },
+  frontIntake: {
+    position: "absolute",
+    bottom: 6,
+    width: 22,
+    height: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: "rgba(130, 130, 130, 0.4)",
+  },
+  frontGrille: {
+    position: "absolute",
+    bottom: 10,
+    left: 82,
+    width: 36,
+    height: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    borderRadius: 3,
+    borderWidth: 1.5,
+    borderColor: "rgba(100, 100, 100, 0.5)",
+  },
+  grilleSlat: {
+    position: "absolute",
+    width: 32,
+    height: 1,
+    backgroundColor: "rgba(120, 120, 120, 0.6)",
+    left: 2,
+    top: 2,
+  },
+  
+  // HOOD
+  hood: {
+    position: "absolute",
+    top: 10,
+    left: 70,
+    width: 60,
     height: 12,
     borderRadius: 4,
     overflow: "hidden",
-    marginVertical: 4,
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: "rgba(255, 255, 255, 0.25)",
+  },
+  hoodVents: {
+    position: "absolute",
+    top: 6,
+    left: 82,
+    width: 36,
+    height: 10,
+  },
+  hoodVent: {
+    position: "absolute",
+    width: 12,
+    height: 8,
+    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: "rgba(200, 200, 200, 0.25)",
+    left: 6,
   },
   
-  // BODY
-  body: {
-    width: 70,
-    height: 75,
-    borderRadius: 10,
+  // PORSCHE BADGES
+  porscheCrest: {
+    position: "absolute",
+    top: 2,
+    left: 24,
+    width: 12,
+    height: 12,
+    backgroundColor: "#FFD700",
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: "#000000",
+  },
+  porscheBadge: {
+    position: "absolute",
+    top: 28,
+    left: 94,
+    width: 12,
+    height: 4,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: "#000000",
+  },
+  
+  // REAR WING/SPOILER
+  rearWing: {
+    position: "absolute",
+    top: 14,
+    left: 60,
+    width: 80,
+    height: 10,
+    borderRadius: 2,
     overflow: "hidden",
     borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.25)",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    position: "relative",
-  },
-  bodyFront: {
+    borderColor: "rgba(130, 130, 130, 0.5)",
     elevation: 8,
-    borderColor: "rgba(255, 255, 255, 0.35)",
-    borderWidth: 2.5,
   },
-  bodySide: {
-    borderColor: "rgba(255, 255, 255, 0.2)",
-  },
-  bodyBack: {
-    borderColor: "rgba(255, 255, 255, 0.15)",
-  },
-  chestPanel: {
+  wingSupport: {
     position: "absolute",
-    top: 12,
-    left: 15,
-    width: 40,
-    height: 50,
+    bottom: -6,
+    left: 10,
+    width: 4,
+    height: 8,
+    backgroundColor: "#1a1a1a",
+    borderWidth: 1,
+    borderColor: "#444444",
+  },
+  rearWingSide: {
+    position: "absolute",
+    top: 16,
+    left: 62,
+    width: 76,
+    height: 6,
+    borderRadius: 1,
+    overflow: "hidden",
+    backgroundColor: "#1a1a1a",
+    borderWidth: 1,
+    borderColor: "rgba(120, 120, 120, 0.4)",
+    elevation: 6,
+  },
+  frontSplitter: {
+    position: "absolute",
+    bottom: 10,
+    left: 35,
+    width: 130,
+    height: 6,
+    borderRadius: 2,
+    overflow: "hidden",
+    borderWidth: 1.5,
+    borderColor: "rgba(130, 130, 130, 0.5)",
+    elevation: 6,
+  },
+  
+  // WHEELS - Porsche 5-spoke
+  wheel: {
+    position: "absolute",
+    bottom: 4,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#0a0a0a",
+    borderWidth: 2,
+    borderColor: "#1a1a1a",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.7,
+    shadowRadius: 6,
     alignItems: "center",
     justifyContent: "center",
   },
-  coreLightOuter: {
+  wheelFront: {
+    left: 32,
+  },
+  wheelBack: {
+    right: 32,
+  },
+  brakeDisk: {
+    position: "absolute",
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "rgba(0, 102, 204, 0.2)",
+    backgroundColor: "#2a2a2a",
+    borderWidth: 2,
+    borderColor: "#444444",
+  },
+  brakeCaliper: {
+    position: "absolute",
+    width: 7,
+    height: 11,
+    backgroundColor: "#E89A3C",
+    borderRadius: 2,
+    left: 5,
+    top: 10,
+    zIndex: 10,
+    borderWidth: 1,
+    borderColor: "#C67B2E",
+  },
+  porscheRim: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "#1a1a1a",
+    borderWidth: 2,
+    borderColor: "#777777",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "#0066cc",
   },
-  coreLight: {
-    width: 16,
+  rimSpoke: {
+    position: "absolute",
+    width: 2,
     height: 16,
-    borderRadius: 8,
-    backgroundColor: "#4da6ff",
-    shadowColor: "#4da6ff",
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
+    backgroundColor: "#999999",
   },
-  chestLine: {
+  porscheCenterCap: {
     position: "absolute",
-    width: 34,
-    height: 1.5,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    top: 35,
-  },
-  shoulder: {
-    position: "absolute",
-    top: 5,
-    width: 22,
-    height: 18,
-    borderRadius: 6,
-    overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: "rgba(150, 100, 50, 0.4)",
-  },
-  sidePanel: {
-    position: "absolute",
-    left: 8,
-    top: 15,
-    width: 30,
-    height: 45,
-  },
-  panelLine: {
-    position: "absolute",
-    width: 28,
-    height: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
-    top: 4,
-  },
-  armJoint: {
-    position: "absolute",
-    left: -4,
-    top: 12,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#666666",
-    borderWidth: 2,
-    borderColor: "#888888",
-  },
-  
-  // ARMS
-  arm: {
-    position: "absolute",
-    left: -18,
-    top: 75,
-    width: 14,
-    height: 42,
-    borderRadius: 7,
-    overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: "rgba(150, 100, 50, 0.3)",
-  },
-  armSegment: {
-    position: "absolute",
-    top: 18,
-    left: 2,
-    width: 10,
-    height: 3,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    borderRadius: 1.5,
-  },
-  armFront: {
-    position: "absolute",
-    top: 75,
-    width: 16,
-    height: 48,
-    borderRadius: 8,
-    overflow: "hidden",
-    borderWidth: 2,
-    borderColor: "rgba(180, 110, 40, 0.4)",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  armBand: {
-    position: "absolute",
-    top: 22,
-    width: "100%",
-    height: 6,
-    backgroundColor: "rgba(0, 0, 0, 0.35)",
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "rgba(100, 100, 100, 0.3)",
-  },
-  hand: {
-    position: "absolute",
-    bottom: -14,
-    left: 2,
-    width: 12,
-    height: 16,
-    borderRadius: 4,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(100, 80, 50, 0.4)",
-  },
-  finger: {
-    position: "absolute",
-    bottom: -3,
-    left: 3,
-    width: 6,
-    height: 6,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    borderRadius: 1,
-  },
-  
-  // LEGS
-  leg: {
-    position: "absolute",
-    left: 15,
-    top: 140,
-    width: 16,
-    height: 35,
-    borderRadius: 8,
-    overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: "rgba(180, 150, 30, 0.3)",
-  },
-  legJoint: {
-    position: "absolute",
-    top: 16,
-    left: 2,
-    width: 12,
+    width: 8,
     height: 8,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
     borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "rgba(100, 100, 100, 0.2)",
-  },
-  legFront: {
-    position: "absolute",
-    top: 135,
-    width: 18,
-    height: 38,
-    borderRadius: 9,
-    overflow: "hidden",
-    borderWidth: 2,
-    borderColor: "rgba(200, 160, 80, 0.4)",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  kneeJoint: {
-    position: "absolute",
-    top: 18,
-    left: 3,
-    width: 12,
-    height: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.35)",
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "rgba(120, 120, 120, 0.3)",
-  },
-  foot: {
-    position: "absolute",
-    bottom: -8,
-    left: -2,
-    width: 22,
-    height: 12,
-    borderRadius: 6,
-    overflow: "hidden",
+    backgroundColor: "#FFD700",
     borderWidth: 1.5,
-    borderColor: "rgba(80, 80, 80, 0.4)",
+    borderColor: "#000000",
   },
   
   gradient: {
@@ -743,14 +771,14 @@ const styles = StyleSheet.create({
   
   shadow: {
     position: "absolute",
-    height: 12,
+    height: 14,
     backgroundColor: "#000000",
-    opacity: 0.4,
+    opacity: 0.5,
     borderRadius: 100,
-    transform: [{ scaleY: 0.3 }],
+    transform: [{ scaleY: 0.2 }],
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
   },
 });
