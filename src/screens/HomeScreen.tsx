@@ -47,7 +47,7 @@ export default function HomeScreen() {
           {/* Hero Section with Car */}
           <Animated.View style={[styles.heroSection, animatedStyle]}>
             <View style={styles.cubeContainer}>
-              <RotatingCar size={240} />
+              <RotatingCar size={280} />
             </View>
           </Animated.View>
 
