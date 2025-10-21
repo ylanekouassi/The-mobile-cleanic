@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,61 +12,171 @@ interface Package {
   description: string;
   features: string[];
   popular?: boolean;
+  category: "interior" | "exterior" | "in-n-out";
 }
 
 const PACKAGES: Package[] = [
+  // INTERIOR PACKAGES
   {
     id: "1",
-    name: "Express Shine",
-    price: "$89",
+    name: "Interior Basic",
+    price: "$79",
     duration: "1-2 hours",
-    description: "Perfect for a quick refresh",
+    description: "Essential interior cleaning",
+    category: "interior",
     features: [
-      "Exterior hand wash",
-      "Wheel cleaning",
-      "Tire shine",
-      "Windows cleaned",
-      "Quick interior vacuum",
+      "Complete vacuum",
+      "Dashboard & console cleaning",
+      "Door panel cleaning",
+      "Windows cleaned inside",
+      "Floor mat cleaning",
     ],
   },
   {
     id: "2",
-    name: "Premium Detail",
-    price: "$199",
-    duration: "3-4 hours",
-    description: "Our most popular choice",
+    name: "Interior Premium",
+    price: "$149",
+    duration: "2-3 hours",
+    description: "Deep interior detailing",
     popular: true,
+    category: "interior",
     features: [
-      "Everything in Express Shine",
-      "Clay bar treatment",
-      "Machine polish",
-      "Premium wax application",
-      "Deep interior cleaning",
+      "Everything in Interior Basic",
+      "Steam cleaning seats",
       "Leather conditioning",
-      "Engine bay cleaning",
+      "Carpet shampooing",
+      "Odor elimination",
+      "Pet hair removal",
     ],
   },
   {
     id: "3",
-    name: "Ultimate Protection",
-    price: "$349",
-    duration: "5-6 hours",
-    description: "Complete transformation",
+    name: "Interior Ultimate",
+    price: "$229",
+    duration: "3-4 hours",
+    description: "Complete interior restoration",
+    category: "interior",
     features: [
-      "Everything in Premium Detail",
-      "Ceramic coating application",
+      "Everything in Interior Premium",
+      "Headliner cleaning",
+      "Trunk detailing",
+      "UV protection treatment",
+      "Fabric protection coating",
+      "Air vent deep cleaning",
+    ],
+  },
+
+  // EXTERIOR PACKAGES
+  {
+    id: "4",
+    name: "Exterior Wash",
+    price: "$69",
+    duration: "1 hour",
+    description: "Quick exterior refresh",
+    category: "exterior",
+    features: [
+      "Hand wash & dry",
+      "Wheel cleaning",
+      "Tire shine",
+      "Windows cleaned outside",
+      "Door jambs wiped",
+    ],
+  },
+  {
+    id: "5",
+    name: "Exterior Detail",
+    price: "$159",
+    duration: "2-3 hours",
+    description: "Professional exterior care",
+    popular: true,
+    category: "exterior",
+    features: [
+      "Everything in Exterior Wash",
+      "Clay bar treatment",
+      "Machine polish",
+      "Premium wax application",
+      "Trim restoration",
+      "Headlight polish",
+    ],
+  },
+  {
+    id: "6",
+    name: "Exterior Protection",
+    price: "$299",
+    duration: "4-5 hours",
+    description: "Maximum paint protection",
+    category: "exterior",
+    features: [
+      "Everything in Exterior Detail",
       "Paint correction",
-      "Headlight restoration",
-      "Pet hair removal",
-      "Odor elimination",
-      "Fabric protection",
+      "Ceramic coating application",
+      "Wheel coating",
+      "Glass coating",
       "6-month warranty",
+    ],
+  },
+
+  // IN-N-OUT PACKAGES (Complete)
+  {
+    id: "7",
+    name: "Express Complete",
+    price: "$129",
+    duration: "2-3 hours",
+    description: "Inside & outside essentials",
+    category: "in-n-out",
+    features: [
+      "Exterior hand wash & dry",
+      "Interior vacuum & wipe down",
+      "Wheel cleaning & tire shine",
+      "All windows cleaned",
+      "Dashboard cleaning",
+    ],
+  },
+  {
+    id: "8",
+    name: "Premium Complete",
+    price: "$249",
+    duration: "4-5 hours",
+    description: "Full interior & exterior detail",
+    popular: true,
+    category: "in-n-out",
+    features: [
+      "Complete exterior detail",
+      "Complete interior detail",
+      "Clay bar treatment",
+      "Machine polish & wax",
+      "Steam cleaning seats",
+      "Leather conditioning",
+      "Carpet shampooing",
+    ],
+  },
+  {
+    id: "9",
+    name: "Ultimate Complete",
+    price: "$449",
+    duration: "6-8 hours",
+    description: "Total transformation",
+    category: "in-n-out",
+    features: [
+      "Everything in Premium Complete",
+      "Paint correction",
+      "Ceramic coating",
+      "Headlight restoration",
+      "Engine bay detailing",
+      "Odor elimination",
+      "Fabric & paint protection",
+      "12-month warranty",
     ],
   },
 ];
 
+type CategoryType = "interior" | "exterior" | "in-n-out";
+
 export default function PackagesScreen() {
   const insets = useSafeAreaInsets();
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("in-n-out");
+
+  const filteredPackages = PACKAGES.filter(pkg => pkg.category === selectedCategory);
 
   return (
     <View style={styles.container}>
@@ -89,9 +199,78 @@ export default function PackagesScreen() {
             </Text>
           </View>
 
+          {/* Category Tabs */}
+          <View style={styles.categoryContainer}>
+            <Pressable
+              style={[
+                styles.categoryTab,
+                selectedCategory === "interior" && styles.categoryTabActive,
+              ]}
+              onPress={() => setSelectedCategory("interior")}
+            >
+              <Ionicons
+                name="home-outline"
+                size={20}
+                color={selectedCategory === "interior" ? "#000000" : "#E89A3C"}
+              />
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === "interior" && styles.categoryTextActive,
+                ]}
+              >
+                Interior
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.categoryTab,
+                selectedCategory === "exterior" && styles.categoryTabActive,
+              ]}
+              onPress={() => setSelectedCategory("exterior")}
+            >
+              <Ionicons
+                name="water-outline"
+                size={20}
+                color={selectedCategory === "exterior" ? "#000000" : "#E89A3C"}
+              />
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === "exterior" && styles.categoryTextActive,
+                ]}
+              >
+                Exterior
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.categoryTab,
+                selectedCategory === "in-n-out" && styles.categoryTabActive,
+              ]}
+              onPress={() => setSelectedCategory("in-n-out")}
+            >
+              <Ionicons
+                name="car-sport-outline"
+                size={20}
+                color={selectedCategory === "in-n-out" ? "#000000" : "#E89A3C"}
+              />
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === "in-n-out" && styles.categoryTextActive,
+                ]}
+              >
+                In-N-Out
+              </Text>
+            </Pressable>
+          </View>
+
           {/* Packages List */}
           <View style={styles.packagesContainer}>
-            {PACKAGES.map((pkg) => (
+            {filteredPackages.map((pkg) => (
               <PackageCard key={pkg.id} package={pkg} />
             ))}
           </View>
@@ -210,6 +389,37 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#888888",
     textAlign: "center",
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    gap: 10,
+    marginBottom: 20,
+  },
+  categoryTab: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: "#0f0f0f",
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  categoryTabActive: {
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+  },
+  categoryText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#E89A3C",
+  },
+  categoryTextActive: {
+    color: "#000000",
   },
   packagesContainer: {
     paddingHorizontal: 20,
