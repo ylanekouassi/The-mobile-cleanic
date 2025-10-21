@@ -25,7 +25,7 @@ export default function AppNavigator() {
           elevation: 0,
           shadowOpacity: 0,
         },
-        headerTintColor: "#C0C0C0",
+        headerTintColor: "#E89A3C",
         headerTitleStyle: {
           fontWeight: "700",
           fontSize: 20,
@@ -35,7 +35,7 @@ export default function AppNavigator() {
           width: 280,
         },
         drawerActiveBackgroundColor: "#1a1a1a",
-        drawerActiveTintColor: "#C0C0C0",
+        drawerActiveTintColor: "#E89A3C",
         drawerInactiveTintColor: "#888888",
         drawerLabelStyle: {
           fontSize: 16,

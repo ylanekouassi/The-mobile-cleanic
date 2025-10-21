@@ -94,7 +94,7 @@ function Feature({ icon, title, description }: FeatureProps) {
   return (
     <View style={styles.featureCard}>
       <View style={styles.featureIconContainer}>
-        <Ionicons name={icon} size={32} color="#C0C0C0" />
+        <Ionicons name={icon} size={32} color="#E89A3C" />
       </View>
       <Text style={styles.featureTitle}>{title}</Text>
       <Text style={styles.featureDescription}>{description}</Text>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: "#1a1a1a",
-    shadowColor: "#C0C0C0",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#C0C0C0",
+    borderColor: "#E89A3C",
   },
   featureTitle: {
     fontSize: 18,
@@ -170,9 +170,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 30,
     borderWidth: 2,
-    borderColor: "#C0C0C0",
+    borderColor: "#E89A3C",
     alignItems: "center",
-    shadowColor: "#C0C0C0",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -194,13 +194,13 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     flexDirection: "row",
-    backgroundColor: "#C0C0C0",
+    backgroundColor: "#E89A3C",
     paddingVertical: 14,
     paddingHorizontal: 28,
     borderRadius: 12,
     alignItems: "center",
     gap: 8,
-    shadowColor: "#C0C0C0",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,

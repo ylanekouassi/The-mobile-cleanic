@@ -62,7 +62,7 @@ export default function ContactScreen() {
           {/* Header Section */}
           <View style={styles.header}>
             <View style={styles.iconContainer}>
-              <Ionicons name="car-sport" size={56} color="#C0C0C0" />
+              <Ionicons name="car-sport" size={56} color="#E89A3C" />
             </View>
             <Text style={styles.headerTitle}>Get in Touch</Text>
             <Text style={styles.headerSubtitle}>
@@ -95,16 +95,16 @@ export default function ContactScreen() {
             <Text style={styles.sectionTitle}>Follow Us</Text>
             <View style={styles.socialButtons}>
               <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-instagram" size={28} color="#C0C0C0" />
+                <Ionicons name="logo-instagram" size={28} color="#E89A3C" />
               </Pressable>
               <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-facebook" size={28} color="#C0C0C0" />
+                <Ionicons name="logo-facebook" size={28} color="#E89A3C" />
               </Pressable>
               <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-twitter" size={28} color="#C0C0C0" />
+                <Ionicons name="logo-twitter" size={28} color="#E89A3C" />
               </Pressable>
               <Pressable style={styles.socialButton}>
-                <Ionicons name="logo-linkedin" size={28} color="#C0C0C0" />
+                <Ionicons name="logo-linkedin" size={28} color="#E89A3C" />
               </Pressable>
             </View>
           </View>
@@ -112,7 +112,7 @@ export default function ContactScreen() {
           {/* Call to Action */}
           <View style={styles.ctaContainer}>
             <View style={styles.ctaBox}>
-              <Ionicons name="calendar" size={48} color="#C0C0C0" />
+              <Ionicons name="calendar" size={48} color="#E89A3C" />
               <Text style={styles.ctaTitle}>Ready to Book?</Text>
               <Text style={styles.ctaText}>
                 Schedule your appointment today and experience the difference
@@ -141,7 +141,7 @@ function ContactMethodCard({ method }: ContactMethodCardProps) {
       disabled={method.id === "4"}
     >
       <View style={styles.contactIconContainer}>
-        <Ionicons name={method.icon} size={28} color="#C0C0C0" />
+        <Ionicons name={method.icon} size={28} color="#E89A3C" />
       </View>
       <View style={styles.contactTextContainer}>
         <Text style={styles.contactTitle}>{method.title}</Text>
@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: "#C0C0C0",
-    shadowColor: "#C0C0C0",
+    borderColor: "#E89A3C",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 15,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#C0C0C0",
+    borderColor: "#E89A3C",
   },
   contactTextContainer: {
     flex: 1,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#C0C0C0",
+    borderColor: "#E89A3C",
   },
   ctaContainer: {
     paddingHorizontal: 20,
@@ -316,9 +316,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 30,
     borderWidth: 2,
-    borderColor: "#C0C0C0",
+    borderColor: "#E89A3C",
     alignItems: "center",
-    shadowColor: "#C0C0C0",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -340,13 +340,13 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     flexDirection: "row",
-    backgroundColor: "#C0C0C0",
+    backgroundColor: "#E89A3C",
     paddingVertical: 14,
     paddingHorizontal: 28,
     borderRadius: 12,
     alignItems: "center",
     gap: 8,
-    shadowColor: "#C0C0C0",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
