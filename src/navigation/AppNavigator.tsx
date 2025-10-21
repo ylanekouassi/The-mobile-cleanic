@@ -42,7 +42,7 @@ export default function AppNavigator() {
         drawerLabelStyle: {
           fontSize: 16,
           fontWeight: "600",
-          marginLeft: -15,
+          marginLeft: 5,
         },
         drawerItemStyle: {
           borderRadius: 10,

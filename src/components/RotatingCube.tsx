@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
   withTiming,
-  withSpring,
+  withDecay,
   Easing,
   interpolate,
+  cancelAnimation,
 } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 
 interface RotatingCubeProps {
@@ -19,17 +21,11 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
   const rotation = useSharedValue(0);
   const scale = useSharedValue(1);
   const tilt = useSharedValue(0);
+  const savedRotation = useSharedValue(0);
+  const isAutoRotating = useSharedValue(true);
 
   useEffect(() => {
-    // Continuous rotation animation
-    rotation.value = withRepeat(
-      withTiming(360, {
-        duration: 6000,
-        easing: Easing.linear,
-      }),
-      -1,
-      false
-    );
+    startAutoRotation();
 
     // Subtle pulsing scale animation
     scale.value = withRepeat(
@@ -52,12 +48,46 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
     );
   }, []);
 
-  const handlePress = () => {
-    // Bounce effect on press
-    scale.value = withSpring(0.85, {}, () => {
-      scale.value = withSpring(1.08);
-    });
+  const startAutoRotation = () => {
+    rotation.value = withRepeat(
+      withTiming(rotation.value + 360, {
+        duration: 6000,
+        easing: Easing.linear,
+      }),
+      -1,
+      false
+    );
   };
+
+  // Pan gesture to control rotation with touch
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
+      // Stop auto rotation when user starts touching
+      if (isAutoRotating.value) {
+        cancelAnimation(rotation);
+        isAutoRotating.value = false;
+      }
+      savedRotation.value = rotation.value;
+    })
+    .onUpdate((event) => {
+      // Rotate based on horizontal drag
+      rotation.value = savedRotation.value + event.translationX * 0.5;
+    })
+    .onEnd((event) => {
+      // Add inertia with decay animation
+      rotation.value = withDecay({
+        velocity: event.velocityX * 0.5,
+        deceleration: 0.998,
+      });
+
+      // Resume auto rotation after 2 seconds of no interaction
+      setTimeout(() => {
+        if (!isAutoRotating.value) {
+          isAutoRotating.value = true;
+          startAutoRotation();
+        }
+      }, 2000);
+    });
 
   const cubeAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -71,8 +101,9 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
 
   // Create 6 faces with different opacity and positioning to simulate 3D
   const frontAnimatedStyle = useAnimatedStyle(() => {
+    const normalizedRotation = rotation.value % 360;
     const opacity = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [1, 0.6, 0.3, 0.6, 1]
     );
@@ -80,13 +111,14 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
   });
 
   const side1AnimatedStyle = useAnimatedStyle(() => {
+    const normalizedRotation = rotation.value % 360;
     const opacity = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [0.3, 1, 0.6, 0.3, 0.3]
     );
     const translateX = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [0, 15, 0, -15, 0]
     );
@@ -94,8 +126,9 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
   });
 
   const side2AnimatedStyle = useAnimatedStyle(() => {
+    const normalizedRotation = rotation.value % 360;
     const opacity = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [0.3, 0.6, 1, 0.6, 0.3]
     );
@@ -103,13 +136,14 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
   });
 
   const side3AnimatedStyle = useAnimatedStyle(() => {
+    const normalizedRotation = rotation.value % 360;
     const opacity = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [0.6, 0.3, 0.3, 1, 0.6]
     );
     const translateX = interpolate(
-      rotation.value,
+      normalizedRotation,
       [0, 90, 180, 270, 360],
       [0, -15, 0, 15, 0]
     );
@@ -119,7 +153,7 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
   const faceSize = size * 0.85;
 
   return (
-    <Pressable onPress={handlePress}>
+    <GestureDetector gesture={panGesture}>
       <View style={[styles.container, { width: size, height: size }]}>
         {/* Outer glow */}
         <View style={[styles.outerGlow, { width: size * 1.6, height: size * 1.6 }]} />
@@ -193,7 +227,7 @@ export default function RotatingCube({ size = 180 }: RotatingCubeProps) {
         {/* Bottom reflection */}
         <View style={[styles.reflection, { width: faceSize, top: size * 0.7 }]} />
       </View>
-    </Pressable>
+    </GestureDetector>
   );
 }
 

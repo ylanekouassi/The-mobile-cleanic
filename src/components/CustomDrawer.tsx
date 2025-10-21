@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -22,11 +22,11 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
         >
           {/* Header Section */}
           <View style={styles.header}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="car-sport" size={48} color="#D4AF37" />
-            </View>
-            <Text style={styles.title}>The Mobile</Text>
-            <Text style={styles.subtitle}>CLEANIC</Text>
+            <Image 
+              source={require("../../assets/logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
             <View style={styles.divider} />
           </View>
 
@@ -72,6 +72,11 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingHorizontal: 20,
     alignItems: "center",
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
   },
   iconContainer: {
     width: 80,
