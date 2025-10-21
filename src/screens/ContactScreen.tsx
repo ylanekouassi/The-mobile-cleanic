@@ -20,8 +20,8 @@ export default function ContactScreen() {
       id: "1",
       icon: "call",
       title: "Call Us",
-      value: "+1 (555) 123-4567",
-      action: () => Linking.openURL("tel:+15551234567"),
+      value: "+1 (343) 988-0197",
+      action: () => Linking.openURL("tel:+13439880197"),
     },
     {
       id: "2",
@@ -34,8 +34,8 @@ export default function ContactScreen() {
       id: "3",
       icon: "chatbubbles",
       title: "Text Us",
-      value: "+1 (555) 123-4567",
-      action: () => Linking.openURL("sms:+15551234567"),
+      value: "+1 (343) 988-0197",
+      action: () => Linking.openURL("sms:+13439880197"),
     },
     {
       id: "4",
