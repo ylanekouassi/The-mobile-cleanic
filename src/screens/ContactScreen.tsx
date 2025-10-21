@@ -61,9 +61,6 @@ export default function ContactScreen() {
         >
           {/* Header Section */}
           <View style={styles.header}>
-            <View style={styles.iconContainer}>
-              <Ionicons name="car-sport" size={56} color="#E89A3C" />
-            </View>
             <Text style={styles.headerTitle}>Get in Touch</Text>
             <Text style={styles.headerSubtitle}>
               We would love to hear from you. Reach out to schedule your
