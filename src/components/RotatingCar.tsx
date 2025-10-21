@@ -122,12 +122,6 @@ export default function RotatingCar({ size = 240 }: RotatingCarProps) {
   return (
     <GestureDetector gesture={panGesture}>
       <View style={[styles.container, { width: size, height: size }]}>
-        {/* Outer glow */}
-        <View style={[styles.outerGlow, { width: size * 1.4, height: size * 1.4 }]} />
-        
-        {/* Middle glow */}
-        <View style={[styles.middleGlow, { width: size * 1.15, height: size * 1.15 }]} />
-
         <Animated.View style={[styles.carContainer, carAnimatedStyle]}>
           {/* Back layer - darker */}
           <Animated.View style={[styles.carLayer, backAnimatedStyle]}>
@@ -210,22 +204,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-  },
-  outerGlow: {
-    position: "absolute",
-    borderRadius: 1000,
-    backgroundColor: "#E89A3C",
-    opacity: 0.08,
-  },
-  middleGlow: {
-    position: "absolute",
-    borderRadius: 1000,
-    backgroundColor: "#E89A3C",
-    opacity: 0.15,
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 25,
   },
   carContainer: {
     width: "100%",
