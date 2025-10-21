@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -22,11 +22,6 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
         >
           {/* Header Section */}
           <View style={styles.header}>
-            <Image 
-              source={require("../../assets/logo.png")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
             <View style={styles.divider} />
           </View>
 
@@ -41,13 +36,13 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
           <View style={styles.footerDivider} />
           <View style={styles.socialContainer}>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-instagram" size={24} color="#888888" />
+              <Ionicons name="logo-instagram" size={24} color="#E89A3C" />
             </Pressable>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-facebook" size={24} color="#888888" />
+              <Ionicons name="logo-facebook" size={24} color="#E89A3C" />
             </Pressable>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-twitter" size={24} color="#888888" />
+              <Ionicons name="logo-twitter" size={24} color="#E89A3C" />
             </Pressable>
           </View>
           <Text style={styles.footerText}>Premium Car Detailing</Text>
@@ -68,8 +63,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 30,
+    paddingTop: 20,
+    paddingBottom: 20,
     paddingHorizontal: 20,
     alignItems: "center",
   },
@@ -87,8 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 15,
     borderWidth: 2,
-    borderColor: "#D4AF37",
-    shadowColor: "#D4AF37",
+    borderColor: "#E89A3C",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
@@ -109,7 +104,7 @@ const styles = StyleSheet.create({
   divider: {
     width: 60,
     height: 2,
-    backgroundColor: "#D4AF37",
+    backgroundColor: "#E89A3C",
     marginTop: 15,
     borderRadius: 1,
   },

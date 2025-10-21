@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import RotatingCube from "../components/RotatingCube";
+import RotatingCar from "../components/RotatingCar";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
@@ -44,19 +44,28 @@ export default function HomeScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {/* Hero Section with Cube */}
+          {/* Hero Section with Logo and Car */}
           <Animated.View style={[styles.heroSection, animatedStyle]}>
+            {/* Logo at the top */}
+            <View style={styles.logoContainer}>
+              <Image 
+                source={require("../../assets/logo.png")}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+            </View>
+
             <View style={styles.taglineContainer}>
-              <Ionicons name="diamond" size={20} color="#D4AF37" />
+              <Ionicons name="diamond" size={20} color="#E89A3C" />
               <Text style={styles.tagline}>PREMIUM CAR DETAILING</Text>
-              <Ionicons name="diamond" size={20} color="#D4AF37" />
+              <Ionicons name="diamond" size={20} color="#E89A3C" />
             </View>
 
             <Text style={styles.title}>The Mobile</Text>
             <Text style={styles.subtitle}>CLEANIC</Text>
 
             <View style={styles.cubeContainer}>
-              <RotatingCube size={200} />
+              <RotatingCar size={220} />
             </View>
 
             <Text style={styles.slogan}>
@@ -121,7 +130,7 @@ function Feature({ icon, title, description }: FeatureProps) {
   return (
     <View style={styles.featureCard}>
       <View style={styles.featureIconContainer}>
-        <Ionicons name={icon} size={32} color="#D4AF37" />
+        <Ionicons name={icon} size={32} color="#E89A3C" />
       </View>
       <Text style={styles.featureTitle}>{title}</Text>
       <Text style={styles.featureDescription}>{description}</Text>
@@ -146,6 +155,22 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 40,
   },
+  logoContainer: {
+    marginBottom: 20,
+    borderRadius: 100,
+    overflow: "hidden",
+    borderWidth: 3,
+    borderColor: "#E89A3C",
+    backgroundColor: "#000000",
+    shadowColor: "#E89A3C",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 15,
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
   taglineContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: 11,
-    color: "#D4AF37",
+    color: "#E89A3C",
     letterSpacing: 3,
     fontWeight: "600",
   },
@@ -167,7 +192,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 48,
     fontWeight: "800",
-    color: "#D4AF37",
+    color: "#E89A3C",
     letterSpacing: 6,
     marginBottom: 30,
   },
@@ -200,7 +225,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: "#1a1a1a",
-    shadowColor: "#D4AF37",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -214,7 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
   },
   featureTitle: {
     fontSize: 18,
@@ -237,9 +262,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 30,
     borderWidth: 2,
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
     alignItems: "center",
-    shadowColor: "#D4AF37",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -261,13 +286,13 @@ const styles = StyleSheet.create({
   },
   ctaButton: {
     flexDirection: "row",
-    backgroundColor: "#D4AF37",
+    backgroundColor: "#E89A3C",
     paddingVertical: 14,
     paddingHorizontal: 28,
     borderRadius: 12,
     alignItems: "center",
     gap: 8,
-    shadowColor: "#D4AF37",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,

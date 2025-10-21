@@ -99,19 +99,19 @@ export default function PackagesScreen() {
           {/* Additional Info */}
           <View style={styles.infoSection}>
             <View style={styles.infoCard}>
-              <Ionicons name="calendar" size={24} color="#D4AF37" />
+              <Ionicons name="calendar" size={24} color="#E89A3C" />
               <Text style={styles.infoText}>
                 Flexible scheduling to fit your busy life
               </Text>
             </View>
             <View style={styles.infoCard}>
-              <Ionicons name="card" size={24} color="#D4AF37" />
+              <Ionicons name="card" size={24} color="#E89A3C" />
               <Text style={styles.infoText}>
                 Secure payment options available
               </Text>
             </View>
             <View style={styles.infoCard}>
-              <Ionicons name="ribbon" size={24} color="#D4AF37" />
+              <Ionicons name="ribbon" size={24} color="#E89A3C" />
               <Text style={styles.infoText}>
                 Satisfaction guaranteed or your money back
               </Text>
@@ -156,7 +156,7 @@ function PackageCard({ package: pkg }: PackageCardProps) {
       <View style={styles.featuresContainer}>
         {pkg.features.map((feature, index) => (
           <View key={index} style={styles.featureRow}>
-            <Ionicons name="checkmark-circle" size={20} color="#D4AF37" />
+            <Ionicons name="checkmark-circle" size={20} color="#E89A3C" />
             <Text style={styles.featureText}>{feature}</Text>
           </View>
         ))}
@@ -176,7 +176,7 @@ function PackageCard({ package: pkg }: PackageCardProps) {
         <Ionicons
           name="arrow-forward"
           size={18}
-          color={pkg.popular ? "#000000" : "#D4AF37"}
+          color={pkg.popular ? "#000000" : "#E89A3C"}
         />
       </Pressable>
     </View>
@@ -225,9 +225,9 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   popularCard: {
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
     borderWidth: 2,
-    shadowColor: "#D4AF37",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -12,
     left: 20,
-    backgroundColor: "#D4AF37",
+    backgroundColor: "#E89A3C",
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 20,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#D4AF37",
+    color: "#E89A3C",
   },
   durationContainer: {
     flexDirection: "row",
@@ -310,12 +310,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     borderWidth: 1,
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
   },
   popularButton: {
-    backgroundColor: "#D4AF37",
-    borderColor: "#D4AF37",
-    shadowColor: "#D4AF37",
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   bookButtonText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#D4AF37",
+    color: "#E89A3C",
     letterSpacing: 1.5,
   },
   popularButtonText: {

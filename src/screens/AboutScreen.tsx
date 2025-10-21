@@ -71,9 +71,9 @@ export default function AboutScreen() {
           {/* Header Section */}
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Ionicons name="diamond" size={20} color="#D4AF37" />
+              <Ionicons name="diamond" size={20} color="#E89A3C" />
               <Text style={styles.logoText}>THE MOBILE CLEANIC</Text>
-              <Ionicons name="diamond" size={20} color="#D4AF37" />
+              <Ionicons name="diamond" size={20} color="#E89A3C" />
             </View>
             <Text style={styles.tagline}>Excellence in Every Detail</Text>
           </View>
@@ -105,7 +105,7 @@ export default function AboutScreen() {
               {STATS.map((stat) => (
                 <View key={stat.id} style={styles.statCard}>
                   <View style={styles.statIconContainer}>
-                    <Ionicons name={stat.icon} size={28} color="#D4AF37" />
+                    <Ionicons name={stat.icon} size={28} color="#E89A3C" />
                   </View>
                   <Text style={styles.statValue}>{stat.value}</Text>
                   <Text style={styles.statLabel}>{stat.label}</Text>
@@ -121,7 +121,7 @@ export default function AboutScreen() {
               {VALUES.map((value) => (
                 <View key={value.id} style={styles.valueCard}>
                   <View style={styles.valueIconContainer}>
-                    <Ionicons name={value.icon} size={32} color="#D4AF37" />
+                    <Ionicons name={value.icon} size={32} color="#E89A3C" />
                   </View>
                   <View style={styles.valueTextContainer}>
                     <Text style={styles.valueTitle}>{value.title}</Text>
@@ -138,7 +138,7 @@ export default function AboutScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Our Team</Text>
             <View style={styles.teamCard}>
-              <Ionicons name="people-circle" size={64} color="#D4AF37" />
+              <Ionicons name="people-circle" size={64} color="#E89A3C" />
               <Text style={styles.teamTitle}>Certified Professionals</Text>
               <Text style={styles.teamText}>
                 Our team consists of highly trained and certified detailing
@@ -152,7 +152,7 @@ export default function AboutScreen() {
           {/* Promise Section */}
           <View style={styles.promiseSection}>
             <View style={styles.promiseCard}>
-              <Ionicons name="ribbon" size={48} color="#D4AF37" />
+              <Ionicons name="ribbon" size={48} color="#E89A3C" />
               <Text style={styles.promiseTitle}>Our Promise</Text>
               <Text style={styles.promiseText}>
                 We guarantee complete satisfaction with every service. If you are
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#D4AF37",
+    color: "#E89A3C",
     letterSpacing: 3,
   },
   tagline: {
@@ -253,12 +253,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
   },
   statValue: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#D4AF37",
+    color: "#E89A3C",
     marginBottom: 4,
   },
   statLabel: {
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#D4AF37",
+    borderColor: "#E89A3C",
   },
   valueTextContainer: {
     flex: 1,
@@ -333,8 +333,8 @@ const styles = StyleSheet.create({
     padding: 30,
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#D4AF37",
-    shadowColor: "#D4AF37",
+    borderColor: "#E89A3C",
+    shadowColor: "#E89A3C",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
