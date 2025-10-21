@@ -85,7 +85,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       <View style={[styles.container, { width: size, height: size }]}>
         <Animated.View style={[styles.carContainer, carAnimatedStyle]}>
           <Image
-            source={require("../../assets/nsx-orange.png")}
+            source={require("../../assets/g-wagon.png")}
             style={styles.carImage}
             resizeMode="contain"
           />
