@@ -89,6 +89,8 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
             style={styles.carImage}
             resizeMode="contain"
           />
+          {/* Orange tint overlay */}
+          <View style={styles.orangeOverlay} />
         </Animated.View>
       </View>
     </GestureDetector>
@@ -110,5 +112,14 @@ const styles = StyleSheet.create({
   carImage: {
     width: "100%",
     height: "100%",
+    tintColor: "#E89A3C",
+  },
+  orangeOverlay: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#E89A3C",
+    opacity: 0.3,
+    mixBlendMode: "multiply",
   },
 });
