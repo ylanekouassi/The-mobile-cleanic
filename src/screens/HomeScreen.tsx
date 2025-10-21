@@ -46,14 +46,8 @@ export default function HomeScreen() {
         >
           {/* Hero Section with Car */}
           <Animated.View style={[styles.heroSection, animatedStyle]}>
-            <View style={styles.taglineContainer}>
-              <Ionicons name="diamond" size={20} color="#E89A3C" />
-              <Text style={styles.tagline}>PREMIUM CAR DETAILING</Text>
-              <Ionicons name="diamond" size={20} color="#E89A3C" />
-            </View>
-
             <View style={styles.cubeContainer}>
-              <RotatingCar size={220} />
+              <RotatingCar size={240} />
             </View>
 
             <Text style={styles.slogan}>
@@ -142,18 +136,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 40,
-  },
-  taglineContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    marginBottom: 20,
-  },
-  tagline: {
-    fontSize: 11,
-    color: "#E89A3C",
-    letterSpacing: 3,
-    fontWeight: "600",
   },
   cubeContainer: {
     marginVertical: 30,
