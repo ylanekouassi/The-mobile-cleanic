@@ -49,14 +49,6 @@ export default function HomeScreen() {
             <View style={styles.cubeContainer}>
               <RotatingCar size={240} />
             </View>
-
-            <Text style={styles.slogan}>
-              Excellence in Every Detail
-            </Text>
-            <Text style={styles.description}>
-              Professional mobile car detailing service that comes to you.
-              Experience showroom quality results wherever you are.
-            </Text>
           </Animated.View>
 
           {/* Features Section */}
@@ -139,21 +131,6 @@ const styles = StyleSheet.create({
   },
   cubeContainer: {
     marginVertical: 30,
-  },
-  slogan: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#FFFFFF",
-    letterSpacing: 1,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 15,
-    color: "#999999",
-    textAlign: "center",
-    lineHeight: 22,
-    paddingHorizontal: 20,
   },
   featuresContainer: {
     paddingHorizontal: 20,
