@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
@@ -44,17 +44,8 @@ export default function HomeScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {/* Hero Section with Logo and Car */}
+          {/* Hero Section with Car */}
           <Animated.View style={[styles.heroSection, animatedStyle]}>
-            {/* Logo at the top */}
-            <View style={styles.logoContainer}>
-              <Image 
-                source={require("../../assets/logo.png")}
-                style={styles.logo}
-                resizeMode="contain"
-              />
-            </View>
-
             <View style={styles.taglineContainer}>
               <Ionicons name="diamond" size={20} color="#E89A3C" />
               <Text style={styles.tagline}>PREMIUM CAR DETAILING</Text>
@@ -154,22 +145,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 40,
-  },
-  logoContainer: {
-    marginBottom: 20,
-    borderRadius: 100,
-    overflow: "hidden",
-    borderWidth: 3,
-    borderColor: "#E89A3C",
-    backgroundColor: "#000000",
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 15,
-  },
-  logo: {
-    width: 120,
-    height: 120,
   },
   taglineContainer: {
     flexDirection: "row",
