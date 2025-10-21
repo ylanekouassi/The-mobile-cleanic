@@ -63,16 +63,6 @@ export default function HomeScreen() {
               title="Mobile Service"
               description="We come to your home or office"
             />
-            <Feature
-              icon="sparkles"
-              title="Premium Products"
-              description="Only the finest detailing products used"
-            />
-            <Feature
-              icon="time"
-              title="Fast & Efficient"
-              description="Quick turnaround without compromising quality"
-            />
           </View>
 
           {/* Call to Action */}
