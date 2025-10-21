@@ -42,7 +42,6 @@ const PACKAGES: Package[] = [
     category: "interior",
     features: [
       "Everything in Interior Basic",
-      "Steam cleaning seats",
       "Leather conditioning",
       "Carpet shampooing",
       "Odor elimination",
