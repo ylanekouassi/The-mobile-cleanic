@@ -27,8 +27,8 @@ export default function ContactScreen() {
       id: "2",
       icon: "mail",
       title: "Email Us",
-      value: "info@mobilecleanic.com",
-      action: () => Linking.openURL("mailto:info@mobilecleanic.com"),
+      value: "themobilecleanic@gmail.com",
+      action: () => Linking.openURL("mailto:themobilecleanic@gmail.com"),
     },
     {
       id: "3",
