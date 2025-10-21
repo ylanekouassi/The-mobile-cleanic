@@ -36,13 +36,13 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
           <View style={styles.footerDivider} />
           <View style={styles.socialContainer}>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-instagram" size={24} color="#E89A3C" />
+              <Ionicons name="logo-instagram" size={24} color="#C0C0C0" />
             </Pressable>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-facebook" size={24} color="#E89A3C" />
+              <Ionicons name="logo-facebook" size={24} color="#C0C0C0" />
             </Pressable>
             <Pressable style={styles.socialButton}>
-              <Ionicons name="logo-twitter" size={24} color="#E89A3C" />
+              <Ionicons name="logo-twitter" size={24} color="#C0C0C0" />
             </Pressable>
           </View>
           <Text style={styles.footerText}>Premium Car Detailing</Text>
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 15,
     borderWidth: 2,
-    borderColor: "#E89A3C",
-    shadowColor: "#E89A3C",
+    borderColor: "#C0C0C0",
+    shadowColor: "#C0C0C0",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   divider: {
     width: 60,
     height: 2,
-    backgroundColor: "#E89A3C",
+    backgroundColor: "#C0C0C0",
     marginTop: 15,
     borderRadius: 1,
   },
