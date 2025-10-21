@@ -85,7 +85,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       <View style={[styles.container, { width: size, height: size }]}>
         <Animated.View style={[styles.carContainer, carAnimatedStyle]}>
           <Image
-            source={{ uri: "https://www.motortrend.com/uploads/2023/07/2024-BMW-M3-CS-front-three-quarter-in-motion-2.jpg" }}
+            source={require("../../assets/bmw-m3.png")}
             style={styles.carImage}
             resizeMode="contain"
           />
