@@ -54,11 +54,13 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       savedRotation.value = rotation.value;
     })
     .onUpdate((event) => {
-      rotation.value = savedRotation.value + event.translationX * 0.5;
+      // Increased sensitivity from 0.5 to 1.0 for more responsive movement
+      rotation.value = savedRotation.value + event.translationX * 1.0;
     })
     .onEnd((event) => {
       rotation.value = withDecay({
-        velocity: event.velocityX * 0.5,
+        // Increased velocity multiplier from 0.5 to 1.0 for smoother flick
+        velocity: event.velocityX * 1.0,
         deceleration: 0.998,
       });
 
