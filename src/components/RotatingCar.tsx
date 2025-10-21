@@ -27,8 +27,8 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
     startAutoRotation();
 
     scale.value = withRepeat(
-      withTiming(1.015, {
-        duration: 2500,
+      withTiming(1.02, {
+        duration: 2000,
         easing: Easing.inOut(Easing.ease),
       }),
       -1,
@@ -39,7 +39,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   const startAutoRotation = () => {
     rotation.value = withRepeat(
       withTiming(rotation.value + 360, {
-        duration: 14000,
+        duration: 12000,
         easing: Easing.linear,
       }),
       -1,
@@ -77,7 +77,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       transform: [
         { perspective: 1200 },
         { rotateY: `${rotation.value}deg` },
-        { rotateX: "-8deg" },
+        { rotateX: "-5deg" },
         { scale: scale.value },
       ],
     };
@@ -90,15 +90,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       [0, 30, 60, 120, 180, 240, 300, 330, 360],
       [1, 0.95, 0.75, 0.5, 0.3, 0.5, 0.75, 0.95, 1]
     );
-    const translateZ = interpolate(
-      normalizedRotation,
-      [0, 90, 180, 270, 360],
-      [0, -14, 0, 14, 0]
-    );
-    return { 
-      opacity,
-      transform: [{ translateX: translateZ }],
-    };
+    return { opacity };
   });
 
   const sideAnimatedStyle = useAnimatedStyle(() => {
@@ -111,7 +103,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
     const translateX = interpolate(
       normalizedRotation,
       [0, 90, 180, 270, 360],
-      [0, 30, 0, -30, 0]
+      [0, 25, 0, -25, 0]
     );
     return { 
       opacity, 
@@ -134,192 +126,143 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       <View style={[styles.container, { width: size, height: size }]}>
         <Animated.View style={[styles.carContainer, carAnimatedStyle]}>
           
-          {/* BACK LAYER - Porsche Rear */}
+          {/* BACK LAYER - GTA/Minecraft Style Rear */}
           <Animated.View style={[styles.carLayer, backAnimatedStyle]}>
             <View style={styles.porsche}>
-              {/* Iconic Porsche rear spoiler */}
+              {/* Blocky rear spoiler */}
               <View style={styles.rearWing}>
                 <LinearGradient
-                  colors={["#1a1a1a", "#0a0a0a"]}
+                  colors={["#2a2a2a", "#1a1a1a"]}
                   style={styles.gradient}
                 />
-                <View style={styles.wingSupport} />
               </View>
               
-              {/* Rear body - curved */}
+              {/* Rear body - blocky */}
               <View style={[styles.body, styles.bodyBack]}>
-                <LinearGradient
-                  colors={["#3a3a3a", "#2a2a2a", "#1a1a1a"]}
-                  style={styles.gradient}
-                />
-                {/* Porsche tail light strip */}
-                <View style={styles.tailLightStrip}>
+                <View style={styles.backPanel}>
                   <LinearGradient
-                    colors={["#ff1a1a", "#cc0000", "#ff1a1a"]}
+                    colors={["#555555", "#3a3a3a"]}
                     style={styles.gradient}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
                   />
                 </View>
-                {/* Porsche badge */}
-                <View style={styles.porscheBadge} />
-                {/* Dual exhaust */}
-                <View style={[styles.exhaust, { left: 35 }]} />
-                <View style={[styles.exhaust, { right: 35 }]} />
+                {/* Chunky tail lights */}
+                <View style={[styles.tailLight, { left: 28 }]} />
+                <View style={[styles.tailLight, { right: 28 }]} />
+                {/* Square exhausts */}
+                <View style={[styles.exhaust, { left: 40 }]} />
+                <View style={[styles.exhaust, { right: 40 }]} />
               </View>
               
-              {/* Roof - coupe style */}
-              <View style={[styles.roof, styles.roofBack]} />
+              {/* Blocky roof */}
+              <View style={[styles.roof, styles.roofBack]}>
+                <LinearGradient
+                  colors={["#2a2a2a", "#1a1a1a"]}
+                  style={styles.gradient}
+                />
+              </View>
             </View>
           </Animated.View>
 
-          {/* SIDE LAYER - Porsche Profile */}
+          {/* SIDE LAYER - GTA/Minecraft Profile */}
           <Animated.View style={[styles.carLayer, sideAnimatedStyle]}>
             <View style={styles.porsche}>
-              {/* Rear wing side view */}
+              {/* Blocky wing side */}
               <View style={styles.rearWingSide}>
                 <LinearGradient
-                  colors={["#1a1a1a", "#0a0a0a"]}
+                  colors={["#2a2a2a", "#1a1a1a"]}
                   style={styles.gradient}
                 />
               </View>
               
-              {/* Side body - classic Porsche curve */}
+              {/* Side body - flat panels */}
               <View style={[styles.body, styles.bodySide]}>
                 <LinearGradient
-                  colors={["#E89A3C", "#D4822C", "#C67B2E", "#D4822C", "#E89A3C"]}
+                  colors={["#FF8C00", "#E89A3C", "#FF8C00"]}
                   style={styles.gradient}
                   start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  end={{ x: 0, y: 1 }}
                 />
                 
-                {/* Side window - coupe style */}
+                {/* Blocky window */}
                 <View style={styles.sideWindow} />
                 
-                {/* Door handle */}
-                <View style={styles.doorHandle} />
+                {/* Door line */}
+                <View style={styles.doorLine} />
                 
-                {/* Side air intake */}
-                <View style={styles.sideAirIntake}>
-                  <View style={styles.intakeBar} />
-                  <View style={[styles.intakeBar, { top: 4 }]} />
-                  <View style={[styles.intakeBar, { top: 8 }]} />
-                </View>
-                
-                {/* Character line */}
-                <View style={styles.characterLine} />
-                
-                {/* Side skirt */}
-                <View style={styles.sideSkirt} />
+                {/* Side decal stripe */}
+                <View style={styles.sideStripe} />
               </View>
               
-              {/* Coupe roof - low and sleek */}
+              {/* Blocky roof */}
               <View style={[styles.roof, styles.roofSide]}>
                 <LinearGradient
-                  colors={["#3a3a3a", "#2a2a2a", "#1a1a1a"]}
+                  colors={["#3a3a3a", "#2a2a2a"]}
                   style={styles.gradient}
                 />
               </View>
               
-              {/* Iconic Porsche wheels */}
+              {/* Chunky wheels */}
               <View style={[styles.wheel, styles.wheelFront]}>
-                <View style={styles.brakeDisk} />
-                <View style={styles.brakeCaliper} />
-                <View style={styles.porscheRim}>
-                  {/* 5-spoke design */}
-                  <View style={styles.rimSpoke} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "72deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "144deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "216deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "288deg" }] }]} />
+                <View style={styles.tire} />
+                <View style={styles.rim}>
+                  <View style={styles.rimCenter} />
                 </View>
-                <View style={styles.porscheCenterCap} />
               </View>
               
               <View style={[styles.wheel, styles.wheelBack]}>
-                <View style={styles.brakeDisk} />
-                <View style={styles.brakeCaliper} />
-                <View style={styles.porscheRim}>
-                  <View style={styles.rimSpoke} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "72deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "144deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "216deg" }] }]} />
-                  <View style={[styles.rimSpoke, { transform: [{ rotate: "288deg" }] }]} />
+                <View style={styles.tire} />
+                <View style={styles.rim}>
+                  <View style={styles.rimCenter} />
                 </View>
-                <View style={styles.porscheCenterCap} />
               </View>
             </View>
           </Animated.View>
 
-          {/* FRONT LAYER - Porsche Front */}
+          {/* FRONT LAYER - GTA/Minecraft Front */}
           <Animated.View style={[styles.carLayer, frontAnimatedStyle]}>
             <View style={styles.porsche}>
-              {/* Front splitter */}
-              <View style={styles.frontSplitter}>
+              {/* Blocky front bumper */}
+              <View style={styles.frontBumper}>
                 <LinearGradient
-                  colors={["#0a0a0a", "#000000"]}
+                  colors={["#1a1a1a", "#0a0a0a"]}
                   style={styles.gradient}
                 />
               </View>
               
-              {/* Front body */}
+              {/* Front body - angular */}
               <View style={[styles.body, styles.bodyFront]}>
                 <LinearGradient
-                  colors={["#FFB347", "#E89A3C", "#D4822C", "#E89A3C", "#FFB347"]}
+                  colors={["#FFA500", "#FF8C00", "#E89A3C", "#FF8C00", "#FFA500"]}
                   style={styles.gradient}
                   start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  end={{ x: 1, y: 0 }}
                 />
                 
-                {/* Porsche LED headlights - 4-point design */}
-                <View style={[styles.porscheHeadlight, styles.headlightLeft]}>
-                  <View style={styles.ledDot} />
-                  <View style={[styles.ledDot, { top: 3, left: 3 }]} />
-                  <View style={[styles.ledDot, { top: 6 }]} />
-                  <View style={[styles.ledDot, { top: 9, left: 3 }]} />
-                </View>
-                <View style={[styles.porscheHeadlight, styles.headlightRight]}>
-                  <View style={styles.ledDot} />
-                  <View style={[styles.ledDot, { top: 3, right: 3 }]} />
-                  <View style={[styles.ledDot, { top: 6 }]} />
-                  <View style={[styles.ledDot, { top: 9, right: 3 }]} />
-                </View>
+                {/* Blocky headlights */}
+                <View style={[styles.headlight, styles.headlightLeft]} />
+                <View style={[styles.headlight, styles.headlightRight]} />
                 
-                {/* Front grille - minimal Porsche style */}
-                <View style={styles.frontGrille}>
-                  <View style={styles.grilleSlat} />
-                  <View style={[styles.grilleSlat, { top: 4 }]} />
-                  <View style={[styles.grilleSlat, { top: 8 }]} />
-                </View>
+                {/* Front grille - chunky */}
+                <View style={styles.frontGrille} />
                 
-                {/* Hood vents */}
-                <View style={styles.hoodVents}>
-                  <View style={styles.hoodVent} />
-                  <View style={[styles.hoodVent, { left: 18 }]} />
-                </View>
-                
-                {/* Front air intakes */}
-                <View style={[styles.frontIntake, { left: 18 }]} />
-                <View style={[styles.frontIntake, { right: 18 }]} />
+                {/* Hood scoop */}
+                <View style={styles.hoodScoop} />
               </View>
               
-              {/* Windshield - very sloped */}
+              {/* Windshield */}
               <View style={[styles.roof, styles.roofFront]}>
                 <LinearGradient
-                  colors={["#4a4a4a", "#3a3a3a", "#2a2a2a"]}
+                  colors={["#4a4a4a", "#3a3a3a"]}
                   style={styles.gradient}
                 />
-                <View style={styles.windshieldGlare} />
               </View>
               
               {/* Hood */}
               <View style={styles.hood}>
                 <LinearGradient
-                  colors={["#E89A3C", "#D4822C"]}
+                  colors={["#FF8C00", "#E89A3C"]}
                   style={styles.gradient}
                 />
-                {/* Porsche crest */}
-                <View style={styles.porscheCrest} />
               </View>
             </View>
           </Animated.View>
@@ -327,7 +270,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
         </Animated.View>
 
         {/* Ground shadow */}
-        <View style={[styles.shadow, { width: size * 0.52, top: size * 0.68 }]} />
+        <View style={[styles.shadow, { width: size * 0.5, top: size * 0.68 }]} />
       </View>
     </GestureDetector>
   );
@@ -353,415 +296,259 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   porsche: {
-    width: 200,
-    height: 105,
+    width: 180,
+    height: 95,
     position: "relative",
   },
   
-  // BODY - Low sports car profile
+  // BODY - Blocky GTA/Minecraft style
   body: {
     position: "absolute",
-    bottom: 14,
-    width: 200,
-    height: 44,
-    borderRadius: 8,
+    bottom: 12,
+    width: 180,
+    height: 42,
+    borderRadius: 2,
     overflow: "visible",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
   },
   bodyFront: {
-    borderWidth: 3,
-    borderColor: "rgba(255, 255, 255, 0.45)",
-    elevation: 14,
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    borderWidth: 4,
+    borderColor: "#000000",
+    elevation: 12,
   },
   bodySide: {
-    borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderWidth: 3,
+    borderColor: "#000000",
     elevation: 10,
   },
   bodyBack: {
-    borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-    elevation: 6,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderWidth: 3,
+    borderColor: "#000000",
+    elevation: 8,
   },
   
-  // ROOF - Low coupe
+  // BACK PANEL
+  backPanel: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  
+  // ROOF - Blocky
   roof: {
     position: "absolute",
-    top: 20,
-    left: 65,
+    top: 22,
+    left: 55,
     width: 70,
-    height: 26,
-    borderRadius: 8,
+    height: 24,
+    borderRadius: 2,
     overflow: "hidden",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
   },
   roofFront: {
-    borderWidth: 2,
-    borderColor: "rgba(140, 140, 140, 0.6)",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   roofSide: {
-    borderWidth: 1.5,
-    borderColor: "rgba(120, 120, 120, 0.4)",
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   roofBack: {
-    backgroundColor: "#1a1a1a",
-    borderWidth: 1,
-    borderColor: "rgba(100, 100, 100, 0.3)",
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   
-  // WINDOWS
+  // WINDOWS - Blocky dark glass
   sideWindow: {
     position: "absolute",
-    top: -14,
-    left: 70,
-    width: 58,
-    height: 14,
-    backgroundColor: "rgba(70, 90, 110, 0.6)",
-    borderRadius: 4,
-    borderWidth: 1.5,
-    borderColor: "rgba(100, 140, 180, 0.4)",
-    transform: [{ skewX: "-8deg" }],
-  },
-  windshieldGlare: {
-    position: "absolute",
-    top: 4,
-    left: 8,
-    width: 28,
+    top: -12,
+    left: 60,
+    width: 60,
     height: 12,
-    backgroundColor: "rgba(200, 220, 255, 0.4)",
-    borderRadius: 6,
-    transform: [{ skewX: "-18deg" }],
+    backgroundColor: "#1a1a1a",
+    borderRadius: 2,
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   
   // DOOR & DETAILS
-  doorHandle: {
+  doorLine: {
+    position: "absolute",
+    top: 8,
+    left: 85,
+    width: 3,
+    height: 28,
+    backgroundColor: "#000000",
+  },
+  sideStripe: {
     position: "absolute",
     top: 16,
-    left: 90,
-    width: 16,
-    height: 3,
-    backgroundColor: "rgba(150, 150, 150, 0.7)",
-    borderRadius: 1.5,
-  },
-  characterLine: {
-    position: "absolute",
-    top: 14,
-    left: 30,
+    left: 20,
     width: 140,
-    height: 2,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-  },
-  sideSkirt: {
-    position: "absolute",
-    bottom: -2,
-    left: 30,
-    width: 140,
-    height: 6,
-    backgroundColor: "#0a0a0a",
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: "rgba(80, 80, 80, 0.5)",
+    height: 4,
+    backgroundColor: "#000000",
   },
   
-  // PORSCHE HEADLIGHTS - 4-point LED
-  porscheHeadlight: {
+  // HEADLIGHTS - Chunky yellow blocks
+  headlight: {
+    position: "absolute",
+    top: 12,
+    width: 18,
+    height: 14,
+    backgroundColor: "#FFFF00",
+    borderRadius: 2,
+    borderWidth: 3,
+    borderColor: "#000000",
+  },
+  headlightLeft: {
+    left: 18,
+  },
+  headlightRight: {
+    right: 18,
+  },
+  
+  // TAIL LIGHTS - Chunky red blocks
+  tailLight: {
     position: "absolute",
     top: 14,
     width: 20,
-    height: 16,
-    backgroundColor: "rgba(255, 255, 250, 0.98)",
-    borderRadius: 4,
-    shadowColor: "#FFFACD",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 12,
-    borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.7)",
-  },
-  headlightLeft: {
-    left: 14,
-  },
-  headlightRight: {
-    right: 14,
-  },
-  ledDot: {
-    position: "absolute",
-    width: 4,
-    height: 4,
+    height: 12,
+    backgroundColor: "#FF0000",
     borderRadius: 2,
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#FFFFFF",
-    shadowOpacity: 1,
-    shadowRadius: 3,
-    top: 2,
-    left: 2,
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   
-  // TAIL LIGHT STRIP
-  tailLightStrip: {
-    position: "absolute",
-    top: 16,
-    left: 30,
-    width: 140,
-    height: 8,
-    borderRadius: 4,
-    overflow: "hidden",
-    shadowColor: "#ff0000",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    borderWidth: 1.5,
-    borderColor: "rgba(200, 0, 0, 0.8)",
-  },
-  
-  // EXHAUSTS
+  // EXHAUSTS - Square pipes
   exhaust: {
     position: "absolute",
     bottom: 4,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#1a1a1a",
-    borderWidth: 2.5,
-    borderColor: "#555555",
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: "#0a0a0a",
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   
-  // AIR INTAKES
-  sideAirIntake: {
-    position: "absolute",
-    bottom: 10,
-    left: 30,
-    width: 24,
-    height: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: "rgba(150, 150, 150, 0.3)",
-  },
-  intakeBar: {
-    position: "absolute",
-    width: 20,
-    height: 1.5,
-    backgroundColor: "rgba(100, 100, 100, 0.5)",
-    left: 2,
-    top: 2,
-  },
-  frontIntake: {
-    position: "absolute",
-    bottom: 6,
-    width: 22,
-    height: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: "rgba(130, 130, 130, 0.4)",
-  },
+  // FRONT GRILLE
   frontGrille: {
     position: "absolute",
-    bottom: 10,
-    left: 82,
-    width: 36,
-    height: 12,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    borderRadius: 3,
-    borderWidth: 1.5,
-    borderColor: "rgba(100, 100, 100, 0.5)",
-  },
-  grilleSlat: {
-    position: "absolute",
-    width: 32,
-    height: 1,
-    backgroundColor: "rgba(120, 120, 120, 0.6)",
-    left: 2,
-    top: 2,
+    bottom: 8,
+    left: 70,
+    width: 40,
+    height: 16,
+    backgroundColor: "#0a0a0a",
+    borderRadius: 2,
+    borderWidth: 3,
+    borderColor: "#000000",
   },
   
   // HOOD
   hood: {
     position: "absolute",
-    top: 10,
-    left: 70,
+    top: 8,
+    left: 60,
     width: 60,
-    height: 12,
-    borderRadius: 4,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.25)",
-  },
-  hoodVents: {
-    position: "absolute",
-    top: 6,
-    left: 82,
-    width: 36,
-    height: 10,
-  },
-  hoodVent: {
-    position: "absolute",
-    width: 12,
-    height: 8,
-    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    height: 16,
     borderRadius: 2,
-    borderWidth: 1,
-    borderColor: "rgba(200, 200, 200, 0.25)",
-    left: 6,
+    overflow: "hidden",
+    borderWidth: 3,
+    borderColor: "#000000",
   },
-  
-  // PORSCHE BADGES
-  porscheCrest: {
+  hoodScoop: {
     position: "absolute",
-    top: 2,
-    left: 24,
-    width: 12,
-    height: 12,
-    backgroundColor: "#FFD700",
-    borderRadius: 6,
+    top: 4,
+    left: 75,
+    width: 30,
+    height: 8,
+    backgroundColor: "#0a0a0a",
+    borderRadius: 2,
     borderWidth: 2,
     borderColor: "#000000",
   },
-  porscheBadge: {
-    position: "absolute",
-    top: 28,
-    left: 94,
-    width: 12,
-    height: 4,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: "#000000",
-  },
   
-  // REAR WING/SPOILER
+  // REAR WING/SPOILER - Blocky
   rearWing: {
     position: "absolute",
-    top: 14,
-    left: 60,
+    top: 16,
+    left: 50,
     width: 80,
-    height: 10,
+    height: 8,
     borderRadius: 2,
     overflow: "hidden",
-    borderWidth: 2,
-    borderColor: "rgba(130, 130, 130, 0.5)",
-    elevation: 8,
-  },
-  wingSupport: {
-    position: "absolute",
-    bottom: -6,
-    left: 10,
-    width: 4,
-    height: 8,
-    backgroundColor: "#1a1a1a",
-    borderWidth: 1,
-    borderColor: "#444444",
+    borderWidth: 3,
+    borderColor: "#000000",
+    elevation: 10,
   },
   rearWingSide: {
     position: "absolute",
-    top: 16,
-    left: 62,
+    top: 18,
+    left: 52,
     width: 76,
-    height: 6,
-    borderRadius: 1,
-    overflow: "hidden",
-    backgroundColor: "#1a1a1a",
-    borderWidth: 1,
-    borderColor: "rgba(120, 120, 120, 0.4)",
-    elevation: 6,
-  },
-  frontSplitter: {
-    position: "absolute",
-    bottom: 10,
-    left: 35,
-    width: 130,
     height: 6,
     borderRadius: 2,
     overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: "rgba(130, 130, 130, 0.5)",
-    elevation: 6,
+    backgroundColor: "#1a1a1a",
+    borderWidth: 3,
+    borderColor: "#000000",
+    elevation: 8,
+  },
+  frontBumper: {
+    position: "absolute",
+    bottom: 8,
+    left: 30,
+    width: 120,
+    height: 6,
+    borderRadius: 2,
+    overflow: "hidden",
+    borderWidth: 3,
+    borderColor: "#000000",
+    elevation: 8,
   },
   
-  // WHEELS - Porsche 5-spoke
+  // WHEELS - Chunky GTA style
   wheel: {
     position: "absolute",
-    bottom: 4,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    bottom: 2,
+    width: 36,
+    height: 36,
+    borderRadius: 2,
     backgroundColor: "#0a0a0a",
-    borderWidth: 2,
-    borderColor: "#1a1a1a",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.7,
-    shadowRadius: 6,
+    borderWidth: 4,
+    borderColor: "#000000",
     alignItems: "center",
     justifyContent: "center",
   },
   wheelFront: {
-    left: 32,
+    left: 26,
   },
   wheelBack: {
-    right: 32,
+    right: 26,
   },
-  brakeDisk: {
+  tire: {
     position: "absolute",
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#2a2a2a",
-    borderWidth: 2,
-    borderColor: "#444444",
-  },
-  brakeCaliper: {
-    position: "absolute",
-    width: 7,
-    height: 11,
-    backgroundColor: "#E89A3C",
-    borderRadius: 2,
-    left: 5,
-    top: 10,
-    zIndex: 10,
-    borderWidth: 1,
-    borderColor: "#C67B2E",
-  },
-  porscheRim: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: "100%",
+    height: "100%",
     backgroundColor: "#1a1a1a",
-    borderWidth: 2,
-    borderColor: "#777777",
+    borderRadius: 2,
+  },
+  rim: {
+    width: 20,
+    height: 20,
+    borderRadius: 2,
+    backgroundColor: "#555555",
+    borderWidth: 3,
+    borderColor: "#000000",
     alignItems: "center",
     justifyContent: "center",
   },
-  rimSpoke: {
-    position: "absolute",
-    width: 2,
-    height: 16,
-    backgroundColor: "#999999",
-  },
-  porscheCenterCap: {
-    position: "absolute",
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#FFD700",
-    borderWidth: 1.5,
+  rimCenter: {
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    backgroundColor: "#FFA500",
+    borderWidth: 2,
     borderColor: "#000000",
   },
   
@@ -771,14 +558,10 @@ const styles = StyleSheet.create({
   
   shadow: {
     position: "absolute",
-    height: 14,
+    height: 16,
     backgroundColor: "#000000",
-    opacity: 0.5,
+    opacity: 0.6,
     borderRadius: 100,
-    transform: [{ scaleY: 0.2 }],
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    transform: [{ scaleY: 0.25 }],
   },
 });
