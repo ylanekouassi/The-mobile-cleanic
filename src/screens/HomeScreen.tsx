@@ -68,7 +68,6 @@ export default function HomeScreen() {
           {/* Call to Action */}
           <View style={styles.ctaContainer}>
             <View style={styles.ctaBox}>
-              <Text style={styles.ctaTitle}>Ready to Transform Your Car?</Text>
               <Text style={styles.ctaText}>
                 Browse our packages and book your appointment today
               </Text>
