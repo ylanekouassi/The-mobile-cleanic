@@ -49,22 +49,6 @@ const PACKAGES: Package[] = [
       "Pet hair removal",
     ],
   },
-  {
-    id: "3",
-    name: "Interior Ultimate",
-    price: "$229",
-    duration: "3-4 hours",
-    description: "Complete interior restoration",
-    category: "interior",
-    features: [
-      "Everything in Interior Premium",
-      "Headliner cleaning",
-      "Trunk detailing",
-      "UV protection treatment",
-      "Fabric protection coating",
-      "Air vent deep cleaning",
-    ],
-  },
 
   // EXTERIOR PACKAGES
   {
