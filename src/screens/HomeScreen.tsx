@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,9 +12,13 @@ import Animated, {
 } from "react-native-reanimated";
 import RotatingCar from "../components/RotatingCar";
 import { Ionicons } from "@expo/vector-icons";
+import { RootDrawerParamList } from "../navigation/AppNavigator";
+
+type HomeScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Home">;
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const fadeAnim = useSharedValue(0);
   const slideAnim = useSharedValue(50);
 
@@ -71,10 +77,13 @@ export default function HomeScreen() {
               <Text style={styles.ctaText}>
                 Browse our packages and book your appointment today
               </Text>
-              <View style={styles.ctaButton}>
+              <Pressable 
+                style={styles.ctaButton}
+                onPress={() => navigation.navigate("Packages")}
+              >
                 <Text style={styles.ctaButtonText}>VIEW PACKAGES</Text>
                 <Ionicons name="arrow-forward" size={20} color="#000000" />
-              </View>
+              </Pressable>
             </View>
           </View>
         </ScrollView>
