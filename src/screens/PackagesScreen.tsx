@@ -129,32 +129,51 @@ export default function PackagesScreen() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("interior");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | null>(null);
+  const [quantity, setQuantity] = useState(1);
 
   const filteredPackages = PACKAGES.filter(pkg => pkg.category === selectedCategory);
 
-  const handleBookNow = (pkg: Package) => {
+  const handleAddToCart = (pkg: Package) => {
     setSelectedPackage(pkg);
+    setSelectedVehicle(null);
+    setQuantity(1);
     setModalVisible(true);
   };
 
   const handleVehicleSelect = (vehicleType: VehicleType) => {
-    setModalVisible(false);
-    
-    if (selectedPackage) {
+    setSelectedVehicle(vehicleType);
+  };
+
+  const incrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1);
+    }
+  };
+
+  const handleAddToCartConfirm = () => {
+    if (selectedPackage && selectedVehicle) {
       // Calculate price based on vehicle type
       const basePrice = parseInt(selectedPackage.price.replace("$", ""));
       let finalPrice = basePrice;
       
-      if (vehicleType === "suv") {
+      if (selectedVehicle === "suv") {
         finalPrice = basePrice + 25;
-      } else if (vehicleType === "van") {
+      } else if (selectedVehicle === "van") {
         finalPrice = basePrice + 50;
       }
       
+      // For now, we'll navigate to DateSelection
+      // Later we'll add to cart instead
+      setModalVisible(false);
       navigation.navigate("DateSelection", {
         packageName: selectedPackage.name,
         packagePrice: `$${finalPrice}`,
-        vehicleType: vehicleType,
+        vehicleType: selectedVehicle,
       });
     }
   };
@@ -252,7 +271,7 @@ export default function PackagesScreen() {
           {/* Packages List */}
           <View style={styles.packagesContainer}>
             {filteredPackages.map((pkg) => (
-              <PackageCard key={pkg.id} package={pkg} onBookNow={handleBookNow} />
+              <PackageCard key={pkg.id} package={pkg} onAddToCart={handleAddToCart} />
             ))}
           </View>
 
@@ -289,38 +308,76 @@ export default function PackagesScreen() {
 
               <View style={styles.vehicleOptionsContainer}>
                 <Pressable
-                  style={styles.vehicleOption}
+                  style={[
+                    styles.vehicleOption,
+                    selectedVehicle === "sedan" && styles.vehicleOptionSelected,
+                  ]}
                   onPress={() => handleVehicleSelect("sedan")}
                 >
-                  <Ionicons name="car-outline" size={48} color="#E89A3C" />
-                  <Text style={styles.vehicleTypeText}>Sedan</Text>
-                  <Text style={styles.vehicleDescription}>
+                  <Ionicons name="car-outline" size={48} color={selectedVehicle === "sedan" ? "#000000" : "#E89A3C"} />
+                  <Text style={[styles.vehicleTypeText, selectedVehicle === "sedan" && styles.vehicleTypeTextSelected]}>Sedan</Text>
+                  <Text style={[styles.vehicleDescription, selectedVehicle === "sedan" && styles.vehicleDescriptionSelected]}>
                     Standard cars, coupes
                   </Text>
                 </Pressable>
 
                 <Pressable
-                  style={styles.vehicleOption}
+                  style={[
+                    styles.vehicleOption,
+                    selectedVehicle === "suv" && styles.vehicleOptionSelected,
+                  ]}
                   onPress={() => handleVehicleSelect("suv")}
                 >
-                  <Ionicons name="subway-outline" size={48} color="#E89A3C" />
-                  <Text style={styles.vehicleTypeText}>SUV</Text>
-                  <Text style={styles.vehicleDescription}>
+                  <Ionicons name="subway-outline" size={48} color={selectedVehicle === "suv" ? "#000000" : "#E89A3C"} />
+                  <Text style={[styles.vehicleTypeText, selectedVehicle === "suv" && styles.vehicleTypeTextSelected]}>SUV</Text>
+                  <Text style={[styles.vehicleDescription, selectedVehicle === "suv" && styles.vehicleDescriptionSelected]}>
                     SUVs, crossovers, trucks
                   </Text>
+                  <Text style={[styles.vehiclePriceAdd, selectedVehicle === "suv" && styles.vehiclePriceAddSelected]}>+$25</Text>
                 </Pressable>
 
                 <Pressable
-                  style={styles.vehicleOption}
+                  style={[
+                    styles.vehicleOption,
+                    selectedVehicle === "van" && styles.vehicleOptionSelected,
+                  ]}
                   onPress={() => handleVehicleSelect("van")}
                 >
-                  <Ionicons name="bus-outline" size={48} color="#E89A3C" />
-                  <Text style={styles.vehicleTypeText}>Van</Text>
-                  <Text style={styles.vehicleDescription}>
+                  <Ionicons name="bus-outline" size={48} color={selectedVehicle === "van" ? "#000000" : "#E89A3C"} />
+                  <Text style={[styles.vehicleTypeText, selectedVehicle === "van" && styles.vehicleTypeTextSelected]}>Van</Text>
+                  <Text style={[styles.vehicleDescription, selectedVehicle === "van" && styles.vehicleDescriptionSelected]}>
                     Minivans, large vehicles
                   </Text>
+                  <Text style={[styles.vehiclePriceAdd, selectedVehicle === "van" && styles.vehiclePriceAddSelected]}>+$50</Text>
                 </Pressable>
               </View>
+
+              {/* Quantity Selector */}
+              {selectedVehicle && (
+                <View style={styles.quantitySection}>
+                  <Text style={styles.quantityLabel}>Quantity</Text>
+                  <View style={styles.quantityControls}>
+                    <Pressable style={styles.quantityButton} onPress={decrementQuantity}>
+                      <Ionicons name="remove" size={24} color="#E89A3C" />
+                    </Pressable>
+                    <Text style={styles.quantityText}>{quantity}</Text>
+                    <Pressable style={styles.quantityButton} onPress={incrementQuantity}>
+                      <Ionicons name="add" size={24} color="#E89A3C" />
+                    </Pressable>
+                  </View>
+                </View>
+              )}
+
+              {/* Add Button */}
+              {selectedVehicle && (
+                <Pressable
+                  style={styles.addButton}
+                  onPress={handleAddToCartConfirm}
+                >
+                  <Ionicons name="cart" size={20} color="#000000" />
+                  <Text style={styles.addButtonText}>ADD TO CART</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </Modal>
@@ -331,10 +388,10 @@ export default function PackagesScreen() {
 
 interface PackageCardProps {
   package: Package;
-  onBookNow: (pkg: Package) => void;
+  onAddToCart: (pkg: Package) => void;
 }
 
-function PackageCard({ package: pkg, onBookNow }: PackageCardProps) {
+function PackageCard({ package: pkg, onAddToCart }: PackageCardProps) {
   return (
     <View style={[styles.packageCard, pkg.popular && styles.popularCard]}>
       {pkg.popular && (
@@ -371,21 +428,21 @@ function PackageCard({ package: pkg, onBookNow }: PackageCardProps) {
 
       <Pressable
         style={[styles.bookButton, pkg.popular && styles.popularButton]}
-        onPress={() => onBookNow(pkg)}
+        onPress={() => onAddToCart(pkg)}
       >
+        <Ionicons
+          name="cart-outline"
+          size={20}
+          color={pkg.popular ? "#000000" : "#E89A3C"}
+        />
         <Text
           style={[
             styles.bookButtonText,
             pkg.popular && styles.popularButtonText,
           ]}
         >
-          BOOK NOW
+          ADD TO CART
         </Text>
-        <Ionicons
-          name="arrow-forward"
-          size={18}
-          color={pkg.popular ? "#000000" : "#E89A3C"}
-        />
       </Pressable>
     </View>
   );
@@ -645,7 +702,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 2,
+    borderColor: "#333333",
+  },
+  vehicleOptionSelected: {
+    backgroundColor: "#E89A3C",
     borderColor: "#E89A3C",
   },
   vehicleTypeText: {
@@ -655,9 +716,79 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 4,
   },
+  vehicleTypeTextSelected: {
+    color: "#000000",
+  },
   vehicleDescription: {
     fontSize: 14,
     color: "#888888",
     textAlign: "center",
+  },
+  vehicleDescriptionSelected: {
+    color: "#000000",
+  },
+  vehiclePriceAdd: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#E89A3C",
+    marginTop: 8,
+  },
+  vehiclePriceAddSelected: {
+    color: "#000000",
+  },
+  quantitySection: {
+    marginTop: 24,
+    alignItems: "center",
+  },
+  quantityLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginBottom: 12,
+  },
+  quantityControls: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+    backgroundColor: "#1a1a1a",
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  quantityButton: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 8,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  quantityText: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#E89A3C",
+    minWidth: 40,
+    textAlign: "center",
+  },
+  addButton: {
+    flexDirection: "row",
+    backgroundColor: "#E89A3C",
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginTop: 24,
+    shadowColor: "#E89A3C",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 1,
   },
 });
