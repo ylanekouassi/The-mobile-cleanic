@@ -115,6 +115,11 @@ const PACKAGES: Package[] = [
     category: "in-n-out",
     features: [
       "Everything in Interior Premium",
+      "Hand wash & dry",
+      "Wheel cleaning",
+      "Tire shine",
+      "Windows cleaned outside",
+      "Door jambs wiped",
       "Paint correction",
     ],
   },
