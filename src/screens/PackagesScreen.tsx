@@ -120,7 +120,7 @@ const PACKAGES: Package[] = [
       "Tire shine",
       "Windows cleaned outside",
       "Door jambs wiped",
-      "Paint correction",
+      "Waxing",
     ],
   },
 ];
