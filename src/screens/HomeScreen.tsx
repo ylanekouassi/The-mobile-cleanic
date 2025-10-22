@@ -61,7 +61,17 @@ export default function HomeScreen() {
           onPress={handleLanguageSwitch}
         >
           <Text style={styles.languageText}>
-            {language === "en" ? "EN/FR" : "FR/EN"}
+            {language === "en" ? (
+              <>
+                <Text style={styles.languageActive}>EN</Text>
+                <Text>/FR</Text>
+              </>
+            ) : (
+              <>
+                <Text>FR/</Text>
+                <Text style={styles.languageActive}>EN</Text>
+              </>
+            )}
           </Text>
         </Pressable>
 
@@ -251,5 +261,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#E89A3C",
     letterSpacing: 0.5,
+  },
+  languageActive: {
+    textDecorationLine: "underline",
+    textDecorationColor: "#E89A3C",
   },
 });
