@@ -157,7 +157,7 @@ type CategoryType = "interior" | "exterior" | "in-n-out";
 
 export default function PackagesScreen() {
   const insets = useSafeAreaInsets();
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("in-n-out");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>("interior");
 
   const filteredPackages = PACKAGES.filter(pkg => pkg.category === selectedCategory);
 
