@@ -35,14 +35,14 @@ const PACKAGES: Package[] = [
   {
     id: "2",
     name: "Interior Premium",
-    price: "$149",
+    price: "$189",
     duration: "2-4 hours",
     description: "Deep interior detailing",
     popular: true,
     category: "interior",
     features: [
       "Everything in Interior Basic",
-      "Leather conditioning",
+      "Leather conditioning (if applicable)",
       "Carpet shampooing",
       "Odor elimination",
       "Pet hair removal",
