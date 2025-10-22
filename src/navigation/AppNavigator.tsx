@@ -1,4 +1,5 @@
 import React from "react";
+import { Pressable } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
@@ -70,30 +71,54 @@ export default function AppNavigator() {
       <Drawer.Screen
         name="Packages"
         component={PackagesScreen}
-        options={{
+        options={({ navigation }) => ({
           title: "Packages",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="cube" size={size} color={color} />
           ),
-        }}
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
       />
       <Drawer.Screen
         name="Contact"
         component={ContactScreen}
-        options={{
+        options={({ navigation }) => ({
           title: "Contact",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="call" size={size} color={color} />
           ),
-        }}
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
       />
       <Drawer.Screen
         name="Booking"
         component={BookingScreen}
-        options={{
+        options={({ navigation }) => ({
           title: "Booking",
           drawerItemStyle: { display: "none" },
-        }}
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
       />
     </Drawer.Navigator>
   );
