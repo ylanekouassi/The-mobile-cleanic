@@ -100,44 +100,12 @@ const PACKAGES: Package[] = [
 
   // IN-N-OUT PACKAGES (Complete)
   {
-    id: "7",
-    name: "Express Complete",
-    price: "$129",
-    duration: "2-3 hours",
-    description: "Inside & outside essentials",
-    category: "in-n-out",
-    features: [
-      "Exterior hand wash & dry",
-      "Interior vacuum & wipe down",
-      "Wheel cleaning & tire shine",
-      "All windows cleaned",
-      "Dashboard cleaning",
-    ],
-  },
-  {
-    id: "8",
-    name: "Premium Complete",
-    price: "$249",
-    duration: "4-5 hours",
-    description: "Full interior & exterior detail",
-    popular: true,
-    category: "in-n-out",
-    features: [
-      "Complete exterior detail",
-      "Complete interior detail",
-      "Clay bar treatment",
-      "Machine polish & wax",
-      "Steam cleaning seats",
-      "Leather conditioning",
-      "Carpet shampooing",
-    ],
-  },
-  {
     id: "9",
     name: "Ultimate Complete",
     price: "$449",
     duration: "6-8 hours",
     description: "Total transformation",
+    popular: true,
     category: "in-n-out",
     features: [
       "Everything in Premium Complete",
