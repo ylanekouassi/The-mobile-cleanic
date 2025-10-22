@@ -257,7 +257,7 @@ export default function PackagesScreen() {
                   selectedCategory === "exterior" && styles.categoryTextActive,
                 ]}
               >
-                Exterior
+                Paint Correction
               </Text>
             </Pressable>
 
