@@ -57,7 +57,7 @@ const PACKAGES: Package[] = [
   // EXTERIOR PACKAGES
   {
     id: "4",
-    name: "Paint Correction: Stage 1",
+    name: "Stage 1",
     price: "$69",
     duration: "1 hour",
     description: "Quick exterior refresh",
@@ -72,7 +72,7 @@ const PACKAGES: Package[] = [
   },
   {
     id: "5",
-    name: "Paint Correction: Stage 2",
+    name: "Stage 2",
     price: "$159",
     duration: "2-3 hours",
     description: "Professional exterior care",
@@ -89,7 +89,7 @@ const PACKAGES: Package[] = [
   },
   {
     id: "6",
-    name: "Paint Correction: Stage 3",
+    name: "Stage 3",
     price: "$299",
     duration: "4-5 hours",
     description: "Maximum paint protection",
