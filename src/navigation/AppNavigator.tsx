@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
+import BookingScreen from "../screens/BookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 
@@ -11,6 +12,11 @@ export type RootDrawerParamList = {
   Home: undefined;
   Packages: undefined;
   Contact: undefined;
+  Booking: {
+    packageName: string;
+    packagePrice: string;
+    vehicleType: string;
+  };
 };
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
@@ -79,6 +85,14 @@ export default function AppNavigator() {
           drawerIcon: ({ color, size }) => (
             <Ionicons name="call" size={size} color={color} />
           ),
+        }}
+      />
+      <Drawer.Screen
+        name="Booking"
+        component={BookingScreen}
+        options={{
+          title: "Booking",
+          drawerItemStyle: { display: "none" },
         }}
       />
     </Drawer.Navigator>

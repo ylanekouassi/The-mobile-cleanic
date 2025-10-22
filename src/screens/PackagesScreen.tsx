@@ -3,6 +3,11 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from "react-nati
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { RootDrawerParamList } from "../navigation/AppNavigator";
+
+type PackagesScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Packages">;
 
 interface Package {
   id: string;
@@ -120,6 +125,7 @@ type VehicleType = "sedan" | "suv" | "van";
 
 export default function PackagesScreen() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<PackagesScreenNavigationProp>();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("interior");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
@@ -133,8 +139,14 @@ export default function PackagesScreen() {
 
   const handleVehicleSelect = (vehicleType: VehicleType) => {
     setModalVisible(false);
-    // TODO: Navigate to booking confirmation or next step
-    console.log(`Selected ${vehicleType} for ${selectedPackage?.name}`);
+    
+    if (selectedPackage) {
+      navigation.navigate("Booking", {
+        packageName: selectedPackage.name,
+        packagePrice: selectedPackage.price,
+        vehicleType: vehicleType,
+      });
+    }
   };
 
   return (
