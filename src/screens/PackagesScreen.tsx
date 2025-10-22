@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RootDrawerParamList } from "../navigation/AppNavigator";
+import { useCartStore } from "../state/cartStore";
 
 type PackagesScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Packages">;
 
@@ -126,6 +127,7 @@ type VehicleType = "sedan" | "suv" | "van";
 export default function PackagesScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<PackagesScreenNavigationProp>();
+  const addItem = useCartStore((s) => s.addItem);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("interior");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
@@ -167,14 +169,23 @@ export default function PackagesScreen() {
         finalPrice = basePrice + 50;
       }
       
-      // For now, we'll navigate to DateSelection
-      // Later we'll add to cart instead
-      setModalVisible(false);
-      navigation.navigate("DateSelection", {
+      // Add to cart
+      addItem({
+        packageId: selectedPackage.id,
         packageName: selectedPackage.name,
-        packagePrice: `$${finalPrice}`,
+        basePrice: basePrice,
         vehicleType: selectedVehicle,
+        finalPrice: finalPrice,
+        quantity: quantity,
       });
+      
+      // Close modal and show success message
+      setModalVisible(false);
+      Alert.alert(
+        "Added to Cart",
+        `${quantity}x ${selectedPackage.name} (${selectedVehicle.toUpperCase()}) added to cart!`,
+        [{ text: "OK", style: "default" }]
+      );
     }
   };
 

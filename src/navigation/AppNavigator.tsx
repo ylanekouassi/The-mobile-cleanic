@@ -9,6 +9,7 @@ import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import CartIcon from "../components/CartIcon";
 
 export type RootDrawerParamList = {
   Home: undefined;
@@ -92,6 +93,7 @@ export default function AppNavigator() {
               <Ionicons name="arrow-back" size={24} color="#E89A3C" />
             </Pressable>
           ),
+          headerRight: () => <CartIcon />,
         })}
       />
       <Drawer.Screen
