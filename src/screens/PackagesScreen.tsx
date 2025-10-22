@@ -58,7 +58,7 @@ const PACKAGES: Package[] = [
   {
     id: "4",
     name: "Stage 1",
-    price: "$69",
+    price: "$250",
     duration: "Up to 2 hours",
     description: "Light defect removal & surface enhancement",
     category: "exterior",
@@ -73,7 +73,7 @@ const PACKAGES: Package[] = [
   {
     id: "5",
     name: "Stage 2",
-    price: "$159",
+    price: "$450",
     duration: "Up to 4 hours",
     description: "Moderate swirl & scratch removal with polish",
     popular: true,
@@ -90,7 +90,7 @@ const PACKAGES: Package[] = [
   {
     id: "6",
     name: "Stage 3",
-    price: "$299",
+    price: "$800",
     duration: "Up to 8 hours",
     description: "Heavy defect correction & ceramic protection",
     category: "exterior",
