@@ -22,6 +22,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   const savedRotationY = useSharedValue(0);
   const savedRotationX = useSharedValue(0);
   const isAutoRotating = useSharedValue(true);
+  const autoRotationTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     startAutoRotation();
@@ -34,6 +35,15 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
       -1,
       true
     );
+
+    return () => {
+      if (autoRotationTimeoutRef.current) {
+        clearTimeout(autoRotationTimeoutRef.current);
+      }
+      cancelAnimation(rotationY);
+      cancelAnimation(rotationX);
+      cancelAnimation(scale);
+    };
   }, []);
 
   const startAutoRotation = () => {
@@ -53,6 +63,9 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
         cancelAnimation(rotationY);
         cancelAnimation(rotationX);
         isAutoRotating.value = false;
+      }
+      if (autoRotationTimeoutRef.current) {
+        clearTimeout(autoRotationTimeoutRef.current);
       }
       savedRotationY.value = rotationY.value;
       savedRotationX.value = rotationX.value;
@@ -74,7 +87,7 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
         deceleration: 0.995,
       });
 
-      setTimeout(() => {
+      autoRotationTimeoutRef.current = setTimeout(() => {
         if (!isAutoRotating.value) {
           isAutoRotating.value = true;
           startAutoRotation();
