@@ -44,7 +44,7 @@ const PACKAGES: Package[] = [
       "Everything in Interior Basic",
       "Leather conditioning (if applicable)",
       "Carpet shampooing",
-      "Pet hair removal",
+      "Pet hair removal (if applicable)",
     ],
   },
 
