@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   languageText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: "#E89A3C",
     letterSpacing: 0.5,
