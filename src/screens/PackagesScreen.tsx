@@ -287,7 +287,7 @@ export default function PackagesScreen() {
                   style={styles.vehicleOption}
                   onPress={() => handleVehicleSelect("suv")}
                 >
-                  <Ionicons name="car-sport-outline" size={48} color="#E89A3C" />
+                  <Ionicons name="subway-outline" size={48} color="#E89A3C" />
                   <Text style={styles.vehicleTypeText}>SUV</Text>
                   <Text style={styles.vehicleDescription}>
                     SUVs, crossovers, trucks
