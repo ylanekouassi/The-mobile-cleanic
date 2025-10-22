@@ -21,11 +21,15 @@ export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const fadeAnim = useSharedValue(0);
   const slideAnim = useSharedValue(50);
+  const [language, setLanguage] = useState<"en" | "fr">("en");
 
   const handleLanguageSwitch = () => {
+    setLanguage(language === "en" ? "fr" : "en");
     Alert.alert(
       "Language / Langue",
-      "French translation coming soon!\nTraduction française à venir!",
+      language === "en" 
+        ? "French translation coming soon!\nTraduction française à venir!"
+        : "English version active!\nVersion anglaise active!",
       [{ text: "OK", style: "default" }]
     );
   };
@@ -51,12 +55,14 @@ export default function HomeScreen() {
         colors={["#000000", "#0a0a0a", "#000000"]}
         style={styles.gradient}
       >
-        {/* Language Button */}
+        {/* Language Switcher */}
         <Pressable 
-          style={[styles.languageButton, { top: insets.top + 10 }]}
+          style={[styles.languageSwitcher, { top: insets.top + 10 }]}
           onPress={handleLanguageSwitch}
         >
-          <Text style={styles.languageButtonText}>FR</Text>
+          <Text style={styles.languageText}>
+            {language === "en" ? "EN/FR" : "FR/EN"}
+          </Text>
         </Pressable>
 
         <ScrollView
@@ -235,20 +241,14 @@ const styles = StyleSheet.create({
     color: "#000000",
     letterSpacing: 1.5,
   },
-  languageButton: {
+  languageSwitcher: {
     position: "absolute",
     right: 16,
     zIndex: 100,
-    backgroundColor: "#1a1a1a",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E89A3C",
   },
-  languageButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
+  languageText: {
+    fontSize: 16,
+    fontWeight: "600",
     color: "#E89A3C",
     letterSpacing: 0.5,
   },
