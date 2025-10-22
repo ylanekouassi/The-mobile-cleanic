@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -22,6 +22,14 @@ export default function HomeScreen() {
   const fadeAnim = useSharedValue(0);
   const slideAnim = useSharedValue(50);
 
+  const handleLanguageSwitch = () => {
+    Alert.alert(
+      "Language / Langue",
+      "French translation coming soon!\nTraduction française à venir!",
+      [{ text: "OK", style: "default" }]
+    );
+  };
+
   useEffect(() => {
     fadeAnim.value = withTiming(1, { duration: 1000 });
     slideAnim.value = withTiming(0, {
@@ -43,6 +51,14 @@ export default function HomeScreen() {
         colors={["#000000", "#0a0a0a", "#000000"]}
         style={styles.gradient}
       >
+        {/* Language Button */}
+        <Pressable 
+          style={[styles.languageButton, { top: insets.top + 10 }]}
+          onPress={handleLanguageSwitch}
+        >
+          <Text style={styles.languageButtonText}>FR</Text>
+        </Pressable>
+
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
@@ -218,5 +234,22 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#000000",
     letterSpacing: 1.5,
+  },
+  languageButton: {
+    position: "absolute",
+    right: 20,
+    zIndex: 100,
+    backgroundColor: "#1a1a1a",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  languageButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#E89A3C",
+    letterSpacing: 0.5,
   },
 });
