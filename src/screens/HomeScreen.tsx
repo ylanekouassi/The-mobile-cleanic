@@ -53,7 +53,7 @@ export default function HomeScreen() {
       >
         {/* Language Button */}
         <Pressable 
-          style={[styles.languageButton, { top: insets.top + 12 }]}
+          style={[styles.languageButton, { top: insets.top + 10 }]}
           onPress={handleLanguageSwitch}
         >
           <Text style={styles.languageButtonText}>FR</Text>
@@ -237,11 +237,11 @@ const styles = StyleSheet.create({
   },
   languageButton: {
     position: "absolute",
-    right: 20,
+    right: 16,
     zIndex: 100,
     backgroundColor: "#1a1a1a",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: "#E89A3C",
