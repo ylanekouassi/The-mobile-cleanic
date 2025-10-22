@@ -101,8 +101,8 @@ const PACKAGES: Package[] = [
   // IN-N-OUT PACKAGES (Complete)
   {
     id: "9",
-    name: "Ultimate Complete",
-    price: "$449",
+    name: "Full Detail",
+    price: "$299",
     duration: "6-8 hours",
     description: "Total transformation",
     popular: true,
