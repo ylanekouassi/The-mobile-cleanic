@@ -57,7 +57,7 @@ const PACKAGES: Package[] = [
   // EXTERIOR PACKAGES
   {
     id: "4",
-    name: "Exterior Wash",
+    name: "Paint Correction: Stage 1",
     price: "$69",
     duration: "1 hour",
     description: "Quick exterior refresh",
@@ -72,14 +72,14 @@ const PACKAGES: Package[] = [
   },
   {
     id: "5",
-    name: "Exterior Detail",
+    name: "Paint Correction: Stage 2",
     price: "$159",
     duration: "2-3 hours",
     description: "Professional exterior care",
     popular: true,
     category: "exterior",
     features: [
-      "Everything in Exterior Wash",
+      "Everything in Stage 1",
       "Clay bar treatment",
       "Machine polish",
       "Premium wax application",
@@ -89,13 +89,13 @@ const PACKAGES: Package[] = [
   },
   {
     id: "6",
-    name: "Exterior Protection",
+    name: "Paint Correction: Stage 3",
     price: "$299",
     duration: "4-5 hours",
     description: "Maximum paint protection",
     category: "exterior",
     features: [
-      "Everything in Exterior Detail",
+      "Everything in Stage 2",
       "Paint correction",
       "Ceramic coating application",
       "Wheel coating",
