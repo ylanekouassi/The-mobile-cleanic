@@ -26,7 +26,7 @@ export default function BookingScreen() {
   const navigation = useNavigation<BookingScreenNavigationProp>();
   const route = useRoute<BookingScreenRouteProp>();
   
-  const { packageName, packagePrice, vehicleType } = route.params || {};
+  const { packageName, packagePrice, vehicleType, selectedDate, selectedTime } = route.params || {};
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -43,6 +43,8 @@ export default function BookingScreen() {
       packageName,
       packagePrice,
       vehicleType,
+      selectedDate,
+      selectedTime,
     });
   };
 
@@ -91,6 +93,22 @@ export default function BookingScreen() {
                 <Text style={styles.summaryValue}>
                   {vehicleType ? vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1) : "N/A"}
                 </Text>
+              </View>
+              
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Date:</Text>
+                <Text style={styles.summaryValue}>
+                  {selectedDate ? new Date(selectedDate).toLocaleDateString("en-US", { 
+                    weekday: "short", 
+                    month: "short", 
+                    day: "numeric" 
+                  }) : "N/A"}
+                </Text>
+              </View>
+              
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Time:</Text>
+                <Text style={styles.summaryValue}>{selectedTime || "N/A"}</Text>
               </View>
               
               <View style={styles.divider} />

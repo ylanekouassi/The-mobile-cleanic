@@ -151,7 +151,7 @@ export default function PackagesScreen() {
         finalPrice = basePrice + 50;
       }
       
-      navigation.navigate("Booking", {
+      navigation.navigate("DateSelection", {
         packageName: selectedPackage.name,
         packagePrice: `$${finalPrice}`,
         vehicleType: vehicleType,

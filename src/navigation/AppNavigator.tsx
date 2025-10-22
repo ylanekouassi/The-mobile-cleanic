@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
+import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
@@ -13,10 +14,17 @@ export type RootDrawerParamList = {
   Home: undefined;
   Packages: undefined;
   Contact: undefined;
+  DateSelection: {
+    packageName: string;
+    packagePrice: string;
+    vehicleType: string;
+  };
   Booking: {
     packageName: string;
     packagePrice: string;
     vehicleType: string;
+    selectedDate: string;
+    selectedTime: string;
   };
 };
 
@@ -94,6 +102,22 @@ export default function AppNavigator() {
           drawerIcon: ({ color, size }) => (
             <Ionicons name="call" size={size} color={color} />
           ),
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="DateSelection"
+        component={DateSelectionScreen}
+        options={({ navigation }) => ({
+          title: "Select Date",
+          drawerItemStyle: { display: "none" },
           headerLeft: () => (
             <Pressable
               onPress={() => navigation.goBack()}
