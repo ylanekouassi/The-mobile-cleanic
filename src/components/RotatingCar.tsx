@@ -16,9 +16,11 @@ interface RotatingCarProps {
 }
 
 export default function RotatingCar({ size = 280 }: RotatingCarProps) {
-  const rotation = useSharedValue(0);
+  const rotationY = useSharedValue(0);
+  const rotationX = useSharedValue(0);
   const scale = useSharedValue(1);
-  const savedRotation = useSharedValue(0);
+  const savedRotationY = useSharedValue(0);
+  const savedRotationX = useSharedValue(0);
   const isAutoRotating = useSharedValue(true);
 
   useEffect(() => {
@@ -35,8 +37,8 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   }, []);
 
   const startAutoRotation = () => {
-    rotation.value = withRepeat(
-      withTiming(rotation.value + 360, {
+    rotationY.value = withRepeat(
+      withTiming(rotationY.value + 360, {
         duration: 8000,
         easing: Easing.linear,
       }),
@@ -48,19 +50,27 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   const panGesture = Gesture.Pan()
     .onStart(() => {
       if (isAutoRotating.value) {
-        cancelAnimation(rotation);
+        cancelAnimation(rotationY);
+        cancelAnimation(rotationX);
         isAutoRotating.value = false;
       }
-      savedRotation.value = rotation.value;
+      savedRotationY.value = rotationY.value;
+      savedRotationX.value = rotationX.value;
     })
     .onUpdate((event) => {
-      // Increased sensitivity from 0.5 to 1.0 for more responsive movement
-      rotation.value = savedRotation.value + event.translationX * 1.0;
+      // Rotation horizontale (gauche-droite) sur l'axe Y
+      rotationY.value = savedRotationY.value + event.translationX * 1.0;
+      // Rotation verticale (haut-bas) sur l'axe X
+      rotationX.value = savedRotationX.value - event.translationY * 1.0;
     })
     .onEnd((event) => {
-      rotation.value = withDecay({
-        // Increased velocity multiplier from 0.5 to 1.0 for smoother flick
+      rotationY.value = withDecay({
         velocity: event.velocityX * 1.0,
+        deceleration: 0.998,
+      });
+      
+      rotationX.value = withDecay({
+        velocity: -event.velocityY * 1.0,
         deceleration: 0.998,
       });
 
@@ -76,7 +86,8 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
     return {
       transform: [
         { perspective: 1000 },
-        { rotateY: `${rotation.value}deg` },
+        { rotateY: `${rotationY.value}deg` },
+        { rotateX: `${rotationX.value}deg` },
         { scale: scale.value },
       ],
     };
