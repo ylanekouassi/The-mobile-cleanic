@@ -108,7 +108,7 @@ const PACKAGES: Package[] = [
     popular: true,
     category: "in-n-out",
     features: [
-      "Everything in Premium Complete",
+      "Everything in Interior Premium",
       "Paint correction",
     ],
   },
