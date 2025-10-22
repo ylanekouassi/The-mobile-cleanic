@@ -262,7 +262,7 @@ export default function PackagesScreen() {
             <View style={styles.priceNotice}>
               <Ionicons name="information-circle" size={24} color="#E89A3C" />
               <Text style={styles.priceNoticeText}>
-                Prices may vary depending on distance and vehicle condition
+                Prices may vary depending on vehicle size, distance and condition
               </Text>
             </View>
           </View>
