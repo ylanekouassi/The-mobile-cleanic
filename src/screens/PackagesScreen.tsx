@@ -110,12 +110,6 @@ const PACKAGES: Package[] = [
     features: [
       "Everything in Premium Complete",
       "Paint correction",
-      "Ceramic coating",
-      "Headlight restoration",
-      "Engine bay detailing",
-      "Odor elimination",
-      "Fabric & paint protection",
-      "12-month warranty",
     ],
   },
 ];
