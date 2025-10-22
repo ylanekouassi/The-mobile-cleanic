@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -154,11 +154,26 @@ const PACKAGES: Package[] = [
 
 type CategoryType = "interior" | "exterior" | "in-n-out";
 
+type VehicleType = "sedan" | "suv" | "van";
+
 export default function PackagesScreen() {
   const insets = useSafeAreaInsets();
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>("interior");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
 
   const filteredPackages = PACKAGES.filter(pkg => pkg.category === selectedCategory);
+
+  const handleBookNow = (pkg: Package) => {
+    setSelectedPackage(pkg);
+    setModalVisible(true);
+  };
+
+  const handleVehicleSelect = (vehicleType: VehicleType) => {
+    setModalVisible(false);
+    // TODO: Navigate to booking confirmation or next step
+    console.log(`Selected ${vehicleType} for ${selectedPackage?.name}`);
+  };
 
   return (
     <View style={styles.container}>
@@ -253,7 +268,7 @@ export default function PackagesScreen() {
           {/* Packages List */}
           <View style={styles.packagesContainer}>
             {filteredPackages.map((pkg) => (
-              <PackageCard key={pkg.id} package={pkg} />
+              <PackageCard key={pkg.id} package={pkg} onBookNow={handleBookNow} />
             ))}
           </View>
 
@@ -267,6 +282,64 @@ export default function PackagesScreen() {
             </View>
           </View>
         </ScrollView>
+
+        {/* Vehicle Selection Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Select Vehicle Type</Text>
+                <Pressable onPress={() => setModalVisible(false)}>
+                  <Ionicons name="close-circle" size={32} color="#E89A3C" />
+                </Pressable>
+              </View>
+
+              <Text style={styles.modalSubtitle}>
+                Choose your vehicle type for {selectedPackage?.name}
+              </Text>
+
+              <View style={styles.vehicleOptionsContainer}>
+                <Pressable
+                  style={styles.vehicleOption}
+                  onPress={() => handleVehicleSelect("sedan")}
+                >
+                  <Ionicons name="car-outline" size={48} color="#E89A3C" />
+                  <Text style={styles.vehicleTypeText}>Sedan</Text>
+                  <Text style={styles.vehicleDescription}>
+                    Standard cars, coupes
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.vehicleOption}
+                  onPress={() => handleVehicleSelect("suv")}
+                >
+                  <Ionicons name="car-sport-outline" size={48} color="#E89A3C" />
+                  <Text style={styles.vehicleTypeText}>SUV</Text>
+                  <Text style={styles.vehicleDescription}>
+                    SUVs, crossovers, trucks
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.vehicleOption}
+                  onPress={() => handleVehicleSelect("van")}
+                >
+                  <Ionicons name="bus-outline" size={48} color="#E89A3C" />
+                  <Text style={styles.vehicleTypeText}>Van</Text>
+                  <Text style={styles.vehicleDescription}>
+                    Minivans, large vehicles
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </LinearGradient>
     </View>
   );
@@ -274,9 +347,10 @@ export default function PackagesScreen() {
 
 interface PackageCardProps {
   package: Package;
+  onBookNow: (pkg: Package) => void;
 }
 
-function PackageCard({ package: pkg }: PackageCardProps) {
+function PackageCard({ package: pkg, onBookNow }: PackageCardProps) {
   return (
     <View style={[styles.packageCard, pkg.popular && styles.popularCard]}>
       {pkg.popular && (
@@ -313,6 +387,7 @@ function PackageCard({ package: pkg }: PackageCardProps) {
 
       <Pressable
         style={[styles.bookButton, pkg.popular && styles.popularButton]}
+        onPress={() => onBookNow(pkg)}
       >
         <Text
           style={[
@@ -544,5 +619,61 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#CCCCCC",
     flex: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 20,
+    padding: 24,
+    width: "100%",
+    maxWidth: 400,
+    borderWidth: 2,
+    borderColor: "#E89A3C",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  modalSubtitle: {
+    fontSize: 15,
+    color: "#888888",
+    marginBottom: 24,
+    textAlign: "center",
+  },
+  vehicleOptionsContainer: {
+    gap: 16,
+  },
+  vehicleOption: {
+    backgroundColor: "#1a1a1a",
+    borderRadius: 16,
+    padding: 20,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  vehicleTypeText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#E89A3C",
+    marginTop: 12,
+    marginBottom: 4,
+  },
+  vehicleDescription: {
+    fontSize: 14,
+    color: "#888888",
+    textAlign: "center",
   },
 });
