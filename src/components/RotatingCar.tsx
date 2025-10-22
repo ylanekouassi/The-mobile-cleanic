@@ -8,12 +8,19 @@ import Animated, {
   withDecay,
   Easing,
   cancelAnimation,
+  runOnJS,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 interface RotatingCarProps {
   size?: number;
 }
+
+// Helper function to normalize rotation values between 0-360
+const normalizeRotation = (rotation: number): number => {
+  const normalized = rotation % 360;
+  return normalized < 0 ? normalized + 360 : normalized;
+};
 
 export default function RotatingCar({ size = 280 }: RotatingCarProps) {
   const rotationY = useSharedValue(0);
@@ -54,24 +61,41 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
         cancelAnimation(rotationX);
         isAutoRotating.value = false;
       }
+      // Normalize before saving to prevent overflow
+      rotationY.value = normalizeRotation(rotationY.value);
+      rotationX.value = normalizeRotation(rotationX.value);
       savedRotationY.value = rotationY.value;
       savedRotationX.value = rotationX.value;
     })
     .onUpdate((event) => {
       // Rotation horizontale (gauche-droite) sur l'axe Y
-      rotationY.value = savedRotationY.value + event.translationX * 1.0;
+      const newRotationY = savedRotationY.value + event.translationX * 1.0;
+      rotationY.value = normalizeRotation(newRotationY);
+      
       // Rotation verticale (haut-bas) sur l'axe X
-      rotationX.value = savedRotationX.value - event.translationY * 1.0;
+      const newRotationX = savedRotationX.value - event.translationY * 1.0;
+      rotationX.value = normalizeRotation(newRotationX);
     })
     .onEnd((event) => {
+      // Use smaller velocity multipliers to prevent extreme values
       rotationY.value = withDecay({
-        velocity: event.velocityX * 1.0,
-        deceleration: 0.998,
+        velocity: event.velocityX * 0.5,
+        deceleration: 0.995,
+        clamp: [-720, 720], // Limit the decay range
+      }, (finished) => {
+        if (finished) {
+          rotationY.value = normalizeRotation(rotationY.value);
+        }
       });
       
       rotationX.value = withDecay({
-        velocity: -event.velocityY * 1.0,
-        deceleration: 0.998,
+        velocity: -event.velocityY * 0.5,
+        deceleration: 0.995,
+        clamp: [-720, 720], // Limit the decay range
+      }, (finished) => {
+        if (finished) {
+          rotationX.value = normalizeRotation(rotationX.value);
+        }
       });
 
       setTimeout(() => {
@@ -86,8 +110,8 @@ export default function RotatingCar({ size = 280 }: RotatingCarProps) {
     return {
       transform: [
         { perspective: 1000 },
-        { rotateY: `${rotationY.value}deg` },
-        { rotateX: `${rotationX.value}deg` },
+        { rotateY: `${rotationY.value % 360}deg` },
+        { rotateX: `${rotationX.value % 360}deg` },
         { scale: scale.value },
       ],
     };
