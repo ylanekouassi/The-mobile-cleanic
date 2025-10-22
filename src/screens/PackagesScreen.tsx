@@ -259,22 +259,10 @@ export default function PackagesScreen() {
 
           {/* Additional Info */}
           <View style={styles.infoSection}>
-            <View style={styles.infoCard}>
-              <Ionicons name="calendar" size={24} color="#E89A3C" />
-              <Text style={styles.infoText}>
-                Flexible scheduling to fit your busy life
-              </Text>
-            </View>
-            <View style={styles.infoCard}>
-              <Ionicons name="card" size={24} color="#E89A3C" />
-              <Text style={styles.infoText}>
-                Secure payment options available
-              </Text>
-            </View>
-            <View style={styles.infoCard}>
-              <Ionicons name="ribbon" size={24} color="#E89A3C" />
-              <Text style={styles.infoText}>
-                Satisfaction guaranteed or your money back
+            <View style={styles.priceNotice}>
+              <Ionicons name="information-circle" size={24} color="#E89A3C" />
+              <Text style={styles.priceNoticeText}>
+                Prices may vary depending on distance and vehicle condition
               </Text>
             </View>
           </View>
@@ -525,6 +513,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 12,
+  },
+  priceNotice: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0f0f0f",
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  priceNoticeText: {
+    fontSize: 14,
+    color: "#E89A3C",
+    flex: 1,
+    fontWeight: "600",
   },
   infoCard: {
     flexDirection: "row",
