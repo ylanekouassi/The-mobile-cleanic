@@ -53,7 +53,7 @@ export default function HomeScreen() {
       >
         {/* Language Button */}
         <Pressable 
-          style={[styles.languageButton, { top: insets.top + 6 }]}
+          style={[styles.languageButton, { top: insets.top + 12 }]}
           onPress={handleLanguageSwitch}
         >
           <Text style={styles.languageButtonText}>FR</Text>
