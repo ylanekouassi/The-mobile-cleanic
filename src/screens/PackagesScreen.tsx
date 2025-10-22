@@ -141,9 +141,19 @@ export default function PackagesScreen() {
     setModalVisible(false);
     
     if (selectedPackage) {
+      // Calculate price based on vehicle type
+      const basePrice = parseInt(selectedPackage.price.replace("$", ""));
+      let finalPrice = basePrice;
+      
+      if (vehicleType === "suv") {
+        finalPrice = basePrice + 25;
+      } else if (vehicleType === "van") {
+        finalPrice = basePrice + 50;
+      }
+      
       navigation.navigate("Booking", {
         packageName: selectedPackage.name,
-        packagePrice: selectedPackage.price,
+        packagePrice: `$${finalPrice}`,
         vehicleType: vehicleType,
       });
     }
