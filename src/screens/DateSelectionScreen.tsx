@@ -25,26 +25,7 @@ export default function DateSelectionScreen() {
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-
-  // Generate available dates (next 14 days, excluding Sundays)
-  const generateAvailableDates = () => {
-    const dates = [];
-    const today = new Date();
-    
-    for (let i = 1; i <= 14; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      
-      // Skip Sundays (0 = Sunday)
-      if (date.getDay() !== 0) {
-        dates.push(date);
-      }
-    }
-    
-    return dates;
-  };
-
-  const availableDates = generateAvailableDates();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // Available time slots
   const timeSlots = [
@@ -55,20 +36,53 @@ export default function DateSelectionScreen() {
     "4:00 PM",
   ];
 
-  const formatDate = (date: Date) => {
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  // Generate calendar days for current month
+  const generateCalendarDays = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
     
-    return {
-      dayName: days[date.getDay()],
-      dayNumber: date.getDate(),
-      month: months[date.getMonth()],
-      year: date.getFullYear(),
-      fullDate: date.toISOString().split("T")[0],
-    };
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days = [];
+    
+    // Add empty slots for days before month starts
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      days.push(date);
+    }
+    
+    return days;
   };
 
-  const handleDateSelect = (dateString: string) => {
+  const calendarDays = generateCalendarDays();
+
+  const isDateAvailable = (date: Date | null) => {
+    if (!date) return false;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Can't book in the past
+    if (date < today) return false;
+    
+    // Can't book on Sundays (0 = Sunday)
+    if (date.getDay() === 0) return false;
+    
+    return true;
+  };
+
+  const handleDateSelect = (date: Date | null) => {
+    if (!date || !isDateAvailable(date)) return;
+    
+    const dateString = date.toISOString().split("T")[0];
     setSelectedDate(dateString);
     setSelectedTime(null); // Reset time when date changes
   };
@@ -87,6 +101,26 @@ export default function DateSelectionScreen() {
         selectedTime,
       });
     }
+  };
+
+  const goToPreviousMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+  };
+
+  const formatMonthYear = () => {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    return `${months[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+  };
+
+  const canGoPrevious = () => {
+    const today = new Date();
+    const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const firstDayOfDisplayedMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    return firstDayOfDisplayedMonth > firstDayOfCurrentMonth;
   };
 
   const isFormValid = selectedDate !== null && selectedTime !== null;
@@ -137,34 +171,79 @@ export default function DateSelectionScreen() {
               <Text style={styles.sectionTitle}>Select a Date</Text>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.datesContainer}
-            >
-              {availableDates.map((date) => {
-                const formatted = formatDate(date);
-                const isSelected = selectedDate === formatted.fullDate;
-                
-                return (
-                  <Pressable
-                    key={formatted.fullDate}
-                    style={[styles.dateCard, isSelected && styles.dateCardSelected]}
-                    onPress={() => handleDateSelect(formatted.fullDate)}
-                  >
-                    <Text style={[styles.dayName, isSelected && styles.dayNameSelected]}>
-                      {formatted.dayName}
-                    </Text>
-                    <Text style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}>
-                      {formatted.dayNumber}
-                    </Text>
-                    <Text style={[styles.monthName, isSelected && styles.monthNameSelected]}>
-                      {formatted.month}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+            {/* Month Navigation */}
+            <View style={styles.monthNavigation}>
+              <Pressable
+                onPress={goToPreviousMonth}
+                disabled={!canGoPrevious()}
+                style={styles.monthButton}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={canGoPrevious() ? "#E89A3C" : "#333333"}
+                />
+              </Pressable>
+              
+              <Text style={styles.monthYearText}>{formatMonthYear()}</Text>
+              
+              <Pressable
+                onPress={goToNextMonth}
+                style={styles.monthButton}
+              >
+                <Ionicons name="chevron-forward" size={24} color="#E89A3C" />
+              </Pressable>
+            </View>
+
+            {/* Calendar Grid */}
+            <View style={styles.calendarContainer}>
+              {/* Day Headers */}
+              <View style={styles.dayHeadersRow}>
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                  <View key={day} style={styles.dayHeader}>
+                    <Text style={styles.dayHeaderText}>{day}</Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Calendar Days */}
+              <View style={styles.calendarGrid}>
+                {calendarDays.map((date, index) => {
+                  if (!date) {
+                    return <View key={`empty-${index}`} style={styles.calendarDay} />;
+                  }
+
+                  const dateString = date.toISOString().split("T")[0];
+                  const isSelected = selectedDate === dateString;
+                  const isAvailable = isDateAvailable(date);
+                  const isSunday = date.getDay() === 0;
+
+                  return (
+                    <Pressable
+                      key={dateString}
+                      style={[
+                        styles.calendarDay,
+                        isSelected && styles.calendarDaySelected,
+                        !isAvailable && styles.calendarDayDisabled,
+                        isSunday && styles.calendarDaySunday,
+                      ]}
+                      onPress={() => handleDateSelect(date)}
+                      disabled={!isAvailable}
+                    >
+                      <Text
+                        style={[
+                          styles.calendarDayText,
+                          isSelected && styles.calendarDayTextSelected,
+                          !isAvailable && styles.calendarDayTextDisabled,
+                        ]}
+                      >
+                        {date.getDate()}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
           </View>
 
           {/* Time Selection */}
@@ -293,6 +372,75 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "#FFFFFF",
+  },
+  monthNavigation: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+    paddingHorizontal: 10,
+  },
+  monthButton: {
+    padding: 8,
+  },
+  monthYearText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  calendarContainer: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#1a1a1a",
+  },
+  dayHeadersRow: {
+    flexDirection: "row",
+    marginBottom: 12,
+  },
+  dayHeader: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dayHeaderText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#888888",
+  },
+  calendarGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  calendarDay: {
+    width: "14.28%",
+    aspectRatio: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 4,
+  },
+  calendarDaySelected: {
+    backgroundColor: "#E89A3C",
+    borderRadius: 8,
+  },
+  calendarDayDisabled: {
+    opacity: 0.3,
+  },
+  calendarDaySunday: {
+    backgroundColor: "#1a1a1a",
+    borderRadius: 8,
+  },
+  calendarDayText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  calendarDayTextSelected: {
+    color: "#000000",
+  },
+  calendarDayTextDisabled: {
+    color: "#444444",
   },
   datesContainer: {
     gap: 12,
