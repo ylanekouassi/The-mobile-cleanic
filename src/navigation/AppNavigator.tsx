@@ -5,6 +5,7 @@ import HomeScreen from "../screens/HomeScreen";
 import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
 import CustomDrawer from "../components/CustomDrawer";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 export type RootDrawerParamList = {
   Home: undefined;
@@ -57,6 +58,7 @@ export default function AppNavigator() {
           drawerIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
+          headerRight: () => <LanguageSwitcher />,
         }}
       />
       <Drawer.Screen

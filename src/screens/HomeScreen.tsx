@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -21,18 +21,6 @@ export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const fadeAnim = useSharedValue(0);
   const slideAnim = useSharedValue(50);
-  const [language, setLanguage] = useState<"en" | "fr">("en");
-
-  const handleLanguageSwitch = () => {
-    setLanguage(language === "en" ? "fr" : "en");
-    Alert.alert(
-      "Language / Langue",
-      language === "en" 
-        ? "French translation coming soon!\nTraduction française à venir!"
-        : "English version active!\nVersion anglaise active!",
-      [{ text: "OK", style: "default" }]
-    );
-  };
 
   useEffect(() => {
     fadeAnim.value = withTiming(1, { duration: 1000 });
@@ -55,26 +43,6 @@ export default function HomeScreen() {
         colors={["#000000", "#0a0a0a", "#000000"]}
         style={styles.gradient}
       >
-        {/* Language Switcher */}
-        <Pressable 
-          style={[styles.languageSwitcher, { top: insets.top + 2 }]}
-          onPress={handleLanguageSwitch}
-        >
-          <Text style={styles.languageText}>
-            {language === "en" ? (
-              <>
-                <Text style={styles.languageActive}>EN</Text>
-                <Text>/FR</Text>
-              </>
-            ) : (
-              <>
-                <Text>FR/</Text>
-                <Text style={styles.languageActive}>EN</Text>
-              </>
-            )}
-          </Text>
-        </Pressable>
-
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
@@ -250,20 +218,5 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#000000",
     letterSpacing: 1.5,
-  },
-  languageSwitcher: {
-    position: "absolute",
-    right: 16,
-    zIndex: 100,
-  },
-  languageText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#E89A3C",
-    letterSpacing: 0.5,
-  },
-  languageActive: {
-    textDecorationLine: "underline",
-    textDecorationColor: "#E89A3C",
   },
 });
