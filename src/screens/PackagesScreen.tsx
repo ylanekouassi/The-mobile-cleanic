@@ -109,7 +109,7 @@ const PACKAGES: Package[] = [
     id: "9",
     name: "Full Detail",
     price: "$299",
-    duration: "6-8 hours",
+    duration: "Up to 6 hours",
     description: "Total transformation",
     popular: true,
     category: "in-n-out",
