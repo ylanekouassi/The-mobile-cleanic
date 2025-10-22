@@ -60,7 +60,7 @@ const PACKAGES: Package[] = [
     name: "Stage 1",
     price: "$69",
     duration: "1 hour",
-    description: "Quick exterior refresh",
+    description: "Light defect removal & surface enhancement",
     category: "exterior",
     features: [
       "Hand wash & dry",
@@ -75,7 +75,7 @@ const PACKAGES: Package[] = [
     name: "Stage 2",
     price: "$159",
     duration: "2-3 hours",
-    description: "Professional exterior care",
+    description: "Moderate swirl & scratch removal with polish",
     popular: true,
     category: "exterior",
     features: [
@@ -92,7 +92,7 @@ const PACKAGES: Package[] = [
     name: "Stage 3",
     price: "$299",
     duration: "4-5 hours",
-    description: "Maximum paint protection",
+    description: "Heavy defect correction & ceramic protection",
     category: "exterior",
     features: [
       "Everything in Stage 2",
