@@ -62,7 +62,6 @@ const PACKAGES: Package[] = [
     category: "interior",
     features: [
       "Seats removed for individual cleaning",
-      "Hot water extraction cleaning",
       "Stain removal treatment",
       "Deep fabric scrubbing",
       "Deodorizing & sanitizing",
@@ -149,7 +148,6 @@ const PACKAGES: Package[] = [
     category: "in-n-out",
     features: [
       "Seats removed for individual cleaning",
-      "Hot water extraction cleaning",
       "Stain removal treatment",
       "Deep fabric scrubbing",
       "Deodorizing & sanitizing",
