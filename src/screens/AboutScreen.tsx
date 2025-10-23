@@ -4,26 +4,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-interface Stat {
-  id: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  value: string;
-  label: string;
-}
-
 interface Value {
   id: string;
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   description: string;
 }
-
-const STATS: Stat[] = [
-  { id: "1", icon: "people", value: "10K+", label: "Happy Customers" },
-  { id: "2", icon: "car", value: "25K+", label: "Cars Detailed" },
-  { id: "3", icon: "trophy", value: "15+", label: "Years Experience" },
-  { id: "4", icon: "star", value: "4.9", label: "Average Rating" },
-];
 
 const VALUES: Value[] = [
   {
@@ -82,22 +68,6 @@ export default function AboutScreen() {
                 inspire and motivate young entrepreneurs like me to chase their dreams and 
                 build something extraordinary.
               </Text>
-            </View>
-          </View>
-
-          {/* Stats Section */}
-          <View style={styles.statsSection}>
-            <Text style={styles.sectionTitle}>By the Numbers</Text>
-            <View style={styles.statsGrid}>
-              {STATS.map((stat) => (
-                <View key={stat.id} style={styles.statCard}>
-                  <View style={styles.statIconContainer}>
-                    <Ionicons name={stat.icon} size={28} color="#E89A3C" />
-                  </View>
-                  <Text style={styles.statValue}>{stat.value}</Text>
-                  <Text style={styles.statLabel}>{stat.label}</Text>
-                </View>
-              ))}
             </View>
           </View>
 
@@ -190,46 +160,6 @@ const styles = StyleSheet.create({
   },
   storyTextSpacing: {
     marginTop: 16,
-  },
-  statsSection: {
-    paddingHorizontal: 20,
-    marginBottom: 30,
-  },
-  statsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-  },
-  statCard: {
-    width: "48%",
-    backgroundColor: "#0f0f0f",
-    borderRadius: 16,
-    padding: 20,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#1a1a1a",
-  },
-  statIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#1a1a1a",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#E89A3C",
-  },
-  statValue: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#E89A3C",
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: "#888888",
-    textAlign: "center",
   },
   valuesContainer: {
     gap: 16,
