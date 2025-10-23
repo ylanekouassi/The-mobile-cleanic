@@ -3,6 +3,11 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Linking } from "react-na
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { RootDrawerParamList } from "../navigation/AppNavigator";
+
+type ContactScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Contact">;
 
 interface ContactMethod {
   id: string;
@@ -14,6 +19,7 @@ interface ContactMethod {
 
 export default function ContactScreen() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<ContactScreenNavigationProp>();
 
   const contactMethods: ContactMethod[] = [
     {
@@ -83,7 +89,10 @@ export default function ContactScreen() {
               <Text style={styles.ctaText}>
                 Schedule your appointment today and experience the difference
               </Text>
-              <Pressable style={styles.ctaButton}>
+              <Pressable 
+                style={styles.ctaButton}
+                onPress={() => navigation.navigate("Packages")}
+              >
                 <Text style={styles.ctaButtonText}>SCHEDULE NOW</Text>
                 <Ionicons name="arrow-forward" size={20} color="#000000" />
               </Pressable>
