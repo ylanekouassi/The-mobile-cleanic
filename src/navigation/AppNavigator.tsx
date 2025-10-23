@@ -7,6 +7,8 @@ import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
 import CartScreen from "../screens/CartScreen";
 import CheckoutScreen from "../screens/CheckoutScreen";
+import PolicyScreen from "../screens/PolicyScreen";
+import AboutScreen from "../screens/AboutScreen";
 import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
@@ -17,6 +19,8 @@ export type RootDrawerParamList = {
   Home: undefined;
   Packages: undefined;
   Contact: undefined;
+  Policy: undefined;
+  About: undefined;
   Cart: undefined;
   Checkout: undefined;
   DateSelection: {
@@ -107,6 +111,42 @@ export default function AppNavigator() {
           title: "Contact",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="call" size={size} color={color} />
+          ),
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="Policy"
+        component={PolicyScreen}
+        options={({ navigation }) => ({
+          title: "Policy",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="shield-checkmark" size={size} color={color} />
+          ),
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="About"
+        component={AboutScreen}
+        options={({ navigation }) => ({
+          title: "About",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="information-circle" size={size} color={color} />
           ),
           headerLeft: () => (
             <Pressable
