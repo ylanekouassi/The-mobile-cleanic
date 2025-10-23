@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RootDrawerParamList } from "../navigation/AppNavigator";
 import { useCartStore } from "../state/cartStore";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Calendar } from "react-native-calendars";
 
 type CheckoutScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
 
@@ -237,22 +237,52 @@ export default function CheckoutScreen() {
               <Text style={styles.sectionTitle}>Schedule</Text>
             </View>
             <View style={styles.inputCard}>
-              <Pressable onPress={() => setShowDatePicker(true)}>
+              <Pressable onPress={() => setShowDatePicker(!showDatePicker)}>
                 <Text style={styles.inputLabel}>Select Date</Text>
                 <View style={styles.dateTimeButton}>
                   <Ionicons name="calendar-outline" size={20} color="#E89A3C" />
                   <Text style={styles.dateTimeText}>{formatDate(selectedDate)}</Text>
+                  <Ionicons 
+                    name={showDatePicker ? "chevron-up" : "chevron-down"} 
+                    size={20} 
+                    color="#E89A3C" 
+                    style={{ marginLeft: "auto" }}
+                  />
                 </View>
               </Pressable>
 
               {showDatePicker && (
-                <DateTimePicker
-                  value={selectedDate}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
-                  minimumDate={new Date()}
-                />
+                <View style={styles.calendarContainer}>
+                  <Calendar
+                    current={selectedDate.toISOString().split('T')[0]}
+                    onDayPress={(day) => {
+                      setSelectedDate(new Date(day.dateString));
+                      setShowDatePicker(false);
+                    }}
+                    minDate={new Date().toISOString().split('T')[0]}
+                    markedDates={{
+                      [selectedDate.toISOString().split('T')[0]]: {
+                        selected: true,
+                        selectedColor: '#E89A3C',
+                      },
+                    }}
+                    theme={{
+                      backgroundColor: '#0f0f0f',
+                      calendarBackground: '#0f0f0f',
+                      textSectionTitleColor: '#E89A3C',
+                      selectedDayBackgroundColor: '#E89A3C',
+                      selectedDayTextColor: '#000000',
+                      todayTextColor: '#E89A3C',
+                      dayTextColor: '#FFFFFF',
+                      textDisabledColor: '#444444',
+                      monthTextColor: '#FFFFFF',
+                      arrowColor: '#E89A3C',
+                      textDayFontWeight: '500',
+                      textMonthFontWeight: '700',
+                      textDayHeaderFontWeight: '600',
+                    }}
+                  />
+                </View>
               )}
 
               <Text style={styles.inputLabel}>Select Time</Text>
@@ -648,6 +678,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#FFFFFF",
     fontWeight: "500",
+  },
+  calendarContainer: {
+    marginTop: 12,
+    borderRadius: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#E89A3C",
   },
   timeOptionsContainer: {
     flexDirection: "row",
