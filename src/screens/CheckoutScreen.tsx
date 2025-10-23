@@ -30,9 +30,8 @@ export default function CheckoutScreen() {
 
   // Date & Time state
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState<"morning" | "afternoon">("morning");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Payment state
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
@@ -48,13 +47,6 @@ export default function CheckoutScreen() {
     }
   };
 
-  const handleTimeChange = (_: any, time?: Date) => {
-    setShowTimePicker(false);
-    if (time) {
-      setSelectedTime(time);
-    }
-  };
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
       weekday: "short",
@@ -64,11 +56,8 @@ export default function CheckoutScreen() {
     });
   };
 
-  const formatTime = (time: Date) => {
-    return time.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatTime = (time: "morning" | "afternoon") => {
+    return time === "morning" ? "7:30 AM" : "1:00 PM";
   };
 
   const validateForm = () => {
@@ -254,12 +243,6 @@ export default function CheckoutScreen() {
                 <Text style={styles.dateTimeText}>{formatDate(selectedDate)}</Text>
               </Pressable>
 
-              <Text style={styles.inputLabel}>Select Time</Text>
-              <Pressable style={styles.dateTimeButton} onPress={() => setShowTimePicker(true)}>
-                <Ionicons name="time-outline" size={20} color="#E89A3C" />
-                <Text style={styles.dateTimeText}>{formatTime(selectedTime)}</Text>
-              </Pressable>
-
               {showDatePicker && (
                 <DateTimePicker
                   value={selectedDate}
@@ -270,14 +253,60 @@ export default function CheckoutScreen() {
                 />
               )}
 
-              {showTimePicker && (
-                <DateTimePicker
-                  value={selectedTime}
-                  mode="time"
-                  display="default"
-                  onChange={handleTimeChange}
-                />
-              )}
+              <Text style={styles.inputLabel}>Select Time</Text>
+              <View style={styles.timeOptionsContainer}>
+                <Pressable
+                  style={[
+                    styles.timeOption,
+                    selectedTime === "morning" && styles.timeOptionSelected,
+                  ]}
+                  onPress={() => setSelectedTime("morning")}
+                >
+                  <Ionicons 
+                    name="sunny-outline" 
+                    size={24} 
+                    color={selectedTime === "morning" ? "#000000" : "#E89A3C"} 
+                  />
+                  <Text style={[
+                    styles.timeOptionText,
+                    selectedTime === "morning" && styles.timeOptionTextSelected
+                  ]}>
+                    7:30 AM
+                  </Text>
+                  <Text style={[
+                    styles.timeOptionLabel,
+                    selectedTime === "morning" && styles.timeOptionLabelSelected
+                  ]}>
+                    Morning
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  style={[
+                    styles.timeOption,
+                    selectedTime === "afternoon" && styles.timeOptionSelected,
+                  ]}
+                  onPress={() => setSelectedTime("afternoon")}
+                >
+                  <Ionicons 
+                    name="partly-sunny-outline" 
+                    size={24} 
+                    color={selectedTime === "afternoon" ? "#000000" : "#E89A3C"} 
+                  />
+                  <Text style={[
+                    styles.timeOptionText,
+                    selectedTime === "afternoon" && styles.timeOptionTextSelected
+                  ]}>
+                    1:00 PM
+                  </Text>
+                  <Text style={[
+                    styles.timeOptionLabel,
+                    selectedTime === "afternoon" && styles.timeOptionLabelSelected
+                  ]}>
+                    Afternoon
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
 
@@ -617,6 +646,39 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#FFFFFF",
     fontWeight: "500",
+  },
+  timeOptionsContainer: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  timeOption: {
+    flex: 1,
+    backgroundColor: "#1a1a1a",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#333333",
+    gap: 8,
+  },
+  timeOptionSelected: {
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+  },
+  timeOptionText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#E89A3C",
+  },
+  timeOptionTextSelected: {
+    color: "#000000",
+  },
+  timeOptionLabel: {
+    fontSize: 13,
+    color: "#888888",
+  },
+  timeOptionLabelSelected: {
+    color: "#000000",
   },
   cardDetailsRow: {
     flexDirection: "row",
