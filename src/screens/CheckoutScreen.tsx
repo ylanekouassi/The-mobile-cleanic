@@ -40,7 +40,6 @@ export default function CheckoutScreen() {
   const [cardName, setCardName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
-  const [email, setEmail] = useState("");
 
   const handleDateChange = (_: any, date?: Date) => {
     setShowDatePicker(false);
@@ -88,11 +87,6 @@ export default function CheckoutScreen() {
     if (paymentMethod === "credit-card") {
       if (!cardNumber || !cardName || !expiryDate || !cvv) {
         Alert.alert("Missing Information", "Please fill in all payment fields.");
-        return false;
-      }
-    } else if (paymentMethod === "e-transfer") {
-      if (!email) {
-        Alert.alert("Missing Information", "Please provide your email for e-transfer instructions.");
         return false;
       }
     }
@@ -417,24 +411,67 @@ export default function CheckoutScreen() {
                 </View>
               )}
 
-              {/* E-Transfer Email Field */}
+              {/* E-Transfer Instructions */}
               {paymentMethod === "e-transfer" && (
                 <View style={styles.paymentFields}>
-                  <Text style={styles.inputLabel}>Email Address</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="your@email.com"
-                    placeholderTextColor="#555555"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                  />
-                  <View style={styles.eTransferNotice}>
-                    <Ionicons name="information-circle" size={18} color="#E89A3C" />
-                    <Text style={styles.eTransferText}>
-                      We will send you e-transfer instructions to complete the $30 reservation fee
-                    </Text>
+                  <View style={styles.eTransferInstructions}>
+                    <View style={styles.eTransferHeader}>
+                      <Ionicons name="mail" size={32} color="#E89A3C" />
+                      <Text style={styles.eTransferTitle}>E-Transfer Instructions</Text>
+                    </View>
+
+                    <View style={styles.eTransferStep}>
+                      <View style={styles.stepNumber}>
+                        <Text style={styles.stepNumberText}>1</Text>
+                      </View>
+                      <View style={styles.stepContent}>
+                        <Text style={styles.stepTitle}>Send E-Transfer</Text>
+                        <Text style={styles.stepDescription}>
+                          Send $30.00 via Interac e-Transfer to:
+                        </Text>
+                        <Pressable 
+                          style={styles.emailBox}
+                          onLongPress={() => {
+                            Alert.alert("Email Copied", "themobilecleanic@gmail.com copied to clipboard");
+                          }}
+                        >
+                          <Ionicons name="mail-outline" size={20} color="#E89A3C" />
+                          <Text style={styles.emailText}>themobilecleanic@gmail.com</Text>
+                          <Ionicons name="copy-outline" size={18} color="#888888" />
+                        </Pressable>
+                      </View>
+                    </View>
+
+                    <View style={styles.eTransferStep}>
+                      <View style={styles.stepNumber}>
+                        <Text style={styles.stepNumberText}>2</Text>
+                      </View>
+                      <View style={styles.stepContent}>
+                        <Text style={styles.stepTitle}>Add Message</Text>
+                        <Text style={styles.stepDescription}>
+                          Include your name and phone number in the e-Transfer message
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.eTransferStep}>
+                      <View style={styles.stepNumber}>
+                        <Text style={styles.stepNumberText}>3</Text>
+                      </View>
+                      <View style={styles.stepContent}>
+                        <Text style={styles.stepTitle}>Auto-Deposit</Text>
+                        <Text style={styles.stepDescription}>
+                          No password required - funds will be deposited automatically
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.eTransferWarning}>
+                      <Ionicons name="alert-circle" size={20} color="#E89A3C" />
+                      <Text style={styles.eTransferWarningText}>
+                        Your booking will be confirmed once we receive your e-Transfer (usually within 5-10 minutes)
+                      </Text>
+                    </View>
                   </View>
                 </View>
               )}
@@ -634,6 +671,93 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: "#333333",
+  },
+  eTransferInstructions: {
+    backgroundColor: "#0f0f0f",
+    borderRadius: 12,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  eTransferHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333333",
+  },
+  eTransferTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  eTransferStep: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 20,
+  },
+  stepNumber: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#E89A3C",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  stepNumberText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000000",
+  },
+  stepContent: {
+    flex: 1,
+  },
+  stepTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 4,
+  },
+  stepDescription: {
+    fontSize: 14,
+    color: "#CCCCCC",
+    lineHeight: 20,
+  },
+  emailBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#1a1a1a",
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  emailText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#E89A3C",
+    flex: 1,
+  },
+  eTransferWarning: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    backgroundColor: "#1a1a1a",
+    padding: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  eTransferWarningText: {
+    fontSize: 13,
+    color: "#E89A3C",
+    flex: 1,
+    lineHeight: 18,
+    fontWeight: "600",
   },
   eTransferNotice: {
     flexDirection: "row",
