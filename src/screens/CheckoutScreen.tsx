@@ -18,6 +18,11 @@ export default function CheckoutScreen() {
   const navigation = useNavigation<CheckoutScreenNavigationProp>();
   const { items, getTotalPrice, clearCart } = useCartStore();
 
+  // Contact state
+  const [contactEmail, setContactEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+
   // Address state
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -68,6 +73,10 @@ export default function CheckoutScreen() {
   };
 
   const validateForm = () => {
+    if (!contactEmail || !fullName || !phone) {
+      Alert.alert("Missing Information", "Please fill in your contact information.");
+      return false;
+    }
     if (!address || !city || !postalCode) {
       Alert.alert("Missing Information", "Please fill in all address fields.");
       return false;
@@ -99,7 +108,7 @@ export default function CheckoutScreen() {
 
     Alert.alert(
       "Booking Confirmed!",
-      `Your detailing service has been scheduled for ${formatDate(selectedDate)} at ${formatTime(selectedTime)}.\n\n${paymentText}\n\nThe remaining $${totalPrice - 30} will be due after service completion.`,
+      `Your detailing service has been scheduled for ${formatDate(selectedDate)} at ${formatTime(selectedTime)}.\n\n${paymentText}\n\nThe remaining $${totalPrice - 30} will be due after service completion.\n\nA confirmation email with booking details, receipt, and our policies has been sent to ${contactEmail}.`,
       [
         {
           text: "OK",
@@ -151,6 +160,52 @@ export default function CheckoutScreen() {
               <View style={styles.summaryItem}>
                 <Text style={styles.summaryTotal}>Due Today:</Text>
                 <Text style={styles.summaryTotalPrice}>$30</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Contact Information Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="person" size={24} color="#E89A3C" />
+              <Text style={styles.sectionTitle}>Contact Information</Text>
+            </View>
+            <View style={styles.inputCard}>
+              <Text style={styles.inputLabel}>Full Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="John Doe"
+                placeholderTextColor="#555555"
+                value={fullName}
+                onChangeText={setFullName}
+              />
+
+              <Text style={styles.inputLabel}>Email Address</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="your@email.com"
+                placeholderTextColor="#555555"
+                value={contactEmail}
+                onChangeText={setContactEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              <Text style={styles.inputLabel}>Phone Number</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="(514) 123-4567"
+                placeholderTextColor="#555555"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+
+              <View style={styles.emailNotice}>
+                <Ionicons name="mail-outline" size={18} color="#E89A3C" />
+                <Text style={styles.emailNoticeText}>
+                  Confirmation email with booking details, receipt, and policies will be sent to this address
+                </Text>
               </View>
             </View>
           </View>
@@ -596,6 +651,24 @@ const styles = StyleSheet.create({
     color: "#E89A3C",
     flex: 1,
     lineHeight: 18,
+  },
+  emailNotice: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    backgroundColor: "#1a1a1a",
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  emailNoticeText: {
+    fontSize: 12,
+    color: "#E89A3C",
+    flex: 1,
+    lineHeight: 18,
+    fontWeight: "500",
   },
   confirmButton: {
     flexDirection: "row",
