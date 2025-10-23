@@ -162,8 +162,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   avatarImage: {
-    width: 150,
-    height: 150,
+    width: 180,
+    height: 180,
   },
   storyCard: {
     backgroundColor: "#0f0f0f",
