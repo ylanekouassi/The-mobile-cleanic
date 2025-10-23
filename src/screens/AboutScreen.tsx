@@ -54,13 +54,11 @@ export default function AboutScreen() {
             
             {/* Avatar Image */}
             <View style={styles.avatarContainer}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={require("../../assets/avatar-pixel.png")}
-                  style={styles.avatarImage}
-                  resizeMode="contain"
-                />
-              </View>
+              <Image
+                source={require("../../assets/avatar-pixel.png")}
+                style={styles.avatarImage}
+                resizeMode="contain"
+              />
             </View>
 
             <View style={styles.storyCard}>
@@ -163,25 +161,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 8,
   },
-  avatarWrapper: {
+  avatarImage: {
     width: 140,
     height: 140,
-    borderRadius: 70,
-    backgroundColor: "#0a0a0a",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 4,
-    borderColor: "#E89A3C",
-    padding: 10,
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.6,
-    shadowRadius: 16,
-    overflow: "hidden",
-  },
-  avatarImage: {
-    width: 120,
-    height: 120,
   },
   storyCard: {
     backgroundColor: "#0f0f0f",
