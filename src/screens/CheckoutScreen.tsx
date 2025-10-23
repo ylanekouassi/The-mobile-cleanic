@@ -237,10 +237,12 @@ export default function CheckoutScreen() {
               <Text style={styles.sectionTitle}>Schedule</Text>
             </View>
             <View style={styles.inputCard}>
-              <Text style={styles.inputLabel}>Select Date</Text>
-              <Pressable style={styles.dateTimeButton} onPress={() => setShowDatePicker(true)}>
-                <Ionicons name="calendar-outline" size={20} color="#E89A3C" />
-                <Text style={styles.dateTimeText}>{formatDate(selectedDate)}</Text>
+              <Pressable onPress={() => setShowDatePicker(true)}>
+                <Text style={styles.inputLabel}>Select Date</Text>
+                <View style={styles.dateTimeButton}>
+                  <Ionicons name="calendar-outline" size={20} color="#E89A3C" />
+                  <Text style={styles.dateTimeText}>{formatDate(selectedDate)}</Text>
+                </View>
               </Pressable>
 
               {showDatePicker && (
