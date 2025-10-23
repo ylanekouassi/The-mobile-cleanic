@@ -78,7 +78,7 @@ export default function AboutScreen() {
                 where I honed my craft and developed an eye for detail.
               </Text>
               <Text style={[styles.storyText, styles.storyTextSpacing]}>
-                To elevate my expertise, I pursued professional car detailing certification 
+                To elevate my expertise, I pursued a professional car detailing certification 
                 at a mechanic school in Montreal. But I did not stop there—I taught myself 
                 to code, building apps and websites from the ground up.
               </Text>
