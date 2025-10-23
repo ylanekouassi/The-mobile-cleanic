@@ -61,6 +61,7 @@ const PACKAGES: Package[] = [
     description: "Deep seat & upholstery cleaning",
     category: "interior",
     features: [
+      "Seats removed for individual cleaning",
       "Hot water extraction cleaning",
       "Stain removal treatment",
       "Deep fabric scrubbing",
@@ -147,6 +148,7 @@ const PACKAGES: Package[] = [
     description: "Deep seat & upholstery cleaning",
     category: "in-n-out",
     features: [
+      "Seats removed for individual cleaning",
       "Hot water extraction cleaning",
       "Stain removal treatment",
       "Deep fabric scrubbing",
