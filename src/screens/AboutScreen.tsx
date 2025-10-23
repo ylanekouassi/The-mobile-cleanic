@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -51,6 +51,18 @@ export default function AboutScreen() {
           {/* Story Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>All About Me</Text>
+            
+            {/* Avatar Image */}
+            <View style={styles.avatarContainer}>
+              <View style={styles.avatarWrapper}>
+                <Image
+                  source={require("../../assets/avatar-pixel.png")}
+                  style={styles.avatarImage}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
             <View style={styles.storyCard}>
               <Text style={styles.storyText}>
                 I am a young entrepreneur driven by a passion for perfection and precision. 
@@ -145,6 +157,31 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginBottom: 16,
     letterSpacing: 0.5,
+  },
+  avatarContainer: {
+    alignItems: "center",
+    marginBottom: 24,
+    marginTop: 8,
+  },
+  avatarWrapper: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: "#0a0a0a",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 4,
+    borderColor: "#E89A3C",
+    padding: 10,
+    shadowColor: "#E89A3C",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.6,
+    shadowRadius: 16,
+    overflow: "hidden",
+  },
+  avatarImage: {
+    width: 120,
+    height: 120,
   },
   storyCard: {
     backgroundColor: "#0f0f0f",
