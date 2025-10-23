@@ -52,16 +52,16 @@ export default function AboutScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>All About Me</Text>
             
-            {/* Avatar Image */}
-            <View style={styles.avatarContainer}>
-              <Image
-                source={require("../../assets/avatar-pixel.png")}
-                style={styles.avatarImage}
-                resizeMode="contain"
-              />
-            </View>
-
             <View style={styles.storyCard}>
+              {/* Avatar Image inside card */}
+              <View style={styles.avatarContainer}>
+                <Image
+                  source={require("../../assets/avatar-pixel.png")}
+                  style={styles.avatarImage}
+                  resizeMode="contain"
+                />
+              </View>
+
               <Text style={styles.storyText}>
                 I am a young entrepreneur driven by a passion for perfection and precision. 
                 My journey began working with premier dealerships including Nissan and Mazda, 
@@ -158,12 +158,11 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     alignItems: "center",
-    marginBottom: 24,
-    marginTop: 8,
+    marginBottom: 20,
   },
   avatarImage: {
-    width: 180,
-    height: 180,
+    width: 120,
+    height: 120,
   },
   storyCard: {
     backgroundColor: "#0f0f0f",
