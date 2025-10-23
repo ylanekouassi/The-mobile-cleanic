@@ -206,8 +206,8 @@ export default function CartScreen() {
 
               {/* Checkout Button */}
               <Pressable style={styles.checkoutButton} onPress={handleCheckout}>
-                <Text style={styles.checkoutButtonText}>PROCEED TO CHECKOUT</Text>
-                <Ionicons name="arrow-forward" size={20} color="#000000" />
+                <Ionicons name="calendar-outline" size={20} color="#000000" />
+                <Text style={styles.checkoutButtonText}>SCHEDULE APPOINTMENT</Text>
               </Pressable>
             </>
           )}
