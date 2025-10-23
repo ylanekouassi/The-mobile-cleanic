@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import PackagesScreen from "../screens/PackagesScreen";
 import ContactScreen from "../screens/ContactScreen";
 import CartScreen from "../screens/CartScreen";
+import CheckoutScreen from "../screens/CheckoutScreen";
 import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
@@ -17,6 +18,7 @@ export type RootDrawerParamList = {
   Packages: undefined;
   Contact: undefined;
   Cart: undefined;
+  Checkout: undefined;
   DateSelection: {
     packageName: string;
     packagePrice: string;
@@ -121,6 +123,22 @@ export default function AppNavigator() {
         component={CartScreen}
         options={({ navigation }) => ({
           title: "Cart",
+          drawerItemStyle: { display: "none" },
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="Checkout"
+        component={CheckoutScreen}
+        options={({ navigation }) => ({
+          title: "Checkout",
           drawerItemStyle: { display: "none" },
           headerLeft: () => (
             <Pressable

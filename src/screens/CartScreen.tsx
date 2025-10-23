@@ -32,7 +32,6 @@ export default function CartScreen() {
       return;
     }
 
-    // TODO: Navigate to date selection or checkout
     Alert.alert(
       "Checkout",
       "Proceed to select date and time for your services?",
@@ -41,8 +40,7 @@ export default function CartScreen() {
         {
           text: "Continue",
           onPress: () => {
-            // For now, just show success
-            Alert.alert("Success", "Checkout flow will be implemented here!");
+            navigation.navigate("Checkout");
           },
         },
       ]
