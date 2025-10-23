@@ -68,16 +68,6 @@ export default function AboutScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header Section */}
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Ionicons name="diamond" size={20} color="#E89A3C" />
-              <Text style={styles.logoText}>THE MOBILE CLEANIC</Text>
-              <Ionicons name="diamond" size={20} color="#E89A3C" />
-            </View>
-            <Text style={styles.tagline}>Excellence in Every Detail</Text>
-          </View>
-
           {/* Story Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Our Story</Text>
@@ -177,28 +167,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: 20,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    alignItems: "center",
-  },
-  logoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    marginBottom: 10,
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#E89A3C",
-    letterSpacing: 3,
-  },
-  tagline: {
-    fontSize: 15,
-    color: "#888888",
-    letterSpacing: 1,
   },
   section: {
     paddingHorizontal: 20,
