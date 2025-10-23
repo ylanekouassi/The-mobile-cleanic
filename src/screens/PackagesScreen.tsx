@@ -53,6 +53,22 @@ const PACKAGES: Package[] = [
       "Pet hair removal (if applicable)",
     ],
   },
+  {
+    id: "3",
+    name: "Seat Shampooing",
+    price: "$150",
+    duration: "Up to 2 hours",
+    description: "Deep seat & upholstery cleaning",
+    category: "interior",
+    features: [
+      "Hot water extraction cleaning",
+      "Stain removal treatment",
+      "Deep fabric scrubbing",
+      "Deodorizing & sanitizing",
+      "UV protection application",
+      "Fast-drying technique",
+    ],
+  },
 
   // EXTERIOR PACKAGES
   {
@@ -121,6 +137,22 @@ const PACKAGES: Package[] = [
       "Windows cleaned outside",
       "Door jambs wiped",
       "Waxing",
+    ],
+  },
+  {
+    id: "10",
+    name: "Seat Shampooing",
+    price: "$150",
+    duration: "Up to 2 hours",
+    description: "Deep seat & upholstery cleaning",
+    category: "in-n-out",
+    features: [
+      "Hot water extraction cleaning",
+      "Stain removal treatment",
+      "Deep fabric scrubbing",
+      "Deodorizing & sanitizing",
+      "UV protection application",
+      "Fast-drying technique",
     ],
   },
 ];
