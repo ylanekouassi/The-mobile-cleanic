@@ -192,16 +192,27 @@ export default function CartScreen() {
                 </View>
 
                 <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>Subtotal:</Text>
+                  <Text style={styles.summaryLabel}>Service Total:</Text>
                   <Text style={styles.summaryValue}>${getTotalPrice()}</Text>
+                </View>
+
+                <View style={styles.reservationNotice}>
+                  <Ionicons name="information-circle" size={20} color="#E89A3C" />
+                  <Text style={styles.reservationText}>
+                    $30 reservation fee required to book
+                  </Text>
                 </View>
 
                 <View style={styles.divider} />
 
                 <View style={styles.summaryRow}>
-                  <Text style={styles.summaryTotalLabel}>Total:</Text>
-                  <Text style={styles.summaryTotalValue}>${getTotalPrice()}</Text>
+                  <Text style={styles.summaryTotalLabel}>Due Today:</Text>
+                  <Text style={styles.summaryTotalValue}>$30</Text>
                 </View>
+
+                <Text style={styles.remainingText}>
+                  Remaining ${getTotalPrice() - 30} due after service
+                </Text>
               </View>
 
               {/* Checkout Button */}
@@ -421,6 +432,29 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: "#E89A3C",
+  },
+  reservationNotice: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#1a1a1a",
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  reservationText: {
+    fontSize: 13,
+    color: "#E89A3C",
+    fontWeight: "600",
+    flex: 1,
+  },
+  remainingText: {
+    fontSize: 13,
+    color: "#888888",
+    textAlign: "center",
+    marginTop: 8,
   },
   checkoutButton: {
     flexDirection: "row",

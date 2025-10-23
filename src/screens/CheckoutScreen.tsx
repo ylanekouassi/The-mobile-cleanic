@@ -11,6 +11,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 type CheckoutScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
 
+type PaymentMethod = "credit-card" | "e-transfer";
+
 export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<CheckoutScreenNavigationProp>();
@@ -28,10 +30,12 @@ export default function CheckoutScreen() {
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Payment state
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleDateChange = (_: any, date?: Date) => {
     setShowDatePicker(false);
@@ -68,9 +72,20 @@ export default function CheckoutScreen() {
       Alert.alert("Missing Information", "Please fill in all address fields.");
       return false;
     }
-    if (!cardNumber || !cardName || !expiryDate || !cvv) {
-      Alert.alert("Missing Information", "Please fill in all payment fields.");
+    if (!paymentMethod) {
+      Alert.alert("Missing Information", "Please select a payment method.");
       return false;
+    }
+    if (paymentMethod === "credit-card") {
+      if (!cardNumber || !cardName || !expiryDate || !cvv) {
+        Alert.alert("Missing Information", "Please fill in all payment fields.");
+        return false;
+      }
+    } else if (paymentMethod === "e-transfer") {
+      if (!email) {
+        Alert.alert("Missing Information", "Please provide your email for e-transfer instructions.");
+        return false;
+      }
     }
     return true;
   };
@@ -78,9 +93,13 @@ export default function CheckoutScreen() {
   const handleConfirmBooking = () => {
     if (!validateForm()) return;
 
+    const paymentText = paymentMethod === "credit-card" 
+      ? "Your $30 reservation fee has been charged to your card."
+      : "We will send e-transfer instructions to your email for the $30 reservation fee.";
+
     Alert.alert(
       "Booking Confirmed!",
-      "Your detailing service has been scheduled. We will send you a confirmation email shortly.",
+      `Your detailing service has been scheduled for ${formatDate(selectedDate)} at ${formatTime(selectedTime)}.\n\n${paymentText}\n\nThe remaining $${totalPrice - 30} will be due after service completion.`,
       [
         {
           text: "OK",
@@ -119,8 +138,19 @@ export default function CheckoutScreen() {
               ))}
               <View style={styles.summaryDivider} />
               <View style={styles.summaryItem}>
-                <Text style={styles.summaryTotal}>Total</Text>
-                <Text style={styles.summaryTotalPrice}>${totalPrice}</Text>
+                <Text style={styles.summaryLabel}>Service Total:</Text>
+                <Text style={styles.summaryValue}>${totalPrice}</Text>
+              </View>
+              <View style={styles.reservationFeeNotice}>
+                <Ionicons name="information-circle" size={18} color="#E89A3C" />
+                <Text style={styles.reservationFeeText}>
+                  $30 reservation fee • Remaining ${totalPrice - 30} due after service
+                </Text>
+              </View>
+              <View style={styles.summaryDivider} />
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryTotal}>Due Today:</Text>
+                <Text style={styles.summaryTotalPrice}>$30</Text>
               </View>
             </View>
           </View>
@@ -206,56 +236,153 @@ export default function CheckoutScreen() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Ionicons name="card" size={24} color="#E89A3C" />
-              <Text style={styles.sectionTitle}>Payment Information</Text>
+              <Text style={styles.sectionTitle}>Payment Method</Text>
             </View>
+            
+            {/* Payment Method Selection */}
             <View style={styles.inputCard}>
-              <Text style={styles.inputLabel}>Cardholder Name</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="John Doe"
-                placeholderTextColor="#555555"
-                value={cardName}
-                onChangeText={setCardName}
-              />
-
-              <Text style={styles.inputLabel}>Card Number</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="1234 5678 9012 3456"
-                placeholderTextColor="#555555"
-                value={cardNumber}
-                onChangeText={setCardNumber}
-                keyboardType="numeric"
-                maxLength={19}
-              />
-
-              <View style={styles.cardDetailsRow}>
-                <View style={styles.cardDetailsItem}>
-                  <Text style={styles.inputLabel}>Expiry Date</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="MM/YY"
-                    placeholderTextColor="#555555"
-                    value={expiryDate}
-                    onChangeText={setExpiryDate}
-                    maxLength={5}
+              <Text style={styles.paymentMethodTitle}>Select Payment Method</Text>
+              
+              <Pressable
+                style={[
+                  styles.paymentMethodOption,
+                  paymentMethod === "credit-card" && styles.paymentMethodOptionSelected,
+                ]}
+                onPress={() => setPaymentMethod("credit-card")}
+              >
+                <View style={styles.paymentMethodContent}>
+                  <Ionicons 
+                    name="card" 
+                    size={32} 
+                    color={paymentMethod === "credit-card" ? "#000000" : "#E89A3C"} 
                   />
+                  <View style={styles.paymentMethodText}>
+                    <Text style={[
+                      styles.paymentMethodTitle,
+                      paymentMethod === "credit-card" && styles.paymentMethodTitleSelected
+                    ]}>
+                      Credit Card
+                    </Text>
+                    <Text style={[
+                      styles.paymentMethodDescription,
+                      paymentMethod === "credit-card" && styles.paymentMethodDescriptionSelected
+                    ]}>
+                      Pay $30 reservation fee now
+                    </Text>
+                  </View>
                 </View>
+                {paymentMethod === "credit-card" && (
+                  <Ionicons name="checkmark-circle" size={24} color="#000000" />
+                )}
+              </Pressable>
 
-                <View style={styles.cardDetailsItem}>
-                  <Text style={styles.inputLabel}>CVV</Text>
+              <Pressable
+                style={[
+                  styles.paymentMethodOption,
+                  paymentMethod === "e-transfer" && styles.paymentMethodOptionSelected,
+                ]}
+                onPress={() => setPaymentMethod("e-transfer")}
+              >
+                <View style={styles.paymentMethodContent}>
+                  <Ionicons 
+                    name="mail" 
+                    size={32} 
+                    color={paymentMethod === "e-transfer" ? "#000000" : "#E89A3C"} 
+                  />
+                  <View style={styles.paymentMethodText}>
+                    <Text style={[
+                      styles.paymentMethodTitle,
+                      paymentMethod === "e-transfer" && styles.paymentMethodTitleSelected
+                    ]}>
+                      E-Transfer
+                    </Text>
+                    <Text style={[
+                      styles.paymentMethodDescription,
+                      paymentMethod === "e-transfer" && styles.paymentMethodDescriptionSelected
+                    ]}>
+                      Receive instructions by email
+                    </Text>
+                  </View>
+                </View>
+                {paymentMethod === "e-transfer" && (
+                  <Ionicons name="checkmark-circle" size={24} color="#000000" />
+                )}
+              </Pressable>
+
+              {/* Credit Card Fields */}
+              {paymentMethod === "credit-card" && (
+                <View style={styles.paymentFields}>
+                  <Text style={styles.inputLabel}>Cardholder Name</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder="123"
+                    placeholder="John Doe"
                     placeholderTextColor="#555555"
-                    value={cvv}
-                    onChangeText={setCvv}
+                    value={cardName}
+                    onChangeText={setCardName}
+                  />
+
+                  <Text style={styles.inputLabel}>Card Number</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="1234 5678 9012 3456"
+                    placeholderTextColor="#555555"
+                    value={cardNumber}
+                    onChangeText={setCardNumber}
                     keyboardType="numeric"
-                    maxLength={3}
-                    secureTextEntry
+                    maxLength={19}
                   />
+
+                  <View style={styles.cardDetailsRow}>
+                    <View style={styles.cardDetailsItem}>
+                      <Text style={styles.inputLabel}>Expiry Date</Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="MM/YY"
+                        placeholderTextColor="#555555"
+                        value={expiryDate}
+                        onChangeText={setExpiryDate}
+                        maxLength={5}
+                      />
+                    </View>
+
+                    <View style={styles.cardDetailsItem}>
+                      <Text style={styles.inputLabel}>CVV</Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="123"
+                        placeholderTextColor="#555555"
+                        value={cvv}
+                        onChangeText={setCvv}
+                        keyboardType="numeric"
+                        maxLength={3}
+                        secureTextEntry
+                      />
+                    </View>
+                  </View>
                 </View>
-              </View>
+              )}
+
+              {/* E-Transfer Email Field */}
+              {paymentMethod === "e-transfer" && (
+                <View style={styles.paymentFields}>
+                  <Text style={styles.inputLabel}>Email Address</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="your@email.com"
+                    placeholderTextColor="#555555"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  <View style={styles.eTransferNotice}>
+                    <Ionicons name="information-circle" size={18} color="#E89A3C" />
+                    <Text style={styles.eTransferText}>
+                      We will send you e-transfer instructions to complete the $30 reservation fee
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
 
@@ -319,6 +446,33 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#E89A3C",
   },
+  summaryLabel: {
+    fontSize: 15,
+    color: "#888888",
+  },
+  summaryValue: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#FFFFFF",
+  },
+  reservationFeeNotice: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    backgroundColor: "#1a1a1a",
+    padding: 12,
+    borderRadius: 10,
+    marginVertical: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  reservationFeeText: {
+    fontSize: 12,
+    color: "#E89A3C",
+    fontWeight: "600",
+    flex: 1,
+    lineHeight: 18,
+  },
   summaryDivider: {
     height: 1,
     backgroundColor: "#1a1a1a",
@@ -378,6 +532,70 @@ const styles = StyleSheet.create({
   },
   cardDetailsItem: {
     flex: 1,
+  },
+  paymentMethodTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    marginBottom: 16,
+  },
+  paymentMethodOption: {
+    backgroundColor: "#1a1a1a",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: "#333333",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  paymentMethodOptionSelected: {
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+  },
+  paymentMethodContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    flex: 1,
+  },
+  paymentMethodText: {
+    flex: 1,
+  },
+  paymentMethodTitleSelected: {
+    color: "#000000",
+  },
+  paymentMethodDescription: {
+    fontSize: 13,
+    color: "#888888",
+    marginTop: 4,
+  },
+  paymentMethodDescriptionSelected: {
+    color: "#000000",
+  },
+  paymentFields: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#333333",
+  },
+  eTransferNotice: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 8,
+    backgroundColor: "#1a1a1a",
+    padding: 12,
+    borderRadius: 10,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+  },
+  eTransferText: {
+    fontSize: 12,
+    color: "#E89A3C",
+    flex: 1,
+    lineHeight: 18,
   },
   confirmButton: {
     flexDirection: "row",
