@@ -106,19 +106,6 @@ export default function AboutScreen() {
               </Text>
             </View>
           </View>
-
-          {/* Promise Section */}
-          <View style={styles.promiseSection}>
-            <View style={styles.promiseCard}>
-              <Ionicons name="ribbon" size={48} color="#E89A3C" />
-              <Text style={styles.promiseTitle}>Our Promise</Text>
-              <Text style={styles.promiseText}>
-                We guarantee complete satisfaction with every service. If you are
-                not 100% happy with the results, we will make it right or refund
-                your money. No questions asked.
-              </Text>
-            </View>
-          </View>
         </ScrollView>
       </LinearGradient>
     </View>
@@ -214,36 +201,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   teamText: {
-    fontSize: 15,
-    color: "#CCCCCC",
-    textAlign: "center",
-    lineHeight: 24,
-  },
-  promiseSection: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  promiseCard: {
-    backgroundColor: "#0f0f0f",
-    borderRadius: 20,
-    padding: 30,
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#E89A3C",
-    shadowColor: "#E89A3C",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-  },
-  promiseTitle: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    marginTop: 16,
-    marginBottom: 12,
-    letterSpacing: 0.5,
-  },
-  promiseText: {
     fontSize: 15,
     color: "#CCCCCC",
     textAlign: "center",
