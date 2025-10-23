@@ -40,12 +40,6 @@ const VALUES: Value[] = [
   },
   {
     id: "3",
-    icon: "leaf",
-    title: "Eco-Friendly",
-    description: "Using environmentally safe products and water-saving techniques",
-  },
-  {
-    id: "4",
     icon: "heart",
     title: "Customer Focused",
     description: "Your satisfaction is our top priority, guaranteed",
