@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable, TextInput, Alert } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,6 +40,15 @@ export default function CheckoutScreen() {
   const [cardName, setCardName] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
+
+  // Copy state
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    await Clipboard.setStringAsync("themobilecleanic@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleDateChange = (_: any, date?: Date) => {
     setShowDatePicker(false);
@@ -492,14 +502,19 @@ export default function CheckoutScreen() {
                         </Text>
                         <Pressable 
                           style={styles.emailBox}
-                          onLongPress={() => {
-                            Alert.alert("Email Copied", "themobilecleanic@gmail.com copied to clipboard");
-                          }}
+                          onPress={handleCopyEmail}
                         >
                           <Ionicons name="mail-outline" size={20} color="#E89A3C" />
                           <Text style={styles.emailText}>themobilecleanic@gmail.com</Text>
-                          <Ionicons name="copy-outline" size={18} color="#888888" />
+                          <Ionicons 
+                            name={copied ? "checkmark-circle" : "copy-outline"} 
+                            size={18} 
+                            color={copied ? "#E89A3C" : "#888888"} 
+                          />
                         </Pressable>
+                        {copied && (
+                          <Text style={styles.copiedText}>✓ Copié!</Text>
+                        )}
                       </View>
                     </View>
 
@@ -842,6 +857,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#E89A3C",
     flex: 1,
+  },
+  copiedText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#E89A3C",
+    marginTop: 6,
+    textAlign: "center",
   },
   eTransferWarning: {
     flexDirection: "row",
