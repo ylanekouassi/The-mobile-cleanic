@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -53,15 +53,6 @@ export default function AboutScreen() {
             <Text style={styles.sectionTitle}>All About Me</Text>
             
             <View style={styles.storyCard}>
-              {/* Avatar Image inside card */}
-              <View style={styles.avatarContainer}>
-                <Image
-                  source={require("../../assets/avatar-pixel.png")}
-                  style={styles.avatarImage}
-                  resizeMode="contain"
-                />
-              </View>
-
               <Text style={styles.storyText}>
                 I am a young entrepreneur driven by a passion for perfection and precision. 
                 My journey began working with premier dealerships including Nissan and Mazda, 
@@ -155,14 +146,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginBottom: 16,
     letterSpacing: 0.5,
-  },
-  avatarContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  avatarImage: {
-    width: 120,
-    height: 120,
   },
   storyCard: {
     backgroundColor: "#0f0f0f",
