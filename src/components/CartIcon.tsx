@@ -2,13 +2,18 @@ import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCartStore } from "../state/cartStore";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { RootDrawerParamList } from "../navigation/AppNavigator";
+
+type CartIconNavigationProp = DrawerNavigationProp<RootDrawerParamList>;
 
 export default function CartIcon() {
   const totalItems = useCartStore((s) => s.getTotalItems());
+  const navigation = useNavigation<CartIconNavigationProp>();
 
   const handlePress = () => {
-    // TODO: Navigate to cart screen
-    console.log("Navigate to cart");
+    navigation.navigate("Cart");
   };
 
   return (
