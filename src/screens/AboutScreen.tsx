@@ -70,20 +70,23 @@ export default function AboutScreen() {
         >
           {/* Story Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Our Story</Text>
+            <Text style={styles.sectionTitle}>All About Me</Text>
             <View style={styles.storyCard}>
               <Text style={styles.storyText}>
-                Founded in 2008, The Mobile Cleanic began with a simple mission:
-                to bring professional-grade car detailing directly to our
-                customers. What started as a one-person operation has grown into
-                a trusted team of expert detailers serving the greater Los
-                Angeles area.
+                I am a young entrepreneur driven by a passion for perfection and precision. 
+                My journey began working with premier dealerships including Nissan and Mazda, 
+                where I honed my craft and developed an eye for detail.
               </Text>
               <Text style={[styles.storyText, styles.storyTextSpacing]}>
-                We believe your car deserves the best care possible, and you
-                deserve the convenience of having that service come to you. Every
-                vehicle we work on receives the same meticulous attention to
-                detail, whether it is a daily commuter or a luxury sports car.
+                To elevate my expertise, I pursued professional car detailing certification 
+                at a mechanic school in Montreal. But I did not stop there—I taught myself 
+                to code, building apps and websites from the ground up.
+              </Text>
+              <Text style={[styles.storyText, styles.storyTextSpacing]}>
+                This app is the result of that journey: built entirely from scratch, combining 
+                my passion for detailing with my self-taught tech skills. My mission is to 
+                inspire and motivate young entrepreneurs like me to chase their dreams and 
+                build something extraordinary.
               </Text>
             </View>
           </View>
