@@ -56,7 +56,7 @@ const PACKAGES: Package[] = [
   {
     id: "3",
     name: "Seat Shampooing",
-    price: "$150",
+    price: "$99",
     duration: "Up to 2 hours",
     description: "Deep seat & upholstery cleaning",
     category: "interior",
@@ -141,7 +141,7 @@ const PACKAGES: Package[] = [
   {
     id: "10",
     name: "Seat Shampooing",
-    price: "$150",
+    price: "$99",
     duration: "Up to 2 hours",
     description: "Deep seat & upholstery cleaning",
     category: "in-n-out",
