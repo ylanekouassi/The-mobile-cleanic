@@ -199,6 +199,37 @@ app.get("/api/admin/customers/:id", async (c) => {
   }
 });
 
+// Update customer details
+app.put("/api/admin/customers/:id", async (c) => {
+  const customerId = c.req.param("id");
+
+  try {
+    const customerData = await c.req.json();
+
+    const customer = await prisma.customer.update({
+      where: { id: customerId },
+      data: {
+        firstName: customerData.firstName,
+        lastName: customerData.lastName,
+        fullName: customerData.fullName,
+        email: customerData.email,
+        phone: customerData.phone,
+        streetAddress: customerData.streetAddress,
+        city: customerData.city,
+        postalCode: customerData.postalCode,
+      },
+    });
+
+    return c.json({
+      success: true,
+      customer,
+      message: "Customer updated successfully",
+    });
+  } catch (error) {
+    return c.json({ success: false, error: "Failed to update customer" }, 500);
+  }
+});
+
 // Mark booking as completed
 app.put("/api/admin/bookings/:id/complete", async (c) => {
   const bookingId = c.req.param("id");

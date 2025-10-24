@@ -370,18 +370,34 @@ export default function AdminDashboardScreen() {
                     </Text>
                   </View>
 
-                  {/* Add Booking Button */}
-                  <Pressable
-                    style={styles.addBookingButton}
-                    onPress={() => {
-                      (navigation as any).navigate("AddBooking", {
-                        customerId: customer.id,
-                      });
-                    }}
-                  >
-                    <Ionicons name="calendar-outline" size={18} color="#000000" />
-                    <Text style={styles.addBookingButtonText}>CREATE BOOKING</Text>
-                  </Pressable>
+                  {/* Action Buttons Row */}
+                  <View style={styles.actionButtonsRow}>
+                    {/* Edit Customer Button */}
+                    <Pressable
+                      style={styles.editButton}
+                      onPress={() => {
+                        (navigation as any).navigate("EditCustomer", {
+                          customerId: customer.id,
+                        });
+                      }}
+                    >
+                      <Ionicons name="create-outline" size={18} color="#000000" />
+                      <Text style={styles.editButtonText}>EDIT</Text>
+                    </Pressable>
+
+                    {/* Add Booking Button */}
+                    <Pressable
+                      style={styles.addBookingButton}
+                      onPress={() => {
+                        (navigation as any).navigate("AddBooking", {
+                          customerId: customer.id,
+                        });
+                      }}
+                    >
+                      <Ionicons name="calendar-outline" size={18} color="#000000" />
+                      <Text style={styles.addBookingButtonText}>CREATE BOOKING</Text>
+                    </Pressable>
+                  </View>
 
                   <Text style={styles.sectionTitle}>Booking History:</Text>
                   {customer.bookings.map((booking) => (
@@ -847,6 +863,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   addBookingButton: {
+    flex: 1,
     flexDirection: "row",
     backgroundColor: "#E89A3C",
     paddingVertical: 10,
@@ -855,10 +872,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+  },
+  addBookingButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
+  },
+  actionButtonsRow: {
+    flexDirection: "row",
+    gap: 10,
     marginTop: 15,
     marginBottom: 15,
   },
-  addBookingButtonText: {
+  editButton: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#4ade80",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  editButtonText: {
     fontSize: 13,
     fontWeight: "700",
     color: "#000000",

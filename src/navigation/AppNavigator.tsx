@@ -15,6 +15,7 @@ import AdminLoginScreen from "../screens/AdminLoginScreen";
 import AdminDashboardScreen from "../screens/AdminDashboardScreen";
 import AddCustomerScreen from "../screens/AddCustomerScreen";
 import AddBookingScreen from "../screens/AddBookingScreen";
+import EditCustomerScreen from "../screens/EditCustomerScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import CartIcon from "../components/CartIcon";
@@ -30,6 +31,9 @@ export type RootDrawerParamList = {
   AdminLogin: undefined;
   AdminDashboard: undefined;
   AddCustomer: undefined;
+  EditCustomer: {
+    customerId: string;
+  };
   AddBooking: {
     customerId: string;
   };
@@ -278,6 +282,22 @@ export default function AppNavigator() {
         component={AddBookingScreen}
         options={({ navigation }) => ({
           title: "Add Booking",
+          drawerItemStyle: { display: "none" },
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="EditCustomer"
+        component={EditCustomerScreen}
+        options={({ navigation }) => ({
+          title: "Edit Customer",
           drawerItemStyle: { display: "none" },
           headerLeft: () => (
             <Pressable
