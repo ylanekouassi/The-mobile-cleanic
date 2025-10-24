@@ -13,6 +13,8 @@ import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
 import AdminLoginScreen from "../screens/AdminLoginScreen";
 import AdminDashboardScreen from "../screens/AdminDashboardScreen";
+import AddCustomerScreen from "../screens/AddCustomerScreen";
+import AddBookingScreen from "../screens/AddBookingScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import CartIcon from "../components/CartIcon";
@@ -27,6 +29,10 @@ export type RootDrawerParamList = {
   Checkout: undefined;
   AdminLogin: undefined;
   AdminDashboard: undefined;
+  AddCustomer: undefined;
+  AddBooking: {
+    customerId: string;
+  };
   DateSelection: {
     packageName: string;
     packagePrice: string;
@@ -250,6 +256,38 @@ export default function AppNavigator() {
           drawerItemStyle: { display: "none" },
           headerShown: false,
         }}
+      />
+      <Drawer.Screen
+        name="AddCustomer"
+        component={AddCustomerScreen}
+        options={({ navigation }) => ({
+          title: "Add Customer",
+          drawerItemStyle: { display: "none" },
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="AddBooking"
+        component={AddBookingScreen}
+        options={({ navigation }) => ({
+          title: "Add Booking",
+          drawerItemStyle: { display: "none" },
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
       />
     </Drawer.Navigator>
   );

@@ -114,6 +114,51 @@ app.get("/api/admin/customers", async (c) => {
   }
 });
 
+// Create new customer manually
+app.post("/api/admin/customers", async (c) => {
+  try {
+    const customerData = await c.req.json();
+
+    // Check if customer with email already exists
+    const existingCustomer = await prisma.customer.findFirst({
+      where: {
+        email: customerData.email,
+      },
+    });
+
+    if (existingCustomer) {
+      return c.json(
+        {
+          success: false,
+          error: "Customer with this email already exists",
+        },
+        400
+      );
+    }
+
+    const customer = await prisma.customer.create({
+      data: {
+        firstName: customerData.firstName,
+        lastName: customerData.lastName,
+        fullName: customerData.fullName,
+        email: customerData.email,
+        phone: customerData.phone,
+        streetAddress: customerData.streetAddress,
+        city: customerData.city,
+        postalCode: customerData.postalCode,
+      },
+    });
+
+    return c.json({
+      success: true,
+      customer,
+      message: "Customer created successfully",
+    });
+  } catch (error) {
+    return c.json({ success: false, error: "Failed to create customer" }, 500);
+  }
+});
+
 // Get single customer details
 app.get("/api/admin/customers/:id", async (c) => {
   const customerId = c.req.param("id");

@@ -314,6 +314,15 @@ export default function AdminDashboardScreen() {
         style={styles.tabContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#E89A3C" />}
       >
+        {/* Add Customer Button */}
+        <Pressable
+          style={styles.addButton}
+          onPress={() => navigation.navigate("AddCustomer" as never)}
+        >
+          <Ionicons name="person-add" size={20} color="#000000" />
+          <Text style={styles.addButtonText}>ADD NEW CUSTOMER</Text>
+        </Pressable>
+
         {customers.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="people-outline" size={60} color="#666666" />
@@ -368,6 +377,19 @@ export default function AdminDashboardScreen() {
                       {customer.streetAddress}, {customer.city}, {customer.postalCode}
                     </Text>
                   </View>
+
+                  {/* Add Booking Button */}
+                  <Pressable
+                    style={styles.addBookingButton}
+                    onPress={() => {
+                      (navigation as any).navigate("AddBooking", {
+                        customerId: customer.id,
+                      });
+                    }}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color="#000000" />
+                    <Text style={styles.addBookingButtonText}>CREATE BOOKING</Text>
+                  </Pressable>
 
                   <Text style={styles.sectionTitle}>Booking History:</Text>
                   {customer.bookings.map((booking) => (
@@ -814,5 +836,40 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: "#FFFFFF",
+  },
+  addButton: {
+    flexDirection: "row",
+    backgroundColor: "#E89A3C",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
+  },
+  addBookingButton: {
+    flexDirection: "row",
+    backgroundColor: "#E89A3C",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  addBookingButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
   },
 });
