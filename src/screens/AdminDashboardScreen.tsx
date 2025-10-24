@@ -8,6 +8,8 @@ import {
   RefreshControl,
   Alert,
   ActivityIndicator,
+  Modal,
+  TextInput,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -54,6 +56,10 @@ export default function AdminDashboardScreen() {
   const [activeTab, setActiveTab] = useState<"schedule" | "customers">("schedule");
   const [expandedBooking, setExpandedBooking] = useState<string | null>(null);
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
+  const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
+  const [rescheduleBookingId, setRescheduleBookingId] = useState<string | null>(null);
+  const [rescheduleDate, setRescheduleDate] = useState<string>("");
+  const [rescheduleTime, setRescheduleTime] = useState<string>("");
 
   useEffect(() => {
     fetchData();
@@ -101,6 +107,40 @@ export default function AdminDashboardScreen() {
         },
       },
     ]);
+  };
+
+  const handleReschedule = async () => {
+    if (!rescheduleDate || !rescheduleTime) {
+      Alert.alert("Error", "Please enter both date and time");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/api/admin/bookings/${rescheduleBookingId}/reschedule`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            bookingDate: rescheduleDate,
+            bookingTime: rescheduleTime,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert("Success", "Booking has been rescheduled successfully!");
+        setRescheduleModalVisible(false);
+        fetchData(); // Refresh data
+      } else {
+        Alert.alert("Error", data.error || "Failed to reschedule booking");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Could not connect to server");
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -264,29 +304,84 @@ export default function AdminDashboardScreen() {
                         </View>
 
                         {booking.paymentStatus !== "completed" && (
-                          <Pressable
-                            style={styles.completeButton}
-                            onPress={async () => {
-                              try {
-                                const response = await fetch(
-                                  `${BACKEND_URL}/api/admin/bookings/${booking.id}/complete`,
-                                  { method: "PUT" }
-                                );
-                                const data = await response.json();
-                                if (data.success) {
-                                  Alert.alert("Success", "Booking marked as completed!");
-                                  fetchData(); // Refresh data
-                                } else {
-                                  Alert.alert("Error", "Failed to update booking");
+                          <>
+                            {/* Reschedule and Cancel Buttons Row */}
+                            <View style={styles.actionButtonsRowBooking}>
+                              <Pressable
+                                style={styles.rescheduleButton}
+                                onPress={() => {
+                                  setRescheduleBookingId(booking.id);
+                                  setRescheduleDate(booking.bookingDate);
+                                  setRescheduleTime(booking.bookingTime);
+                                  setRescheduleModalVisible(true);
+                                }}
+                              >
+                                <Ionicons name="calendar-outline" size={18} color="#000000" />
+                                <Text style={styles.rescheduleButtonText}>RESCHEDULE</Text>
+                              </Pressable>
+
+                              <Pressable
+                                style={styles.cancelButton}
+                                onPress={() => {
+                                  Alert.alert(
+                                    "Cancel Booking",
+                                    "Are you sure you want to cancel this booking? This action cannot be undone.",
+                                    [
+                                      { text: "No", style: "cancel" },
+                                      {
+                                        text: "Yes, Cancel",
+                                        style: "destructive",
+                                        onPress: async () => {
+                                          try {
+                                            const response = await fetch(
+                                              `${BACKEND_URL}/api/admin/bookings/${booking.id}/cancel`,
+                                              { method: "PUT" }
+                                            );
+                                            const data = await response.json();
+                                            if (data.success) {
+                                              Alert.alert("Success", "Booking has been cancelled");
+                                              fetchData(); // Refresh data
+                                            } else {
+                                              Alert.alert("Error", "Failed to cancel booking");
+                                            }
+                                          } catch (error) {
+                                            Alert.alert("Error", "Could not connect to server");
+                                          }
+                                        },
+                                      },
+                                    ]
+                                  );
+                                }}
+                              >
+                                <Ionicons name="close-circle" size={18} color="#FFFFFF" />
+                                <Text style={styles.cancelButtonText}>CANCEL</Text>
+                              </Pressable>
+                            </View>
+
+                            <Pressable
+                              style={styles.completeButton}
+                              onPress={async () => {
+                                try {
+                                  const response = await fetch(
+                                    `${BACKEND_URL}/api/admin/bookings/${booking.id}/complete`,
+                                    { method: "PUT" }
+                                  );
+                                  const data = await response.json();
+                                  if (data.success) {
+                                    Alert.alert("Success", "Booking marked as completed!");
+                                    fetchData(); // Refresh data
+                                  } else {
+                                    Alert.alert("Error", "Failed to update booking");
+                                  }
+                                } catch (error) {
+                                  Alert.alert("Error", "Could not connect to server");
                                 }
-                              } catch (error) {
-                                Alert.alert("Error", "Could not connect to server");
-                              }
-                            }}
-                          >
-                            <Ionicons name="checkmark-circle" size={20} color="#000000" />
-                            <Text style={styles.completeButtonText}>MARK AS COMPLETED</Text>
-                          </Pressable>
+                              }}
+                            >
+                              <Ionicons name="checkmark-circle" size={20} color="#000000" />
+                              <Text style={styles.completeButtonText}>MARK AS COMPLETED</Text>
+                            </Pressable>
+                          </>
                         )}
                       </View>
                     )}
@@ -507,6 +602,61 @@ export default function AdminDashboardScreen() {
 
       {/* Tab Content */}
       {activeTab === "schedule" ? renderScheduleTab() : renderCustomersTab()}
+
+      {/* Reschedule Modal */}
+      <Modal
+        visible={rescheduleModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setRescheduleModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Reschedule Booking</Text>
+              <Pressable onPress={() => setRescheduleModalVisible(false)}>
+                <Ionicons name="close" size={28} color="#FFFFFF" />
+              </Pressable>
+            </View>
+
+            <View style={styles.modalBody}>
+              <Text style={styles.inputLabel}>Date (YYYY-MM-DD)</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={rescheduleDate}
+                onChangeText={setRescheduleDate}
+                placeholder="2024-12-31"
+                placeholderTextColor="#666666"
+              />
+
+              <Text style={styles.inputLabel}>Time (HH:MM AM/PM)</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={rescheduleTime}
+                onChangeText={setRescheduleTime}
+                placeholder="7:00 AM"
+                placeholderTextColor="#666666"
+              />
+
+              <View style={styles.modalButtonsRow}>
+                <Pressable
+                  style={styles.modalCancelButton}
+                  onPress={() => setRescheduleModalVisible(false)}
+                >
+                  <Text style={styles.modalCancelButtonText}>CANCEL</Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.modalConfirmButton}
+                  onPress={handleReschedule}
+                >
+                  <Text style={styles.modalConfirmButtonText}>RESCHEDULE</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </LinearGradient>
   );
 }
@@ -898,6 +1048,125 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     fontSize: 13,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
+  },
+  actionButtonsRowBooking: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 15,
+  },
+  rescheduleButton: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#60a5fa",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  rescheduleButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
+  },
+  cancelButton: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#ef4444",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  cancelButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#1a1a1a",
+    borderRadius: 16,
+    width: "100%",
+    maxWidth: 400,
+    borderWidth: 1,
+    borderColor: "#333333",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#333333",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#E89A3C",
+  },
+  modalBody: {
+    padding: 20,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#CCCCCC",
+    marginBottom: 8,
+    marginTop: 10,
+  },
+  modalInput: {
+    backgroundColor: "#0a0a0a",
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 16,
+    color: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#333333",
+  },
+  modalButtonsRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 25,
+  },
+  modalCancelButton: {
+    flex: 1,
+    backgroundColor: "#333333",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalCancelButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    letterSpacing: 0.5,
+  },
+  modalConfirmButton: {
+    flex: 1,
+    backgroundColor: "#E89A3C",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalConfirmButtonText: {
+    fontSize: 14,
     fontWeight: "700",
     color: "#000000",
     letterSpacing: 0.5,

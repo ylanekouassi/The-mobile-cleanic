@@ -256,6 +256,65 @@ app.put("/api/admin/bookings/:id/complete", async (c) => {
   }
 });
 
+// Reschedule booking
+app.put("/api/admin/bookings/:id/reschedule", async (c) => {
+  const bookingId = c.req.param("id");
+
+  try {
+    const { bookingDate, bookingTime } = await c.req.json();
+
+    if (!bookingDate || !bookingTime) {
+      return c.json({ success: false, error: "Date and time are required" }, 400);
+    }
+
+    const booking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        bookingDate,
+        bookingTime,
+      },
+      include: {
+        customer: true,
+        packages: true,
+      },
+    });
+
+    return c.json({
+      success: true,
+      booking,
+      message: "Booking rescheduled successfully",
+    });
+  } catch (error) {
+    return c.json({ success: false, error: "Failed to reschedule booking" }, 500);
+  }
+});
+
+// Cancel booking
+app.put("/api/admin/bookings/:id/cancel", async (c) => {
+  const bookingId = c.req.param("id");
+
+  try {
+    const booking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        paymentStatus: "cancelled",
+      },
+      include: {
+        customer: true,
+        packages: true,
+      },
+    });
+
+    return c.json({
+      success: true,
+      booking,
+      message: "Booking cancelled successfully",
+    });
+  } catch (error) {
+    return c.json({ success: false, error: "Failed to cancel booking" }, 500);
+  }
+});
+
 // ==================== BOOKING ROUTES ====================
 
 // Check availability for a specific date
