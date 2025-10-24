@@ -154,6 +154,32 @@ app.get("/api/admin/customers/:id", async (c) => {
   }
 });
 
+// Mark booking as completed
+app.put("/api/admin/bookings/:id/complete", async (c) => {
+  const bookingId = c.req.param("id");
+
+  try {
+    const booking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        paymentStatus: "completed",
+      },
+      include: {
+        customer: true,
+        packages: true,
+      },
+    });
+
+    return c.json({
+      success: true,
+      booking,
+      message: "Booking marked as completed",
+    });
+  } catch (error) {
+    return c.json({ success: false, error: "Failed to update booking" }, 500);
+  }
+});
+
 // ==================== BOOKING ROUTES ====================
 
 // Check availability for a specific date

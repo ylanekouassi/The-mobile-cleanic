@@ -258,13 +258,44 @@ export default function AdminDashboardScreen() {
                           </Text>
                         </View>
 
-                        <View style={styles.statusBadge}>
+                        <View style={[
+                          styles.statusBadge,
+                          booking.paymentStatus === "completed" && styles.statusBadgeCompleted
+                        ]}>
                           <Text style={styles.statusText}>
-                            {booking.paymentStatus === "reservation_paid"
+                            {booking.paymentStatus === "completed"
+                              ? "✓ Job Completed"
+                              : booking.paymentStatus === "reservation_paid"
                               ? "Reservation Paid"
                               : booking.paymentStatus}
                           </Text>
                         </View>
+
+                        {booking.paymentStatus !== "completed" && (
+                          <Pressable
+                            style={styles.completeButton}
+                            onPress={async () => {
+                              try {
+                                const response = await fetch(
+                                  `${BACKEND_URL}/api/admin/bookings/${booking.id}/complete`,
+                                  { method: "PUT" }
+                                );
+                                const data = await response.json();
+                                if (data.success) {
+                                  Alert.alert("Success", "Booking marked as completed!");
+                                  fetchData(); // Refresh data
+                                } else {
+                                  Alert.alert("Error", "Failed to update booking");
+                                }
+                              } catch (error) {
+                                Alert.alert("Error", "Could not connect to server");
+                              }
+                            }}
+                          >
+                            <Ionicons name="checkmark-circle" size={20} color="#000000" />
+                            <Text style={styles.completeButtonText}>MARK AS COMPLETED</Text>
+                          </Pressable>
+                        )}
                       </View>
                     )}
                   </Pressable>
@@ -388,6 +419,13 @@ export default function AdminDashboardScreen() {
           <Text style={styles.statLabel}>Total Bookings</Text>
         </View>
         <View style={styles.statCard}>
+          <Ionicons name="checkmark-circle" size={24} color="#4ade80" />
+          <Text style={styles.statValue}>
+            {bookings.filter((b) => b.paymentStatus === "completed").length}
+          </Text>
+          <Text style={styles.statLabel}>Jobs Completed</Text>
+        </View>
+        <View style={styles.statCard}>
           <Ionicons name="people" size={24} color="#E89A3C" />
           <Text style={styles.statValue}>{customers.length}</Text>
           <Text style={styles.statLabel}>Customers</Text>
@@ -480,12 +518,13 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     paddingHorizontal: 20,
     gap: 10,
     marginBottom: 20,
   },
   statCard: {
-    flex: 1,
+    width: "48%",
     backgroundColor: "#1a1a1a",
     borderRadius: 12,
     padding: 15,
@@ -690,10 +729,30 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 10,
   },
+  statusBadgeCompleted: {
+    backgroundColor: "#1a4a1a",
+  },
   statusText: {
     fontSize: 12,
     fontWeight: "600",
     color: "#4ade80",
+  },
+  completeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#E89A3C",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginTop: 15,
+    gap: 8,
+  },
+  completeButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#000000",
+    letterSpacing: 0.5,
   },
   customerCard: {
     backgroundColor: "#1a1a1a",
