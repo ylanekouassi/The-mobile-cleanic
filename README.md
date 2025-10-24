@@ -149,10 +149,10 @@ To access the admin dashboard:
 
 1. Open the app and tap the menu (☰) icon
 2. Scroll to the bottom and tap "Admin Login"
-3. Enter admin credentials:
-   - **Username:** `ylanekouassi`
-   - **Password:** `Algoma2021@!`
+3. Enter admin credentials (credentials are stored securely in the backend)
 4. View schedule and customer management features
+
+**Note:** Admin credentials are hardcoded in the backend for security. Contact the repository owner for access.
 
 ## 📊 API Endpoints
 
