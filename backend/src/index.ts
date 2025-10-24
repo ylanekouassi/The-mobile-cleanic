@@ -333,29 +333,28 @@ app.put("/api/admin/bookings/:id/reschedule", async (c) => {
   }
 });
 
-// Cancel booking
+// Cancel booking (delete completely)
 app.put("/api/admin/bookings/:id/cancel", async (c) => {
   const bookingId = c.req.param("id");
 
   try {
-    const booking = await prisma.booking.update({
+    // First delete all associated packages
+    await prisma.bookingPackage.deleteMany({
+      where: { bookingId },
+    });
+
+    // Then delete the booking itself
+    await prisma.booking.delete({
       where: { id: bookingId },
-      data: {
-        paymentStatus: "cancelled",
-      },
-      include: {
-        customer: true,
-        packages: true,
-      },
     });
 
     return c.json({
       success: true,
-      booking,
-      message: "Booking cancelled successfully",
+      message: "Booking deleted successfully",
     });
   } catch (error) {
-    return c.json({ success: false, error: "Failed to cancel booking" }, 500);
+    console.error("Delete booking error:", error);
+    return c.json({ success: false, error: "Failed to delete booking" }, 500);
   }
 });
 

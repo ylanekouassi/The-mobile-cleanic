@@ -367,12 +367,12 @@ export default function AdminDashboardScreen() {
                                 style={styles.cancelButton}
                                 onPress={() => {
                                   Alert.alert(
-                                    "Cancel Booking",
-                                    "Are you sure you want to cancel this booking? This action cannot be undone.",
+                                    "Delete Booking",
+                                    "Are you sure you want to delete this booking? This will permanently remove it from the system.",
                                     [
                                       { text: "No", style: "cancel" },
                                       {
-                                        text: "Yes, Cancel",
+                                        text: "Yes, Delete",
                                         style: "destructive",
                                         onPress: async () => {
                                           try {
@@ -382,10 +382,10 @@ export default function AdminDashboardScreen() {
                                             );
                                             const data = await response.json();
                                             if (data.success) {
-                                              Alert.alert("Success", "Booking has been cancelled");
+                                              Alert.alert("Success", "Booking has been deleted");
                                               fetchData(); // Refresh data
                                             } else {
-                                              Alert.alert("Error", "Failed to cancel booking");
+                                              Alert.alert("Error", "Failed to delete booking");
                                             }
                                           } catch (error) {
                                             Alert.alert("Error", "Could not connect to server");
