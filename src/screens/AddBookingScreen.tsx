@@ -177,9 +177,21 @@ export default function AddBookingScreen() {
       const data = await response.json();
 
       if (data.success) {
-        Alert.alert("Success", "Booking created successfully!", [
+        // Reset form
+        setSelectedPackage(null);
+        setSelectedVehicleType(null);
+        setQuantity("1");
+        setSelectedDate(new Date());
+        setSelectedTime(null);
+        setPaymentMethod("e_transfer");
+
+        Alert.alert("Success", "Booking created successfully! You can create another or go back.", [
           {
-            text: "OK",
+            text: "Create Another",
+            style: "default",
+          },
+          {
+            text: "Back to Dashboard",
             onPress: () => navigation.goBack(),
           },
         ]);

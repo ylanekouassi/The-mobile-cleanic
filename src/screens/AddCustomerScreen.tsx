@@ -86,9 +86,22 @@ export default function AddCustomerScreen() {
       const data = await response.json();
 
       if (data.success) {
-        Alert.alert("Success", "Customer added successfully!", [
+        // Clear form
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setPhone("");
+        setStreetAddress("");
+        setCity("");
+        setPostalCode("");
+
+        Alert.alert("Success", "Customer added successfully! You can add another or go back.", [
           {
-            text: "OK",
+            text: "Add Another",
+            style: "default",
+          },
+          {
+            text: "Back to Dashboard",
             onPress: () => navigation.goBack(),
           },
         ]);

@@ -56,16 +56,8 @@ export default function AdminDashboardScreen() {
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
 
   useEffect(() => {
-    checkAuth();
     fetchData();
   }, []);
-
-  const checkAuth = async () => {
-    const session = await AsyncStorage.getItem("adminSession");
-    if (!session) {
-      navigation.navigate("AdminLogin" as never);
-    }
-  };
 
   const fetchData = async () => {
     setLoading(true);
