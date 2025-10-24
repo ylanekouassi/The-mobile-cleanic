@@ -2,11 +2,13 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
-There are already environment keys in the project. 
+There are already environment keys in the project.
 Before telling the user to add them, check if you already have access to the required keys through bash.
 Directly access them with process.env.${key}
 
@@ -26,6 +28,23 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 */
 
 export default function App() {
+  // Auto-login admin on app start
+  useEffect(() => {
+    const autoLogin = async () => {
+      try {
+        await AsyncStorage.setItem("adminSession", JSON.stringify({
+          isLoggedIn: true,
+          timestamp: new Date().toISOString(),
+        }));
+        console.log("Admin auto-login successful");
+      } catch (error) {
+        console.error("Auto-login error:", error);
+      }
+    };
+
+    autoLogin();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>

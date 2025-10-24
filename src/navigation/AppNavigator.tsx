@@ -57,6 +57,7 @@ export default function AppNavigator() {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
+      initialRouteName="AdminDashboard"
       screenOptions={{
         headerStyle: {
           backgroundColor: "#000000",
@@ -88,6 +89,19 @@ export default function AppNavigator() {
         },
       }}
     >
+      {/* Admin Dashboard - Default Homepage */}
+      <Drawer.Screen
+        name="AdminDashboard"
+        component={AdminDashboardScreen}
+        options={{
+          title: "Admin Dashboard",
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="shield-checkmark" size={size} color={color} />
+          ),
+          headerRight: () => <CartIcon />,
+        }}
+      />
+
       <Drawer.Screen
         name="Home"
         component={HomeScreen}
