@@ -9,12 +9,12 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
-  TextInput,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Calendar } from "react-native-calendars";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL || "http://localhost:3000";
 
@@ -58,8 +58,9 @@ export default function AdminDashboardScreen() {
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
   const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
   const [rescheduleBookingId, setRescheduleBookingId] = useState<string | null>(null);
-  const [rescheduleDate, setRescheduleDate] = useState<string>("");
-  const [rescheduleTime, setRescheduleTime] = useState<string>("");
+  const [rescheduleDate, setRescheduleDate] = useState<Date>(new Date());
+  const [rescheduleTime, setRescheduleTime] = useState<"morning" | "afternoon">("morning");
+  const [showRescheduleDatePicker, setShowRescheduleDatePicker] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -111,9 +112,15 @@ export default function AdminDashboardScreen() {
 
   const handleReschedule = async () => {
     if (!rescheduleDate || !rescheduleTime) {
-      Alert.alert("Error", "Please enter both date and time");
+      Alert.alert("Error", "Please select both date and time");
       return;
     }
+
+    // Format date to YYYY-MM-DD
+    const formattedDate = rescheduleDate.toISOString().split('T')[0];
+
+    // Format time to "7:00 AM" or "1:00 PM"
+    const formattedTime = rescheduleTime === "morning" ? "7:00 AM" : "1:00 PM";
 
     try {
       const response = await fetch(
@@ -124,8 +131,8 @@ export default function AdminDashboardScreen() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            bookingDate: rescheduleDate,
-            bookingTime: rescheduleTime,
+            bookingDate: formattedDate,
+            bookingTime: formattedTime,
           }),
         }
       );
@@ -134,6 +141,7 @@ export default function AdminDashboardScreen() {
       if (data.success) {
         Alert.alert("Success", "Booking has been rescheduled successfully!");
         setRescheduleModalVisible(false);
+        setShowRescheduleDatePicker(false);
         fetchData(); // Refresh data
       } else {
         Alert.alert("Error", data.error || "Failed to reschedule booking");
@@ -311,8 +319,14 @@ export default function AdminDashboardScreen() {
                                 style={styles.rescheduleButton}
                                 onPress={() => {
                                   setRescheduleBookingId(booking.id);
-                                  setRescheduleDate(booking.bookingDate);
-                                  setRescheduleTime(booking.bookingTime);
+                                  // Convert string date to Date object
+                                  setRescheduleDate(new Date(booking.bookingDate));
+                                  // Convert time string to morning/afternoon
+                                  const timeSlot = booking.bookingTime.includes("7:00 AM") || booking.bookingTime.includes("7:30 AM")
+                                    ? "morning"
+                                    : "afternoon";
+                                  setRescheduleTime(timeSlot);
+                                  setShowRescheduleDatePicker(false);
                                   setRescheduleModalVisible(true);
                                 }}
                               >
@@ -620,23 +634,115 @@ export default function AdminDashboardScreen() {
             </View>
 
             <View style={styles.modalBody}>
-              <Text style={styles.inputLabel}>Date (YYYY-MM-DD)</Text>
-              <TextInput
-                style={styles.modalInput}
-                value={rescheduleDate}
-                onChangeText={setRescheduleDate}
-                placeholder="2024-12-31"
-                placeholderTextColor="#666666"
-              />
+              <Text style={styles.inputLabel}>Select Date</Text>
+              <Pressable onPress={() => setShowRescheduleDatePicker(!showRescheduleDatePicker)}>
+                <View style={styles.dateTimeButton}>
+                  <Ionicons name="calendar-outline" size={20} color="#E89A3C" />
+                  <Text style={styles.dateTimeText}>
+                    {rescheduleDate.toLocaleDateString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </Text>
+                  <Ionicons
+                    name={showRescheduleDatePicker ? "chevron-up" : "chevron-down"}
+                    size={20}
+                    color="#E89A3C"
+                    style={{ marginLeft: "auto" }}
+                  />
+                </View>
+              </Pressable>
 
-              <Text style={styles.inputLabel}>Time (HH:MM AM/PM)</Text>
-              <TextInput
-                style={styles.modalInput}
-                value={rescheduleTime}
-                onChangeText={setRescheduleTime}
-                placeholder="7:00 AM"
-                placeholderTextColor="#666666"
-              />
+              {showRescheduleDatePicker && (
+                <View style={styles.calendarContainer}>
+                  <Calendar
+                    current={rescheduleDate.toISOString().split('T')[0]}
+                    onDayPress={(day) => {
+                      setRescheduleDate(new Date(day.dateString));
+                      setShowRescheduleDatePicker(false);
+                    }}
+                    minDate={new Date().toISOString().split('T')[0]}
+                    markedDates={{
+                      [rescheduleDate.toISOString().split('T')[0]]: {
+                        selected: true,
+                        selectedColor: '#E89A3C',
+                      },
+                    }}
+                    theme={{
+                      backgroundColor: '#0a0a0a',
+                      calendarBackground: '#0a0a0a',
+                      textSectionTitleColor: '#E89A3C',
+                      selectedDayBackgroundColor: '#E89A3C',
+                      selectedDayTextColor: '#000000',
+                      todayTextColor: '#E89A3C',
+                      dayTextColor: '#FFFFFF',
+                      textDisabledColor: '#444444',
+                      monthTextColor: '#FFFFFF',
+                      arrowColor: '#E89A3C',
+                      textDayFontWeight: '500',
+                      textMonthFontWeight: '700',
+                      textDayHeaderFontWeight: '600',
+                    }}
+                  />
+                </View>
+              )}
+
+              <Text style={styles.inputLabel}>Select Time</Text>
+              <View style={styles.timeOptionsContainer}>
+                <Pressable
+                  style={[
+                    styles.timeOption,
+                    rescheduleTime === "morning" && styles.timeOptionSelected,
+                  ]}
+                  onPress={() => setRescheduleTime("morning")}
+                >
+                  <Ionicons
+                    name="sunny-outline"
+                    size={24}
+                    color={rescheduleTime === "morning" ? "#000000" : "#E89A3C"}
+                  />
+                  <Text style={[
+                    styles.timeOptionText,
+                    rescheduleTime === "morning" && styles.timeOptionTextSelected
+                  ]}>
+                    7:00 AM
+                  </Text>
+                  <Text style={[
+                    styles.timeOptionSubtext,
+                    rescheduleTime === "morning" && styles.timeOptionSubtextSelected
+                  ]}>
+                    Morning
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  style={[
+                    styles.timeOption,
+                    rescheduleTime === "afternoon" && styles.timeOptionSelected,
+                  ]}
+                  onPress={() => setRescheduleTime("afternoon")}
+                >
+                  <Ionicons
+                    name="partly-sunny-outline"
+                    size={24}
+                    color={rescheduleTime === "afternoon" ? "#000000" : "#E89A3C"}
+                  />
+                  <Text style={[
+                    styles.timeOptionText,
+                    rescheduleTime === "afternoon" && styles.timeOptionTextSelected
+                  ]}>
+                    1:00 PM
+                  </Text>
+                  <Text style={[
+                    styles.timeOptionSubtext,
+                    rescheduleTime === "afternoon" && styles.timeOptionSubtextSelected
+                  ]}>
+                    Afternoon
+                  </Text>
+                </Pressable>
+              </View>
 
               <View style={styles.modalButtonsRow}>
                 <Pressable
@@ -1170,5 +1276,62 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#000000",
     letterSpacing: 0.5,
+  },
+  dateTimeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0a0a0a",
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#333333",
+    gap: 10,
+  },
+  dateTimeText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontWeight: "500",
+  },
+  calendarContainer: {
+    marginTop: 10,
+    marginBottom: 15,
+    borderRadius: 10,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#333333",
+  },
+  timeOptionsContainer: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+  },
+  timeOption: {
+    flex: 1,
+    backgroundColor: "#0a0a0a",
+    borderWidth: 2,
+    borderColor: "#333333",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    gap: 8,
+  },
+  timeOptionSelected: {
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+  },
+  timeOptionText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  timeOptionTextSelected: {
+    color: "#000000",
+  },
+  timeOptionSubtext: {
+    fontSize: 12,
+    color: "#888888",
+  },
+  timeOptionSubtextSelected: {
+    color: "#000000",
   },
 });
