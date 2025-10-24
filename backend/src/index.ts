@@ -93,12 +93,14 @@ app.get("/api/admin/customers", async (c) => {
       },
     });
 
-    // Calculate total spent for each customer
+    // Calculate statistics for each customer
     const customersWithStats = customers.map((customer) => {
-      const totalSpent = customer.bookings.reduce(
-        (sum, booking) => sum + booking.totalAmount,
-        0
-      );
+      // Total spent: only count completed bookings (actual revenue)
+      const totalSpent = customer.bookings
+        .filter((booking) => booking.paymentStatus === "completed")
+        .reduce((sum, booking) => sum + booking.totalAmount, 0);
+
+      // Booking count: all bookings (active + completed)
       const bookingCount = customer.bookings.length;
 
       return {
@@ -182,10 +184,10 @@ app.get("/api/admin/customers/:id", async (c) => {
       return c.json({ success: false, error: "Customer not found" }, 404);
     }
 
-    const totalSpent = customer.bookings.reduce(
-      (sum, booking) => sum + booking.totalAmount,
-      0
-    );
+    // Total spent: only count completed bookings (actual revenue)
+    const totalSpent = customer.bookings
+      .filter((booking) => booking.paymentStatus === "completed")
+      .reduce((sum, booking) => sum + booking.totalAmount, 0);
 
     return c.json({
       success: true,
