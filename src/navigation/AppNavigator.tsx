@@ -11,6 +11,8 @@ import PolicyScreen from "../screens/PolicyScreen";
 import AboutScreen from "../screens/AboutScreen";
 import DateSelectionScreen from "../screens/DateSelectionScreen";
 import BookingScreen from "../screens/BookingScreen";
+import AdminLoginScreen from "../screens/AdminLoginScreen";
+import AdminDashboardScreen from "../screens/AdminDashboardScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import CartIcon from "../components/CartIcon";
@@ -23,6 +25,8 @@ export type RootDrawerParamList = {
   About: undefined;
   Cart: undefined;
   Checkout: undefined;
+  AdminLogin: undefined;
+  AdminDashboard: undefined;
   DateSelection: {
     packageName: string;
     packagePrice: string;
@@ -221,6 +225,31 @@ export default function AppNavigator() {
             </Pressable>
           ),
         })}
+      />
+      <Drawer.Screen
+        name="AdminLogin"
+        component={AdminLoginScreen}
+        options={({ navigation }) => ({
+          title: "Admin Login",
+          drawerItemStyle: { display: "none" },
+          headerLeft: () => (
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={{ marginLeft: 15 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#E89A3C" />
+            </Pressable>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="AdminDashboard"
+        component={AdminDashboardScreen}
+        options={{
+          title: "Admin Dashboard",
+          drawerItemStyle: { display: "none" },
+          headerShown: false,
+        }}
       />
     </Drawer.Navigator>
   );

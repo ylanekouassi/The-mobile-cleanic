@@ -9,6 +9,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function CustomDrawer(props: DrawerContentComponentProps) {
+  const handleAdminLogin = () => {
+    props.navigation.navigate("AdminLogin");
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -30,6 +34,12 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
             <DrawerItemList {...props} />
           </View>
         </DrawerContentScrollView>
+
+        {/* Admin Login Button - Just above footer */}
+        <Pressable style={styles.adminButton} onPress={handleAdminLogin}>
+          <Ionicons name="lock-closed" size={18} color="#E89A3C" />
+          <Text style={styles.adminButtonText}>Admin Login</Text>
+        </Pressable>
 
         {/* Footer */}
         <View style={styles.footer}>
@@ -111,6 +121,25 @@ const styles = StyleSheet.create({
   navContainer: {
     flex: 1,
     paddingTop: 20,
+  },
+  adminButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1a1a1a",
+    marginHorizontal: 20,
+    marginBottom: 15,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#E89A3C",
+    gap: 8,
+  },
+  adminButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#E89A3C",
+    letterSpacing: 1,
   },
   footer: {
     paddingHorizontal: 20,

@@ -12,8 +12,7 @@
   },
   "dependencies": {
     "hono": "^4.0.0",
-    "@prisma/client": "^5.19.0",
-    "@hono/cors": "^1.0.0"
+    "@prisma/client": "^5.19.0"
   },
   "devDependencies": {
     "prisma": "^5.19.0",

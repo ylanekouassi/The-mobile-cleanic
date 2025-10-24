@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Customer {
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  fullName      String
+  email         String
+  phone         String
+  streetAddress String
+  city          String
+  postalCode    String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bookings      Booking[]
+}
+
+model Booking {
+  id              String   @id @default(cuid())
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  // Date and Time
+  bookingDate     DateTime // The date of the service
+  bookingTime     String   // e.g., "7:00 AM", "1:00 PM"
+
+  // Service Details
+  packages        BookingPackage[]
+
+  // Payment Info
+  paymentMethod   String   // "credit_card" | "e_transfer"
+  reservationFee  Float    @default(30.0)
+  serviceTotal    Float
+  totalAmount     Float
+  paymentStatus   String   @default("pending") // "pending" | "reservation_paid" | "completed"
+
+  // Additional Info
+  message         String?
+
+  // Metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([bookingDate])
+}
+
+model BookingPackage {
+  id          String  @id @default(cuid())
+  bookingId   String
+  booking     Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  packageId   String
+  packageName String
+  vehicleType String  // "sedan" | "suv" | "van"
+  basePrice   Float
+  finalPrice  Float
+  quantity    Int
+
+  @@index([bookingId])
+}

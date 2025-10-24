@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, TextInput, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, TextInput, Alert, ActivityIndicator } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,6 +9,8 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { RootDrawerParamList } from "../navigation/AppNavigator";
 import { useCartStore } from "../state/cartStore";
 import { Calendar } from "react-native-calendars";
+
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
 
 type CheckoutScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
 
@@ -43,6 +45,7 @@ export default function CheckoutScreen() {
 
   // Copy state
   const [copied, setCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCopyEmail = async () => {
     await Clipboard.setStringAsync("themobilecleanic@gmail.com");
@@ -92,26 +95,89 @@ export default function CheckoutScreen() {
     return true;
   };
 
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async () => {
     if (!validateForm()) return;
 
-    const paymentText = paymentMethod === "credit-card" 
-      ? "Your $30 reservation fee has been charged to your card."
-      : "We will send e-transfer instructions to your email for the $30 reservation fee.";
+    setIsSubmitting(true);
 
-    Alert.alert(
-      "Booking Confirmed!",
-      `Your detailing service has been scheduled for ${formatDate(selectedDate)} at ${formatTime(selectedTime)}.\n\n${paymentText}\n\nThe remaining $${totalPrice - 30} will be due after service completion.\n\nA confirmation email with booking details, receipt, and our policies has been sent to ${contactEmail}.`,
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            clearCart();
-            navigation.navigate("Home");
-          },
+    try {
+      // Split full name into first and last name
+      const nameParts = fullName.trim().split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+
+      // Prepare booking data
+      const bookingData = {
+        customer: {
+          firstName,
+          lastName,
+          fullName: fullName.trim(),
+          email: contactEmail.trim(),
+          phone: phone.trim(),
+          streetAddress: address.trim(),
+          city: city.trim(),
+          postalCode: postalCode.trim(),
         },
-      ]
-    );
+        bookingDate: selectedDate.toISOString(),
+        bookingTime: formatTime(selectedTime),
+        paymentMethod: paymentMethod === "credit-card" ? "credit_card" : "e_transfer",
+        serviceTotal: totalPrice,
+        packages: items.map((item) => ({
+          packageId: item.packageId,
+          packageName: item.packageName,
+          vehicleType: item.vehicleType,
+          basePrice: item.basePrice,
+          finalPrice: item.finalPrice,
+          quantity: item.quantity,
+        })),
+        message: null,
+      };
+
+      // Send booking to backend
+      const response = await fetch(`${BACKEND_URL}/api/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        Alert.alert("Booking Failed", data.error || "Could not create booking. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Success!
+      const paymentText =
+        paymentMethod === "credit-card"
+          ? "Your $30 reservation fee has been charged to your card."
+          : "We will send e-transfer instructions to your email for the $30 reservation fee.";
+
+      Alert.alert(
+        "Booking Confirmed!",
+        `Your detailing service has been scheduled for ${formatDate(selectedDate)} at ${formatTime(selectedTime)}.\n\n${paymentText}\n\nThe remaining $${totalPrice - 30} will be due after service completion.\n\nA confirmation email with booking details, receipt, and our policies has been sent to ${contactEmail}.`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              clearCart();
+              navigation.navigate("Home");
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      console.error("Booking error:", error);
+      Alert.alert(
+        "Connection Error",
+        "Could not connect to the server. Please check your internet connection and try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const totalPrice = getTotalPrice();
@@ -555,9 +621,22 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Confirm Button */}
-          <Pressable style={styles.confirmButton} onPress={handleConfirmBooking}>
-            <Ionicons name="checkmark-circle" size={24} color="#000000" />
-            <Text style={styles.confirmButtonText}>CONFIRM BOOKING</Text>
+          <Pressable
+            style={[styles.confirmButton, isSubmitting && styles.confirmButtonDisabled]}
+            onPress={handleConfirmBooking}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <ActivityIndicator color="#000000" />
+                <Text style={styles.confirmButtonText}>PROCESSING...</Text>
+              </>
+            ) : (
+              <>
+                <Ionicons name="checkmark-circle" size={24} color="#000000" />
+                <Text style={styles.confirmButtonText}>CONFIRM BOOKING</Text>
+              </>
+            )}
           </Pressable>
         </ScrollView>
       </LinearGradient>
@@ -931,6 +1010,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 12,
+  },
+  confirmButtonDisabled: {
+    opacity: 0.6,
   },
   confirmButtonText: {
     fontSize: 17,
