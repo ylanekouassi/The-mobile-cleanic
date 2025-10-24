@@ -1,0 +1,22 @@
+{
+  "name": "detailing-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "db:generate": "bunx prisma generate",
+    "db:migrate": "bunx prisma migrate dev",
+    "db:migrate:deploy": "bunx prisma migrate deploy",
+    "db:studio": "bunx prisma studio"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@prisma/client": "^5.19.0",
+    "@hono/cors": "^1.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.0",
+    "@types/bun": "latest"
+  }
+}
