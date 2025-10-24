@@ -93,6 +93,9 @@ app.get("/api/admin/customers", async (c) => {
       },
     });
 
+    // Get all refunds to subtract from revenue
+    const allRefunds = await prisma.refund.findMany();
+
     // Calculate statistics for each customer
     const customersWithStats = customers.map((customer) => {
       // Total spent: only count completed bookings (actual revenue)
@@ -100,12 +103,19 @@ app.get("/api/admin/customers", async (c) => {
         .filter((booking) => booking.paymentStatus === "completed")
         .reduce((sum, booking) => sum + booking.totalAmount, 0);
 
+      // Subtract refunds for this customer
+      const customerRefunds = allRefunds
+        .filter((refund) => refund.customerId === customer.id)
+        .reduce((sum, refund) => sum + refund.refundAmount, 0);
+
+      const netSpent = totalSpent - customerRefunds;
+
       // Booking count: all bookings (active + completed)
       const bookingCount = customer.bookings.length;
 
       return {
         ...customer,
-        totalSpent,
+        totalSpent: netSpent,
         bookingCount,
       };
     });
@@ -189,11 +199,19 @@ app.get("/api/admin/customers/:id", async (c) => {
       .filter((booking) => booking.paymentStatus === "completed")
       .reduce((sum, booking) => sum + booking.totalAmount, 0);
 
+    // Subtract refunds for this customer
+    const customerRefunds = await prisma.refund.findMany({
+      where: { customerId },
+    });
+    const totalRefunds = customerRefunds.reduce((sum, refund) => sum + refund.refundAmount, 0);
+
+    const netSpent = totalSpent - totalRefunds;
+
     return c.json({
       success: true,
       customer: {
         ...customer,
-        totalSpent,
+        totalSpent: netSpent,
       },
     });
   } catch (error) {
@@ -335,11 +353,27 @@ app.put("/api/admin/bookings/:id/reschedule", async (c) => {
   }
 });
 
-// Cancel booking (delete completely)
+// Cancel booking (delete completely) with optional refund tracking
 app.put("/api/admin/bookings/:id/cancel", async (c) => {
   const bookingId = c.req.param("id");
 
   try {
+    const { refund, customerName, customerId, bookingDate, bookingTime } = await c.req.json();
+
+    // If refund is requested, create a refund record
+    if (refund) {
+      await prisma.refund.create({
+        data: {
+          customerId,
+          customerName,
+          bookingDate: new Date(bookingDate),
+          bookingTime,
+          refundAmount: 30.0,
+          reason: "Booking cancelled by admin",
+        },
+      });
+    }
+
     // First delete all associated packages
     await prisma.bookingPackage.deleteMany({
       where: { bookingId },
@@ -352,7 +386,8 @@ app.put("/api/admin/bookings/:id/cancel", async (c) => {
 
     return c.json({
       success: true,
-      message: "Booking deleted successfully",
+      message: refund ? "Booking deleted and refund recorded" : "Booking deleted successfully",
+      refundIssued: refund,
     });
   } catch (error) {
     console.error("Delete booking error:", error);

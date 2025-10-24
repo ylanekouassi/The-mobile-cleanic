@@ -366,24 +366,64 @@ export default function AdminDashboardScreen() {
                               <Pressable
                                 style={styles.cancelButton}
                                 onPress={() => {
+                                  // First ask about refund
                                   Alert.alert(
-                                    "Delete Booking",
-                                    "Are you sure you want to delete this booking? This will permanently remove it from the system.",
+                                    "Cancel Booking",
+                                    "Do you want to refund the reservation fee ($30)?",
                                     [
-                                      { text: "No", style: "cancel" },
+                                      { text: "Cancel", style: "cancel" },
                                       {
-                                        text: "Yes, Delete",
+                                        text: "No Refund",
+                                        style: "default",
+                                        onPress: async () => {
+                                          try {
+                                            const response = await fetch(
+                                              `${BACKEND_URL}/api/admin/bookings/${booking.id}/cancel`,
+                                              {
+                                                method: "PUT",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({
+                                                  refund: false,
+                                                  customerName: booking.customer.fullName,
+                                                  customerId: booking.customerId,
+                                                }),
+                                              }
+                                            );
+                                            const data = await response.json();
+                                            if (data.success) {
+                                              Alert.alert("Success", "Booking deleted (no refund issued)");
+                                              fetchData();
+                                            } else {
+                                              Alert.alert("Error", "Failed to delete booking");
+                                            }
+                                          } catch (error) {
+                                            Alert.alert("Error", "Could not connect to server");
+                                          }
+                                        },
+                                      },
+                                      {
+                                        text: "Yes, Refund $30",
                                         style: "destructive",
                                         onPress: async () => {
                                           try {
                                             const response = await fetch(
                                               `${BACKEND_URL}/api/admin/bookings/${booking.id}/cancel`,
-                                              { method: "PUT" }
+                                              {
+                                                method: "PUT",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({
+                                                  refund: true,
+                                                  customerName: booking.customer.fullName,
+                                                  customerId: booking.customerId,
+                                                  bookingDate: booking.bookingDate,
+                                                  bookingTime: booking.bookingTime,
+                                                }),
+                                              }
                                             );
                                             const data = await response.json();
                                             if (data.success) {
-                                              Alert.alert("Success", "Booking has been deleted");
-                                              fetchData(); // Refresh data
+                                              Alert.alert("Success", "Booking deleted and $30 refund recorded");
+                                              fetchData();
                                             } else {
                                               Alert.alert("Error", "Failed to delete booking");
                                             }

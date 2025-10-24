@@ -65,3 +65,14 @@ model BookingPackage {
 
   @@index([bookingId])
 }
+
+model Refund {
+  id              String   @id @default(cuid())
+  customerId      String
+  customerName    String
+  bookingDate     DateTime
+  bookingTime     String
+  refundAmount    Float    // Amount refunded (usually $30 reservation fee)
+  reason          String?  // Optional cancellation reason
+  createdAt       DateTime @default(now())
+}
