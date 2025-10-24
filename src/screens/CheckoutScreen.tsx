@@ -10,7 +10,7 @@ import { RootDrawerParamList } from "../navigation/AppNavigator";
 import { useCartStore } from "../state/cartStore";
 import { Calendar } from "react-native-calendars";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
+const BACKEND_URL = process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL || "http://localhost:3000";
 
 type CheckoutScreenNavigationProp = DrawerNavigationProp<RootDrawerParamList, "Checkout">;
 
