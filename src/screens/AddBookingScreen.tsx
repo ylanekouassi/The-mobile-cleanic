@@ -57,11 +57,6 @@ const VEHICLE_TYPES = [
   { id: "van", name: "Van", surcharge: 50 },
 ];
 
-const TIME_SLOTS = [
-  "7:00 AM", "7:30 AM", "8:00 AM", "9:00 AM", "10:00 AM",
-  "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-];
-
 export default function AddBookingScreen() {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RouteParams, 'AddBooking'>>();
@@ -75,9 +70,9 @@ export default function AddBookingScreen() {
   const [selectedVehicleType, setSelectedVehicleType] = useState<string | null>(null);
   const [quantity, setQuantity] = useState("1");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<"morning" | "afternoon">("morning");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("e_transfer");
+  const [paymentMethod] = useState("reservation_paid"); // Already paid reservation fee
 
   useEffect(() => {
     if (customerId) {
@@ -140,6 +135,9 @@ export default function AddBookingScreen() {
       const qty = parseInt(quantity) || 1;
       const serviceTotal = finalPrice * qty;
 
+      // Format time to "7:00 AM" or "1:00 PM"
+      const formattedTime = selectedTime === "morning" ? "7:00 AM" : "1:00 PM";
+
       const response = await fetch(`${BACKEND_URL}/api/bookings`, {
         method: "POST",
         headers: {
@@ -157,7 +155,7 @@ export default function AddBookingScreen() {
             postalCode: customer.postalCode,
           },
           bookingDate: selectedDate.toISOString(),
-          bookingTime: selectedTime,
+          bookingTime: formattedTime,
           paymentMethod,
           serviceTotal,
           packages: [
@@ -182,8 +180,7 @@ export default function AddBookingScreen() {
         setSelectedVehicleType(null);
         setQuantity("1");
         setSelectedDate(new Date());
-        setSelectedTime(null);
-        setPaymentMethod("e_transfer");
+        setSelectedTime("morning");
 
         Alert.alert("Success", "Booking created successfully! You can create another or go back.", [
           {
@@ -336,74 +333,59 @@ export default function AddBookingScreen() {
         {/* Time Selection */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Select Time *</Text>
-          <View style={styles.timeGrid}>
-            {TIME_SLOTS.map((time) => (
-              <Pressable
-                key={time}
-                style={[
-                  styles.timeSlot,
-                  selectedTime === time && styles.timeSlotSelected,
-                ]}
-                onPress={() => setSelectedTime(time)}
-              >
-                <Text
-                  style={[
-                    styles.timeText,
-                    selectedTime === time && styles.timeTextSelected,
-                  ]}
-                >
-                  {time}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
+          <View style={styles.timeOptionsContainer}>
+            <Pressable
+              style={[
+                styles.timeOption,
+                selectedTime === "morning" && styles.timeOptionSelected,
+              ]}
+              onPress={() => setSelectedTime("morning")}
+            >
+              <Ionicons
+                name="sunny-outline"
+                size={24}
+                color={selectedTime === "morning" ? "#000000" : "#E89A3C"}
+              />
+              <Text style={[
+                styles.timeOptionText,
+                selectedTime === "morning" && styles.timeOptionTextSelected
+              ]}>
+                7:00 AM
+              </Text>
+              <Text style={[
+                styles.timeOptionSubtext,
+                selectedTime === "morning" && styles.timeOptionSubtextSelected
+              ]}>
+                Morning
+              </Text>
+            </Pressable>
 
-        {/* Payment Method */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
-          <Pressable
-            style={[
-              styles.paymentOption,
-              paymentMethod === "credit_card" && styles.paymentOptionSelected,
-            ]}
-            onPress={() => setPaymentMethod("credit_card")}
-          >
-            <Ionicons
-              name="card"
-              size={24}
-              color={paymentMethod === "credit_card" ? "#000000" : "#E89A3C"}
-            />
-            <Text
+            <Pressable
               style={[
-                styles.paymentText,
-                paymentMethod === "credit_card" && styles.paymentTextSelected,
+                styles.timeOption,
+                selectedTime === "afternoon" && styles.timeOptionSelected,
               ]}
+              onPress={() => setSelectedTime("afternoon")}
             >
-              Credit Card
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.paymentOption,
-              paymentMethod === "e_transfer" && styles.paymentOptionSelected,
-            ]}
-            onPress={() => setPaymentMethod("e_transfer")}
-          >
-            <Ionicons
-              name="mail"
-              size={24}
-              color={paymentMethod === "e_transfer" ? "#000000" : "#E89A3C"}
-            />
-            <Text
-              style={[
-                styles.paymentText,
-                paymentMethod === "e_transfer" && styles.paymentTextSelected,
-              ]}
-            >
-              E-Transfer
-            </Text>
-          </Pressable>
+              <Ionicons
+                name="partly-sunny-outline"
+                size={24}
+                color={selectedTime === "afternoon" ? "#000000" : "#E89A3C"}
+              />
+              <Text style={[
+                styles.timeOptionText,
+                selectedTime === "afternoon" && styles.timeOptionTextSelected
+              ]}>
+                1:00 PM
+              </Text>
+              <Text style={[
+                styles.timeOptionSubtext,
+                selectedTime === "afternoon" && styles.timeOptionSubtextSelected
+              ]}>
+                Afternoon
+              </Text>
+            </Pressable>
+          </View>
         </View>
 
         {/* Total */}
@@ -573,52 +555,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E89A3C",
   },
-  timeGrid: {
+  timeOptionsContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
+    gap: 10,
+    marginTop: 10,
   },
-  timeSlot: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  timeOption: {
+    flex: 1,
     backgroundColor: "#1a1a1a",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#333333",
-  },
-  timeSlotSelected: {
-    backgroundColor: "#E89A3C",
-    borderColor: "#E89A3C",
-  },
-  timeText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  timeTextSelected: {
-    color: "#000000",
-  },
-  paymentOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1a1a1a",
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 10,
     borderWidth: 2,
     borderColor: "#333333",
-    gap: 15,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    gap: 8,
   },
-  paymentOptionSelected: {
+  timeOptionSelected: {
     backgroundColor: "#E89A3C",
     borderColor: "#E89A3C",
   },
-  paymentText: {
-    fontSize: 15,
-    fontWeight: "600",
+  timeOptionText: {
+    fontSize: 16,
+    fontWeight: "700",
     color: "#FFFFFF",
   },
-  paymentTextSelected: {
+  timeOptionTextSelected: {
+    color: "#000000",
+  },
+  timeOptionSubtext: {
+    fontSize: 12,
+    color: "#888888",
+  },
+  timeOptionSubtextSelected: {
     color: "#000000",
   },
   totalCard: {
