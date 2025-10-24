@@ -61,6 +61,20 @@ export default function AdminDashboardScreen() {
   const [rescheduleDate, setRescheduleDate] = useState<Date>(new Date());
   const [rescheduleTime, setRescheduleTime] = useState<"morning" | "afternoon">("morning");
   const [showRescheduleDatePicker, setShowRescheduleDatePicker] = useState(false);
+  const [reschedulePackages, setReschedulePackages] = useState<any[]>([]);
+  const [currentBookingPackages, setCurrentBookingPackages] = useState<any[]>([]);
+
+  // Available packages list
+  const AVAILABLE_PACKAGES = [
+    { id: "1", name: "Interior Basic", basePrice: 99, category: "interior" },
+    { id: "2", name: "Interior Premium", basePrice: 189, category: "interior" },
+    { id: "3", name: "Seat Shampooing", basePrice: 99, category: "interior" },
+    { id: "4", name: "Stage 1", basePrice: 250, category: "exterior" },
+    { id: "5", name: "Stage 2", basePrice: 450, category: "exterior" },
+    { id: "6", name: "Stage 3", basePrice: 800, category: "exterior" },
+    { id: "9", name: "Full Detail", basePrice: 299, category: "in-n-out" },
+    { id: "10", name: "Seat Shampooing (In-N-Out)", basePrice: 99, category: "in-n-out" },
+  ];
 
   useEffect(() => {
     fetchData();
@@ -116,6 +130,11 @@ export default function AdminDashboardScreen() {
       return;
     }
 
+    if (reschedulePackages.length === 0) {
+      Alert.alert("Error", "Please select at least one package");
+      return;
+    }
+
     // Format date to YYYY-MM-DD
     const formattedDate = rescheduleDate.toISOString().split('T')[0];
 
@@ -133,6 +152,7 @@ export default function AdminDashboardScreen() {
           body: JSON.stringify({
             bookingDate: formattedDate,
             bookingTime: formattedTime,
+            packages: reschedulePackages,
           }),
         }
       );
@@ -326,6 +346,15 @@ export default function AdminDashboardScreen() {
                                     ? "morning"
                                     : "afternoon";
                                   setRescheduleTime(timeSlot);
+                                  // Load current packages
+                                  setCurrentBookingPackages(booking.packages);
+                                  setReschedulePackages(booking.packages.map((pkg: any) => ({
+                                    packageId: pkg.packageId || pkg.id,
+                                    packageName: pkg.packageName,
+                                    vehicleType: pkg.vehicleType,
+                                    quantity: pkg.quantity,
+                                    basePrice: pkg.basePrice || pkg.finalPrice,
+                                  })));
                                   setShowRescheduleDatePicker(false);
                                   setRescheduleModalVisible(true);
                                 }}
@@ -743,6 +772,118 @@ export default function AdminDashboardScreen() {
                   </Text>
                 </Pressable>
               </View>
+
+              {/* Package Selection Section */}
+              <Text style={styles.inputLabel}>Packages</Text>
+              <ScrollView style={styles.packagesScrollView} nestedScrollEnabled={true}>
+                {reschedulePackages.map((pkg, index) => (
+                  <View key={index} style={styles.packageEditCard}>
+                    <View style={styles.packageEditHeader}>
+                      <Text style={styles.packageEditName}>{pkg.packageName}</Text>
+                      <Pressable
+                        onPress={() => {
+                          const newPackages = reschedulePackages.filter((_, i) => i !== index);
+                          setReschedulePackages(newPackages);
+                        }}
+                      >
+                        <Ionicons name="trash-outline" size={20} color="#ef4444" />
+                      </Pressable>
+                    </View>
+
+                    <View style={styles.packageEditRow}>
+                      <View style={styles.packageEditField}>
+                        <Text style={styles.packageEditLabel}>Vehicle</Text>
+                        <View style={styles.vehicleOptionsRow}>
+                          {["sedan", "suv", "van"].map((type) => (
+                            <Pressable
+                              key={type}
+                              style={[
+                                styles.vehicleOptionChip,
+                                pkg.vehicleType === type && styles.vehicleOptionChipSelected
+                              ]}
+                              onPress={() => {
+                                const newPackages = [...reschedulePackages];
+                                newPackages[index].vehicleType = type;
+                                setReschedulePackages(newPackages);
+                              }}
+                            >
+                              <Text style={[
+                                styles.vehicleOptionChipText,
+                                pkg.vehicleType === type && styles.vehicleOptionChipTextSelected
+                              ]}>
+                                {type.toUpperCase()}
+                              </Text>
+                            </Pressable>
+                          ))}
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={styles.packageEditRow}>
+                      <View style={styles.packageEditField}>
+                        <Text style={styles.packageEditLabel}>Quantity</Text>
+                        <View style={styles.quantityControl}>
+                          <Pressable
+                            style={styles.quantityButton}
+                            onPress={() => {
+                              if (pkg.quantity > 1) {
+                                const newPackages = [...reschedulePackages];
+                                newPackages[index].quantity -= 1;
+                                setReschedulePackages(newPackages);
+                              }
+                            }}
+                          >
+                            <Ionicons name="remove" size={20} color="#FFFFFF" />
+                          </Pressable>
+                          <Text style={styles.quantityText}>{pkg.quantity}</Text>
+                          <Pressable
+                            style={styles.quantityButton}
+                            onPress={() => {
+                              const newPackages = [...reschedulePackages];
+                              newPackages[index].quantity += 1;
+                              setReschedulePackages(newPackages);
+                            }}
+                          >
+                            <Ionicons name="add" size={20} color="#FFFFFF" />
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+
+                {/* Add New Package Button */}
+                <Pressable
+                  style={styles.addPackageButton}
+                  onPress={() => {
+                    Alert.alert(
+                      "Add Package",
+                      "Select a package to add:",
+                      [
+                        ...AVAILABLE_PACKAGES.map((pkg) => ({
+                          text: `${pkg.name} ($${pkg.basePrice})`,
+                          onPress: () => {
+                            setReschedulePackages([
+                              ...reschedulePackages,
+                              {
+                                packageId: pkg.id,
+                                packageName: pkg.name,
+                                vehicleType: "sedan",
+                                quantity: 1,
+                                basePrice: pkg.basePrice,
+                              },
+                            ]);
+                          },
+                        })),
+                        { text: "Cancel", style: "cancel" as const }
+                      ]
+                    );
+                  }}
+                >
+                  <Ionicons name="add-circle-outline" size={24} color="#E89A3C" />
+                  <Text style={styles.addPackageButtonText}>ADD PACKAGE</Text>
+                </Pressable>
+              </ScrollView>
 
               <View style={styles.modalButtonsRow}>
                 <Pressable
@@ -1333,5 +1474,107 @@ const styles = StyleSheet.create({
   },
   timeOptionSubtextSelected: {
     color: "#000000",
+  },
+  packagesScrollView: {
+    maxHeight: 250,
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  packageEditCard: {
+    backgroundColor: "#0a0a0a",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#333333",
+  },
+  packageEditHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  packageEditName: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+  },
+  packageEditRow: {
+    marginBottom: 10,
+  },
+  packageEditField: {
+    flex: 1,
+  },
+  packageEditLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#888888",
+    marginBottom: 8,
+  },
+  vehicleOptionsRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  vehicleOptionChip: {
+    flex: 1,
+    backgroundColor: "#1a1a1a",
+    borderWidth: 1,
+    borderColor: "#333333",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    alignItems: "center",
+  },
+  vehicleOptionChipSelected: {
+    backgroundColor: "#E89A3C",
+    borderColor: "#E89A3C",
+  },
+  vehicleOptionChipText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#CCCCCC",
+  },
+  vehicleOptionChipTextSelected: {
+    color: "#000000",
+  },
+  quantityControl: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
+  },
+  quantityButton: {
+    backgroundColor: "#333333",
+    borderRadius: 8,
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quantityText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    minWidth: 30,
+    textAlign: "center",
+  },
+  addPackageButton: {
+    flexDirection: "row",
+    backgroundColor: "#1a1a1a",
+    borderWidth: 2,
+    borderColor: "#E89A3C",
+    borderStyle: "dashed",
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 5,
+  },
+  addPackageButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#E89A3C",
+    letterSpacing: 0.5,
   },
 });

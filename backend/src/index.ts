@@ -261,18 +261,61 @@ app.put("/api/admin/bookings/:id/reschedule", async (c) => {
   const bookingId = c.req.param("id");
 
   try {
-    const { bookingDate, bookingTime } = await c.req.json();
+    const { bookingDate, bookingTime, packages } = await c.req.json();
 
     if (!bookingDate || !bookingTime) {
       return c.json({ success: false, error: "Date and time are required" }, 400);
     }
 
+    // Calculate new totals if packages are updated
+    let serviceTotal = 0;
+    let totalAmount = 0;
+
+    if (packages && packages.length > 0) {
+      // Delete old packages first
+      await prisma.bookingPackage.deleteMany({
+        where: { bookingId },
+      });
+
+      // Calculate totals and create new packages
+      for (const pkg of packages) {
+        const vehicleUpcharge =
+          pkg.vehicleType === "suv" ? 25 :
+          pkg.vehicleType === "van" ? 50 : 0;
+
+        const finalPrice = pkg.basePrice + vehicleUpcharge;
+        serviceTotal += finalPrice * pkg.quantity;
+
+        await prisma.bookingPackage.create({
+          data: {
+            bookingId,
+            packageId: pkg.packageId,
+            packageName: pkg.packageName,
+            vehicleType: pkg.vehicleType,
+            basePrice: pkg.basePrice,
+            finalPrice,
+            quantity: pkg.quantity,
+          },
+        });
+      }
+
+      totalAmount = serviceTotal + 30; // Add reservation fee
+    }
+
+    // Update booking with new date, time, and totals
+    const updateData: any = {
+      bookingDate,
+      bookingTime,
+    };
+
+    if (packages && packages.length > 0) {
+      updateData.serviceTotal = serviceTotal;
+      updateData.totalAmount = totalAmount;
+    }
+
     const booking = await prisma.booking.update({
       where: { id: bookingId },
-      data: {
-        bookingDate,
-        bookingTime,
-      },
+      data: updateData,
       include: {
         customer: true,
         packages: true,
@@ -285,6 +328,7 @@ app.put("/api/admin/bookings/:id/reschedule", async (c) => {
       message: "Booking rescheduled successfully",
     });
   } catch (error) {
+    console.error("Reschedule error:", error);
     return c.json({ success: false, error: "Failed to reschedule booking" }, 500);
   }
 });
